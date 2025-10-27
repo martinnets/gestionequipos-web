@@ -87,7 +87,7 @@ export function Login() {
       )}
       {/* begin::Form group */}
       <div className='fv-row mb-8'>
-        <label className='form-label fs-6 fw-bolder text-white'>Codigo</label>
+        <label className='form-label fs-6 fw-bolder text-white'>Número de Documento</label>
         <input
           placeholder='Codigo'
           ref={inputRef} // Añade la referencia aquí
@@ -113,7 +113,7 @@ export function Login() {
 
       {/* begin::Form group */}
       <div className='fv-row mb-3'>
-        <label className='form-label fw-bolder text-white fs-6 mb-0'>Password</label>
+        <label className='form-label fw-bolder text-white fs-6 mb-0'>Contraseña</label>
         <input
           type='password'
           autoComplete='off'
@@ -143,7 +143,9 @@ export function Login() {
         <div />
 
         {/* begin::Link */}
-         
+        <Link to='/auth/reset' className='link-light fw-bold'>
+          Olvide mi Clave ?
+        </Link>
         {/* end::Link */}
       </div>
       {/* end::Wrapper */}

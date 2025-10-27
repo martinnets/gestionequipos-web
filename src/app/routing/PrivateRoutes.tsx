@@ -7,6 +7,10 @@ import { ParametroPage } from '../pages/parametro/parametro'
 import ParametroForm from '../pages/parametro/parametroform'
 import UsuarioForm from '../pages/usuario/usuarioform'
 import { UsuarioPage } from '../pages/usuario/usuario'
+import { EquipoPage } from '../pages/equipo/equipo'
+import EquipoForm from '../pages/equipo/equipoform'
+import { SolicitudPage } from '../pages/solicitud/solicitud'
+import SolicitudForm from '../pages/solicitud/solicitudform'
  
 
 const PrivateRoutes = () => {
@@ -28,11 +32,14 @@ const PrivateRoutes = () => {
          <Route path='/parametroform/:id/:dominio' element={<ParametroForm />} />
 
 
-         <Route path='/usuario' element={< UsuarioPage />} />
-         <Route path='/usuarioform/:id' element={< UsuarioForm />} />
+        <Route path='/usuario' element={< UsuarioPage />} />
+        <Route path='/usuarioform/:id' element={< UsuarioForm />} />
 
- 
+        <Route path='/equipo' element={<EquipoPage />} />
+        <Route path='/equipoform/:id' element={<EquipoForm />} />
 
+        <Route path='/solicitud' element={<SolicitudPage />} />
+        <Route path='/solicitudform/:id' element={< SolicitudForm />} />
 
         {/* Page Not Found */}
         <Route path='*' element={<Navigate to='/error/404' />} />

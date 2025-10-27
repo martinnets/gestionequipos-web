@@ -1,7 +1,8 @@
 
 import React from 'react'
+import {KTIcon} from '../../../helpers'
 import { Link } from 'react-router-dom'
- 
+
 type Props = {
   className: string
   color: string
@@ -11,7 +12,7 @@ type Props = {
   titleColor?: string
   description: string
   descriptionColor?: string
-  link?: string
+  link?:string
 }
 
 const StatisticsWidget5: React.FC<Props> = ({
@@ -23,17 +24,16 @@ const StatisticsWidget5: React.FC<Props> = ({
   titleColor,
   description,
   descriptionColor,
-  link
+  link="#"
 }) => {
   return (
-    <Link  to={"/"+link} className={`card bg-${color} hoverable ${className}`}>
+    <Link to={link} className={`card bg-${color} hoverable ${className}`}>
       <div className='card-body'>
-        {/* <KTIcon iconName={svgIcon} className={`text-${iconColor} fs-3x ms-n1`} /> */}
-        <i className={`fa fa-solid fa-${svgIcon} text-${iconColor}  fs-3x ms-n1`}></i>
-        <div className={`fw-semibold text-${descriptionColor} pt- fs-1x`} >{description}</div>
-        <div className={`text-${titleColor} fw-bold fs-2x mb-2 mt-5`}>{title}</div>
+        <KTIcon iconName={svgIcon} className={`text-${iconColor} fs-3x ms-n1`} />
 
-       
+        <div className={`text-${titleColor} fw-bold fs-2 mb-2 mt-5`}>{title}</div>
+
+        <div className={`fw-semibold text-${descriptionColor}`}>{description}</div>
       </div>
     </Link>
   )

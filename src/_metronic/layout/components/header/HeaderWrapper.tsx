@@ -21,7 +21,7 @@ export function HeaderWrapper() {
       <div className='header-brand bg-white'>
         {/* begin::Logo */}
         <Link to='/dashboard'>
-         <img alt="Logo" src={toAbsoluteUrl('media/empresa/') + currentUser?.id_empresa + '.png'} className="h-25px h-lg-50px " />
+         <img alt="Logo" src={toAbsoluteUrl('media/') +  'logo-header.png'} className="  " />
            
         </Link>
         {/* end::Logo */}

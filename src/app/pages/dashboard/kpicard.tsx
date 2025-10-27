@@ -1,22 +1,30 @@
 import { Card } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
-const KPICard = ({ link, title, value, change, isPositive,color='dark',icon ="info"}) => {
+const KpiCard = ({ title, value, change, icon, variant,link }) => {
+  const isPositive = change.startsWith('+')
+  const changeClass = isPositive ? 'text-success' : 'text-danger'
+  
   return (
-    <Link to={"/"+link} className="text-decoration-none text-dark">
-    <Card className={`shadow-sm h-100 bg-${color }`} >
+    <Card className={`kpi-card border-${variant}`}>
       <Card.Body>
-        <i className={`fa-solid fa-${icon} fs-2x text-light`}></i>
-        <Card.Title className="text-light fs-6">{title}
-        </Card.Title>
-        <Card.Text className="fs-4 fw-bold text-light text-end">{value}</Card.Text>
-        <Card.Text className={`small ${isPositive ? 'text-light' : 'text-secondary'}`}>
-          {change}  
-        </Card.Text>
+        <Link to={`/${link}`}>
+        <div className="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 className="text-muted mb-2">{title}</h6>
+            <h3 className="mb-0">{value}</h3>
+          </div>
+          <div className={`icon-circle bg-${variant}-light`}>
+            <i className={`fa-solid  fa-${icon} text-${variant} fs-3`}></i>
+          </div>
+        </div>
+        <div className={`mt-2  text-green`}>
+          {/* <span>{change} </span> */}
+        </div>
+        </Link>
       </Card.Body>
     </Card>
-    </Link>
   )
 }
 
-export default KPICard
+export default KpiCard

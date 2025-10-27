@@ -68,10 +68,10 @@ export default function ParametroForm() {
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <div className="alert alert-secondary d-flex align-items-center p-5 bg-light-primary">
+                <div className="alert alert-secondary d-flex align-items-center p-5 bg-dark">
                     <div className="d-flex flex-column">
-                        <h3 className="mb-1 text-dark">Registro de {dominio}</h3>
-                        <span className="text-dark">Detalle
+                        <h3 className="mb-1 text-light">Registro de {dominio}</h3>
+                        <span className="text-light">Detalle
                         </span>
                     </div>
                     <div className="d-flex   flex-row-fluid justify-content-end">
@@ -91,17 +91,19 @@ export default function ParametroForm() {
                         <div className="form-group row">
 
                             <div className="col-lg-4  input-group-sm mb-5">
-                                <div className="  mb-2">
-                                    <label className="form-label" id="inputGroup-sizing-sm">Código</label>
+                                <div className="form-floating">
+                                    
                                     <input type="text" name="codigo" defaultValue={parametro.codigo}
                                         className="form-control" onChange={handleChange} />
+                                    <label className="form-label" id="inputGroup-sizing-sm">Código</label>
                                 </div>
                             </div>
                             <div className="col-lg-4  input-group-sm mb-5">
-                                <div className="  mb-2">
-                                    <label className="form-label" id="inputGroup-sizing-sm">Descripción</label>
+                                <div className="form-floating">
+                                    
                                     <input type="text" name="descripcion" defaultValue={parametro.descripcion}
                                         className="form-control" onChange={handleChange} />
+                                        <label className="form-label" id="inputGroup-sizing-sm">Descripción</label>
                                 </div>
                             </div>
                            
