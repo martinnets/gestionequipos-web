@@ -1,60 +1,60 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
-import solicitudDataService from "../../../_services/solicitud";
+import licenciaDataService from "../../../_services/licencia";
 import { useAuth } from "../../modules/auth";
 import { MaterialReactTable, MRT_ColumnDef } from 'material-react-table';
-import { Solicitud } from "../../../_models/solicitud";
+import { Licencia } from "../../../_models/licencia";
 
-export function SolicitudPage() {
+export function LicenciaPage() {
     const { currentUser } = useAuth();
-    const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
+    const [licencias, setLicencias] = useState<Licencia[]>([]);
     const datos =[
-        { id_solicitud: '1', codigo: 'SOL-001', usuario_nombre: 'Juan Perez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'Laptop', gama_nombre: 'Alta', urgencia: 'Alta', estado: 'Pendiente', fecha_solicitud: '2024-06-01', aprobador_nombre: 'Maria Gomez' 
-        },
-        { id_solicitud: '2', codigo: 'SOL-002', usuario_nombre: 'Ana Lopez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'Desktop', gama_nombre: 'Media', urgencia: 'Media', estado: 'Aprobada', fecha_solicitud: '2024-06-05', aprobador_nombre: 'Carlos Ruiz' 
-        },
-        { id_solicitud: '3', codigo: 'SOL-003', usuario_nombre: 'Luis Martinez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'N/A', gama_nombre: 'N/A', urgencia: 'Baja', estado: 'Rechazada', fecha_solicitud: '2024-06-10', aprobador_nombre: 'Sofia Fernandez' 
-        },
+        { id_licencia: '1', nombre: 'Windows 10', version: 'Pro', tipo: 'SO', proveedor: 'Microsoft', fecha_compra: '2023-01-15', fecha_vencimiento: '2025-01-15', costo: 199.99 },
+        { id_licencia: '2', nombre: 'Microsoft Office', version: '365', tipo: 'Productividad', proveedor: 'Microsoft', fecha_compra: '2022-06-10', fecha_vencimiento: '2023-06-10', costo: 99.99 },
+        { id_licencia: '3', nombre: 'Adobe Photoshop', version: '2024', tipo: 'Diseño', proveedor: 'Adobe', fecha_compra: '2023-03-20', fecha_vencimiento: '2024-03-20', costo: 239.88 },
     ]
-    const columns = useMemo<MRT_ColumnDef<Solicitud>[]>(
+    const columns = useMemo<MRT_ColumnDef<Licencia>[]>(
         () => [
             { 
-                accessorKey: 'id_solicitud', 
+                accessorKey: 'id_licencia', 
                 header: 'Acción',
                 enableColumnFilter: false,
                 size: 50,
                 Cell: ({ row }) => (
-                     <div className="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-            <div className="btn-group " role="group" aria-label="First group">
                     <Link className="btn btn-sm" 
-                          to={`/solicitudform/${row.original.id_solicitud}`}>
+                          to={`/licenciaform/${row.original.id_licencia}`}>
                         <i className="fa-solid fa-pen-to-square fs-4 text-primary"></i>
                     </Link>
-                    <Link className="btn btn-sm" 
-                          to={`/solicitudform/${row.original.id_solicitud}`}>
-                            <i className="fa-solid fa-check-to-slot  fs-4 text-success"></i>
-                        
-                    </Link>
-                   </div>
-                   </div>
                 ),
             },
-            { accessorKey: 'codigo', header: 'Código' },
-            { accessorKey: 'usuario_nombre', header: 'Solicitante' },
-            { accessorKey: 'tipo_solicitud', header: 'Tipo Solicitud' },
-            { accessorKey: 'tipo_equipo_nombre', header: 'Tipo Equipo' },
-            { accessorKey: 'gama_nombre', header: 'Gama' },
-            { accessorKey: 'urgencia', header: 'Urgencia' },
-            { accessorKey: 'estado', header: 'Estado' },
+            { accessorKey: 'nombre', header: 'Software' },
+            { accessorKey: 'version', header: 'Versión' },
+            { accessorKey: 'tipo', header: 'Tipo' },
+            { accessorKey: 'proveedor', header: 'Proveedor' },
             { 
-                accessorKey: 'fecha_solicitud', 
-                header: 'Fecha Solicitud',
+                accessorKey: 'fecha_compra', 
+                header: 'Fecha Compra',
                 Cell: ({ cell }) => {
                     const fecha = cell.getValue<string>();
                     return fecha ? new Date(fecha).toLocaleDateString() : '';
                 }
             },
-            { accessorKey: 'aprobador_nombre', header: 'Aprobador' },
+            { 
+                accessorKey: 'fecha_vencimiento', 
+                header: 'Fecha Vencimiento',
+                Cell: ({ cell }) => {
+                    const fecha = cell.getValue<string>();
+                    return fecha ? new Date(fecha).toLocaleDateString() : '';
+                }
+            },
+            { 
+                accessorKey: 'costo', 
+                header: 'Costo',
+                Cell: ({ cell }) => {
+                    const costo = cell.getValue<number>();
+                    return costo ? `$${costo.toFixed(2)}` : '';
+                }
+            },
         ],
         [],
     );
@@ -62,10 +62,10 @@ export function SolicitudPage() {
     const location = useLocation();
 
     useEffect(() => {
-        solicitudDataService.getsolicitud(currentUser?.id_empresa)
+        licenciaDataService.getlicencia(currentUser?.id_empresa)
             .then(response => response.json())
             .then(response => {
-                setSolicitudes(response);
+                setLicencias(response);
                 console.log(response);
             })
             .catch(e => {
@@ -80,11 +80,11 @@ export function SolicitudPage() {
                     <div className="col-lg-12">
                         <div className="card card-custom">
                             <div className="card-header bg-dark">
-                                <h3 className="card-title text-light">Listado de Solicitudes</h3>
+                                <h3 className="card-title text-light">Listado de Licencias</h3>
                                 <div className="card-toolbar">
-                                    <Link to={"/solicitudform/crea"} className="btn btn-sm btn-primary">
+                                    <Link to={"/licenciaform/crea"} className="btn btn-sm btn-primary">
                                         <i className="fa-solid fa-file fs-1x text-light"></i>
-                                        Nueva Solicitud
+                                        Nueva Licencia
                                     </Link>                  
                                 </div>
                             </div>

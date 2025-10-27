@@ -17,15 +17,12 @@ export function AsideMenuMain() {
         icon='element-11'
         title={intl.formatMessage({ id: 'MENU.DASHBOARD' })}
       />
-      <AsideMenuItemWithSub to='/ventas' title='Ventas' icon='shop' visible={currentUser?.opciones?.vendedor}>
-        <AsideMenuItem to='/pedidoreg' title='Registrar Pedido' hasBullet={true} visible={currentUser?.opciones?.vendedor} />
-        <AsideMenuItem to='/listado' title='Resumen' hasBullet={true} visible={currentUser?.opciones?.vendedor} />
-      </AsideMenuItemWithSub>
+       
 
       <div className='menu-item'>
         <Link to="/solicitud" className='menu-link' >
           <span className='menu-icon'>
-            <span className=' fs-1'>
+            <span  >
               <KTIcon iconName='add-folder' className='fs-2' />
             </span>{' '}
           </span>
@@ -35,18 +32,46 @@ export function AsideMenuMain() {
       <div className='menu-item'>
         <Link to="/equipo" className='menu-link' >
           <span className='menu-icon'>
-            <span className=' fs-1'>
+            <span  >
               <KTIcon iconName='monitor-mobile' className='fs-2' />
             </span>{' '}
           </span>
           <span className='menu-title'>Equipos</span>
         </Link>
       </div>
-      <AsideMenuItemWithSub to='/venta' title='Maestros' icon='some-files' visible={true}>
+      <div className='menu-item'>
+        <Link to="/venta" className='menu-link' >
+          <span className='menu-icon'>
+            <span  >
+              <KTIcon iconName='monitor-mobile' className='fs-2' />
+            </span>{' '}
+          </span>
+          <span className='menu-title'>Ventas</span>
+        </Link>
+      </div>
+      <div className='menu-item'>
+        <Link to="/licencia" className='menu-link' >
+          <span className='menu-icon'>
+            <span  >
+              <KTIcon iconName='save-2' className='fs-2' />
+            </span>{' '}
+          </span>
+          <span className='menu-title'>Licencias</span>
+        </Link>
+      </div>
+      <AsideMenuItemWithSub to='/reporte' title='Reportes' icon='folder' visible={true}>
+        <AsideMenuItem to='/' title='Reporte de Equipos'  hasBullet={true}  visible={currentUser?.opciones?.administracion}/>
+        <AsideMenuItem to='/' title='Asignación de Equipos'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
+        <AsideMenuItem to='/' title='Equipos x Colaborador'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
+        <AsideMenuItem to='/' title='Renting x Equipos'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
+        <AsideMenuItem to='/' title='Vencimiento de Equipos'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
+
+      </AsideMenuItemWithSub>
+      <AsideMenuItemWithSub to='/maestro' title='Maestros' icon='some-files' visible={true}>
         <AsideMenuItem to='/empresa' title='Empresa'  hasBullet={true}  visible={currentUser?.opciones?.administracion}/>
         <AsideMenuItem to='/personal' title='Personal'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
       </AsideMenuItemWithSub>
-      <AsideMenuItemWithSub to='/' title='Parametros' icon='questionnaire-tablet' visible={currentUser?.opciones?.administracion}>
+      <AsideMenuItemWithSub to='/parametro' title='Parametros' icon='questionnaire-tablet' visible={currentUser?.opciones?.administracion}>
         <AsideMenuItem to='/parametro/gama' pdominio='gama' title='Gama' hasBullet={true} visible={currentUser?.opciones?.administracion} />
         <AsideMenuItem to='/parametro/tipo_equipo' pdominio='tipo_equipo' title='Tipo Equipo'  hasBullet={true} visible={currentUser?.opciones?.administracion} />        
       </AsideMenuItemWithSub>

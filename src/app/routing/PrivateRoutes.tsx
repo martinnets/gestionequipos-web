@@ -11,6 +11,10 @@ import { EquipoPage } from '../pages/equipo/equipo'
 import EquipoForm from '../pages/equipo/equipoform'
 import { SolicitudPage } from '../pages/solicitud/solicitud'
 import SolicitudForm from '../pages/solicitud/solicitudform'
+import { LicenciaPage } from '../pages/licencia/licencia'
+import LicenciaForm from '../pages/licencia/licenciaform'
+import { VentaPage } from '../pages/venta/venta'
+import VentaForm from '../pages/venta/ventaform'
  
 
 const PrivateRoutes = () => {
@@ -40,6 +44,12 @@ const PrivateRoutes = () => {
 
         <Route path='/solicitud' element={<SolicitudPage />} />
         <Route path='/solicitudform/:id' element={< SolicitudForm />} />
+
+        <Route path='/licencia' element={<LicenciaPage />} />
+        <Route path='/licenciaform/:id' element={< LicenciaForm />} />
+
+        <Route path='/venta' element={<VentaPage />} />
+        <Route path='/ventaform/:id' element={< VentaForm />} />
 
         {/* Page Not Found */}
         <Route path='*' element={<Navigate to='/error/404' />} />

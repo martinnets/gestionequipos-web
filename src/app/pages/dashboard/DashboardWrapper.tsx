@@ -42,7 +42,7 @@ const DashboardWrapper = () => {
               description='Registro de nuevas solicitudes'
               titleColor='white'
               descriptionColor='gray-400'
-              link='7solicitud'
+              link='/solicitud'
             />
           </div>
           <div className='col-6 col-lg-4  '>
@@ -55,6 +55,7 @@ const DashboardWrapper = () => {
               description='Solicitudes venta de equipos'
               titleColor='white'
               descriptionColor='white'
+              link='/venta'
             />
           </div>
           <div className='col-6 col-lg-4  '>
