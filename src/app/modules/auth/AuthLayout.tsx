@@ -20,8 +20,8 @@ const AuthLayout = () => {
     <div className="d-flex flex-column flex-root" id="kt_app_root">
 			<div className="d-flex flex-column flex-lg-row flex-column-fluid bg-dark "      >
 				<a href="#" className="d-block d-lg-none mx-auto py-20">
-					<img alt="Logo" src="public/sigee.png" className="theme-light-show h-100px" />
-					<img alt="Logo" src="public/sigee.png" className="theme-dark-show h-50px" />
+					<img alt="Logo" src="./public/sigee.png"  className="theme-light-show h-100px" />
+					<img alt="Logo" src="./public/sigee.png"  className="theme-dark-show h-50px" />
 				</a>
 				<div className="d-flex flex-column flex-column-fluid flex-center w-lg-50 p-10">
 					<div className="d-flex justify-content-between flex-column-fluid flex-column w-100 mw-450px">
@@ -39,7 +39,7 @@ const AuthLayout = () => {
 				</div>
 				<div className="d-none d-lg-flex flex-lg-row-fluid w-50 bg-white " >
         <div className=" d-flex flex-column flex-center py-15 px-5 px-md-15 w-100  " >
-          <a className="mb-12" href="/"><img alt="Logo" src="public/sigee.png" 
+          <a className="mb-12" href="/"><img alt="Logo" src="./public/sigee.png" 
           className="h-200px"/></a></div>
         </div>
 			</div>

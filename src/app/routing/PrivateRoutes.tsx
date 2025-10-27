@@ -15,6 +15,8 @@ import { LicenciaPage } from '../pages/licencia/licencia'
 import LicenciaForm from '../pages/licencia/licenciaform'
 import { VentaPage } from '../pages/venta/venta'
 import VentaForm from '../pages/venta/ventaform'
+import { CotizacionPage } from '../pages/cotizacion/cotizacion'
+import CotizacionForm from '../pages/cotizacion/cotizacionform'
  
 
 const PrivateRoutes = () => {
@@ -50,6 +52,9 @@ const PrivateRoutes = () => {
 
         <Route path='/venta' element={<VentaPage />} />
         <Route path='/ventaform/:id' element={< VentaForm />} />
+
+        <Route path='/cotizacion' element={<CotizacionPage />} />
+        <Route path='/cotizacionform/:id' element={< CotizacionForm />} />
 
         {/* Page Not Found */}
         <Route path='*' element={<Navigate to='/error/404' />} />

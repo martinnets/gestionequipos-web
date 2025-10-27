@@ -13,7 +13,11 @@ export function SolicitudPage() {
         },
         { id_solicitud: '2', codigo: 'SOL-002', usuario_nombre: 'Ana Lopez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'Desktop', gama_nombre: 'Media', urgencia: 'Media', estado: 'Aprobada', fecha_solicitud: '2024-06-05', aprobador_nombre: 'Carlos Ruiz' 
         },
-        { id_solicitud: '3', codigo: 'SOL-003', usuario_nombre: 'Luis Martinez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'N/A', gama_nombre: 'N/A', urgencia: 'Baja', estado: 'Rechazada', fecha_solicitud: '2024-06-10', aprobador_nombre: 'Sofia Fernandez' 
+        { id_solicitud: '3', codigo: 'SOL-003', usuario_nombre: 'Luis Martinez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'N/A', gama_nombre: 'N/A', urgencia: 'Baja', estado: 'Rechazada', fecha_solicitud: '2024-06-10', aprobador_nombre: 'Sofia Fernandez'             
+        },
+        { id_solicitud: '4', codigo: 'SOL-004', usuario_nombre: 'Marta Sanchez', tipo_solicitud: 'Reparación', tipo_equipo_nombre: 'Tablet', gama_nombre: 'Baja', urgencia: 'Alta', estado: 'En Proceso', fecha_solicitud: '2024-06-12', aprobador_nombre: 'Diego Torres'            
+        },
+        { id_solicitud: '5', codigo: 'SOL-005', usuario_nombre: 'Pedro Ramirez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'Laptop', gama_nombre: 'Alta', urgencia: 'Media', estado: 'Pendiente', fecha_solicitud: '2024-06-15', aprobador_nombre: 'Laura Morales'             
         },
     ]
     const columns = useMemo<MRT_ColumnDef<Solicitud>[]>(
@@ -45,7 +49,34 @@ export function SolicitudPage() {
             { accessorKey: 'tipo_equipo_nombre', header: 'Tipo Equipo' },
             { accessorKey: 'gama_nombre', header: 'Gama' },
             { accessorKey: 'urgencia', header: 'Urgencia' },
-            { accessorKey: 'estado', header: 'Estado' },
+            { accessorKey: 'estado',
+        header: 'Estado', size: 10,
+        Cell: ({ row }) => {
+          const estadosolicitud = row.original.estado;
+          let colorClass = '';
+          let label = '';
+          switch (estadosolicitud) {
+            case 'Pendiente':
+              colorClass = 'badge badge-danger';
+              label = 'Pendiente';
+              break;
+            case 'Aprobada':
+              colorClass = 'badge badge-success';
+              label = 'Aprobada';
+              break;
+            case 'Rechazada':
+              colorClass = 'badge badge-dark';
+              label = 'Rechazada';
+              break;
+            case 'En Proceso':
+              colorClass = 'badge badge-warning';
+              label = 'En Proceso';
+              break;
+          }
+
+          return <span className={colorClass}>{label}</span>;
+        },
+      },
             { 
                 accessorKey: 'fecha_solicitud', 
                 header: 'Fecha Solicitud',
@@ -59,7 +90,6 @@ export function SolicitudPage() {
         [],
     );
 
-    const location = useLocation();
 
     useEffect(() => {
         solicitudDataService.getsolicitud(currentUser?.id_empresa)

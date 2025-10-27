@@ -1,64 +1,53 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
-import ventaDataService from "../../../_services/venta";
+import cotizacionDataService from "../../../_services/cotizacion";
 import { useAuth } from "../../modules/auth";
 import { MaterialReactTable, MRT_ColumnDef } from 'material-react-table';
-import { Venta } from "../../../_models/venta";
+import { Cotizacion } from "../../../_models/cotizacion";
 
-export function VentaPage() {
+export function CotizacionPage() {
     const { currentUser } = useAuth();
-    const [solicitudesVenta, setSolicitudesVenta] = useState<Venta[]>([]);
-    const datos =[
-        { id_venta: '1', codigo: 'VEN-001', usuario_nombre: 'Juan Perez', tipo_equipo: 'Laptop', descripcion: 'Laptop para oficina', modelo: 'Dell XPS 13', cantidad: 2, estado: 'Pendiente', fecha_solicitud: '2024-06-01', 
-            notificar_email: ''
-        },
-        { id_venta: '2', codigo: 'VEN-002', usuario_nombre: 'Ana Lopez', tipo_equipo: 'Desktop', descripcion: 'Desktop para diseño gráfico', modelo: 'iMac 27"', cantidad: 1, estado: 'Aprobada', fecha_solicitud: '2024-06-05', 
-            notificar_email: ''
-        },
-        { id_venta: '3', codigo: 'VEN-003', usuario_nombre: 'Luis Martinez', tipo_equipo: 'Tablet', descripcion: 'Tablet para presentaciones', modelo: 'iPad Pro', cantidad: 3, estado: 'Rechazada', fecha_solicitud: '2024-06-10', 
-            notificar_email: ''
-        },  
-        { id_venta: '4', codigo: 'VEN-004', usuario_nombre: 'Marta Sanchez', tipo_equipo: 'Laptop', descripcion: 'Laptop para desarrollo de software', modelo: 'MacBook Pro', cantidad: 2, estado: 'En Proceso', fecha_solicitud: '2024-06-12', 
-            notificar_email: '' 
-        }
-
+    const [cotizaciones, setCotizaciones] = useState<Cotizacion[]>([]);
+    const datos=[
+        { id_cotizacion: '1', codigo: 'COT-001', solicitud_venta_codigo: 'VEN-001', tipo_equipo: 'Laptop', descripcion: 'Laptop para oficina', fecha_actualizacion: '2024-06-15', total_cotizacion: 2500.00, estado: 'Pendiente' },
+        { id_cotizacion: '2', codigo: 'COT-002', solicitud_venta_codigo: 'VEN-002', tipo_equipo: 'Desktop', descripcion: 'Desktop para diseño gráfico', fecha_actualizacion: '2024-06-18', total_cotizacion: 1800.00, estado: 'Aprobada' },
+        { id_cotizacion: '3', codigo: 'COT-003', solicitud_venta_codigo: 'VEN-003', tipo_equipo: 'Tablet', descripcion: 'Tablet para presentaciones', fecha_actualizacion: '2024-06-20', total_cotizacion: 1200.00, estado: 'Rechazada' },
     ]
-    const columns = useMemo<MRT_ColumnDef<Venta>[]>(
+    const columns = useMemo<MRT_ColumnDef<Cotizacion>[]>(
         () => [
             { 
-                accessorKey: 'id_solicitud_venta', 
+                accessorKey: 'id_cotizacion', 
                 header: 'Acción',
                 enableColumnFilter: false,
                 size: 50,
                 Cell: ({ row }) => (
-                    <>
                     <Link className="btn btn-sm" 
-                          to={`/ventaform/${row.original.id_venta}`}>
+                          to={`/cotizacionform/${row.original.id_cotizacion}`}>
                         <i className="fa-solid fa-pen-to-square fs-4 text-primary"></i>
                     </Link>
-                    <Link className="btn btn-sm" 
-                        to={`/cotizacionform/${row.original.id_venta}`}>
-                        <i className="fa-solid fa-list-check  fs-4 text-danger"></i>                                            
-                    </Link>
-                    </>
                 ),
             },
             { accessorKey: 'codigo', header: 'Código' },
-            { accessorKey: 'usuario_nombre', header: 'Solicitante' },
+            { accessorKey: 'solicitud_venta_codigo', header: 'Solicitud Venta' },
             { accessorKey: 'tipo_equipo', header: 'Tipo Equipo' },
             { accessorKey: 'descripcion', header: 'Descripción' },
-            { accessorKey: 'modelo', header: 'Modelo' },
-            { accessorKey: 'cantidad', header: 'Cantidad' },
-            { accessorKey: 'estado', header: 'Estado' },
             { 
-                accessorKey: 'fecha_solicitud', 
-                header: 'Fecha Solicitud',
+                accessorKey: 'fecha_actualizacion', 
+                header: 'Fecha Actualización',
                 Cell: ({ cell }) => {
                     const fecha = cell.getValue<string>();
                     return fecha ? new Date(fecha).toLocaleDateString() : '';
                 }
             },
-            { accessorKey: 'notificar_email', header: 'Email Notificación' },
+            { 
+                accessorKey: 'total_cotizacion', 
+                header: 'Total',
+                Cell: ({ cell }) => {
+                    const total = cell.getValue<number>();
+                    return total ? `$${total.toFixed(2)}` : '';
+                }
+            },
+            { accessorKey: 'estado', header: 'Estado' },
         ],
         [],
     );
@@ -66,10 +55,10 @@ export function VentaPage() {
     const location = useLocation();
 
     useEffect(() => {
-        ventaDataService.getventa(currentUser?.id_empresa)
+        cotizacionDataService.getcotizacion(currentUser?.id_empresa)
             .then(response => response.json())
             .then(response => {
-                setSolicitudesVenta(response);
+                setCotizaciones(response);
                 console.log(response);
             })
             .catch(e => {
@@ -84,18 +73,18 @@ export function VentaPage() {
                     <div className="col-lg-12">
                         <div className="card card-custom">
                             <div className="card-header bg-dark">
-                                <h3 className="card-title text-light">Listado de Solicitudes de Venta</h3>
+                                <h3 className="card-title text-light">Listado de Cotizaciones</h3>
                                 <div className="card-toolbar">
-                                    <Link to={"/ventaform/crea"} className="btn btn-sm btn-primary">
+                                    <Link to={"/cotizacionform/crea"} className="btn btn-sm btn-primary">
                                         <i className="fa-solid fa-file fs-1x text-light"></i>
-                                        Nueva Solicitud
+                                        Nueva Cotización
                                     </Link>                  
                                 </div>
                             </div>
                             <div className="card-body">
                                 <MaterialReactTable 
                                     columns={columns} 
-                                    data={datos}
+                                    data={cotizaciones}
                                     enableTopToolbar={false}  
                                     muiTableHeadCellProps={{
                                         className: 'bg-secondary text-dark',

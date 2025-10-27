@@ -23,7 +23,7 @@ export default function VentaForm() {
                 solicitudVenta.estado = 'En Cotización';
                 
                 console.log(solicitudVenta);
-                ventaDataService.createSolicitudVenta(solicitudVenta)
+                ventaDataService.createventa(solicitudVenta)
                     .then(function (response) {
                         console.log(JSON.stringify(response.data));
                         alert("Solicitud de venta creada correctamente");
@@ -35,7 +35,7 @@ export default function VentaForm() {
             } else {
                 solicitudVenta.usu_modi = currentUser?.codigo;
                 solicitudVenta.id_venta = id;
-                ventaDataService.updateSolicitudVenta(id, solicitudVenta)
+                ventaDataService.updateventa(id, solicitudVenta)
                     .then(function (response) {
                         console.log(JSON.stringify(response.data));
                         alert("Solicitud de venta actualizada correctamente");

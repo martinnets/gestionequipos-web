@@ -43,7 +43,7 @@ export function AsideMenuMain() {
         <Link to="/venta" className='menu-link' >
           <span className='menu-icon'>
             <span  >
-              <KTIcon iconName='monitor-mobile' className='fs-2' />
+              <KTIcon iconName='basket' className='fs-2' />
             </span>{' '}
           </span>
           <span className='menu-title'>Ventas</span>
