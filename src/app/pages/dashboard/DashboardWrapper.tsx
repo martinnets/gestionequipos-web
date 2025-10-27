@@ -137,7 +137,7 @@ const DashboardWrapper = () => {
               description='Solicitudes venta de equipos'
               titleColor='white'
               descriptionColor='white'
-              link='/venta'
+              link='/ventaform/crea'
             />
           </div>
           <div className='col-6 col-lg-4  '>

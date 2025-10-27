@@ -17,6 +17,9 @@ import { VentaPage } from '../pages/venta/venta'
 import VentaForm from '../pages/venta/ventaform'
 import { CotizacionPage } from '../pages/cotizacion/cotizacion'
 import CotizacionForm from '../pages/cotizacion/cotizacionform'
+import { AsignacionPage } from '../pages/asignacion/asignacion'
+import AsignacionForm from '../pages/asignacion/asignacionform'
+import { ReporteEquipoPage } from '../pages/reportes/equipos'
  
 
 const PrivateRoutes = () => {
@@ -55,6 +58,11 @@ const PrivateRoutes = () => {
 
         <Route path='/cotizacion' element={<CotizacionPage />} />
         <Route path='/cotizacionform/:id' element={< CotizacionForm />} />
+
+        <Route path='/asignacion' element={<AsignacionPage />} />
+        <Route path='/asignacionform/:id' element={< AsignacionForm />} />
+
+        <Route path='/reportexequipo' element={< ReporteEquipoPage />} />
 
         {/* Page Not Found */}
         <Route path='*' element={<Navigate to='/error/404' />} />

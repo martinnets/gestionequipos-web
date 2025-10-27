@@ -39,6 +39,11 @@ export function SolicitudPage() {
                             <i className="fa-solid fa-check-to-slot  fs-4 text-success"></i>
                         
                     </Link>
+                     <Link className="btn btn-sm" 
+                          to={`/asignacionform/${row.original.id_solicitud}`}>
+                            <i className="fa-solid fa-user-plus  fs-4 text-dark"></i>
+                        
+                    </Link>
                    </div>
                    </div>
                 ),

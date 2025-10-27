@@ -60,7 +60,7 @@ export function AsideMenuMain() {
         </Link>
       </div>
       <AsideMenuItemWithSub to='/reporte' title='Reportes' icon='folder' visible={true}>
-        <AsideMenuItem to='/' title='Reporte de Equipos'  hasBullet={true}  visible={currentUser?.opciones?.administracion}/>
+        <AsideMenuItem to='/reportexequipo' title='Reporte de Equipos'  hasBullet={true}  visible={currentUser?.opciones?.administracion}/>
         <AsideMenuItem to='/' title='Asignación de Equipos'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
         <AsideMenuItem to='/' title='Equipos x Colaborador'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
         <AsideMenuItem to='/' title='Renting x Equipos'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
