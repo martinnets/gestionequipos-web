@@ -8,44 +8,51 @@ import { Solicitud } from "../../../_models/solicitud";
 export function SolicitudPage() {
     const { currentUser } = useAuth();
     const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
-    const datos =[
-        { id_solicitud: '1', codigo: 'SOL-001', usuario_nombre: 'Juan Perez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'Laptop', gama_nombre: 'Alta', urgencia: 'Alta', estado: 'Pendiente', fecha_solicitud: '2024-06-01', aprobador_nombre: 'Maria Gomez' 
+    const datos = [
+        {
+            id_solicitud: '1', codigo: 'SOL-001', usuario_nombre: 'Juan Perez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'Laptop', gama_nombre: 'Alta', urgencia: 'Alta', estado: 'Pendiente', fecha_solicitud: '2024-06-01', aprobador_nombre: 'Maria Gomez'
         },
-        { id_solicitud: '2', codigo: 'SOL-002', usuario_nombre: 'Ana Lopez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'Desktop', gama_nombre: 'Media', urgencia: 'Media', estado: 'Aprobada', fecha_solicitud: '2024-06-05', aprobador_nombre: 'Carlos Ruiz' 
+        {
+            id_solicitud: '2', codigo: 'SOL-002', usuario_nombre: 'Ana Lopez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'Desktop', gama_nombre: 'Media', urgencia: 'Media', estado: 'Aprobada', fecha_solicitud: '2024-06-05', aprobador_nombre: 'Carlos Ruiz'
         },
-        { id_solicitud: '3', codigo: 'SOL-003', usuario_nombre: 'Luis Martinez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'N/A', gama_nombre: 'N/A', urgencia: 'Baja', estado: 'Rechazada', fecha_solicitud: '2024-06-10', aprobador_nombre: 'Sofia Fernandez'             
+        {
+            id_solicitud: '3', codigo: 'SOL-003', usuario_nombre: 'Luis Martinez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'N/A', gama_nombre: 'N/A', urgencia: 'Baja', estado: 'Rechazada', fecha_solicitud: '2024-06-10', aprobador_nombre: 'Sofia Fernandez'
         },
-        { id_solicitud: '4', codigo: 'SOL-004', usuario_nombre: 'Marta Sanchez', tipo_solicitud: 'Reparación', tipo_equipo_nombre: 'Tablet', gama_nombre: 'Baja', urgencia: 'Alta', estado: 'En Proceso', fecha_solicitud: '2024-06-12', aprobador_nombre: 'Diego Torres'            
+        {
+            id_solicitud: '4', codigo: 'SOL-004', usuario_nombre: 'Marta Sanchez', tipo_solicitud: 'Reparación', tipo_equipo_nombre: 'Tablet', gama_nombre: 'Baja', urgencia: 'Alta', estado: 'En Proceso', fecha_solicitud: '2024-06-12', aprobador_nombre: 'Diego Torres'
         },
-        { id_solicitud: '5', codigo: 'SOL-005', usuario_nombre: 'Pedro Ramirez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'Laptop', gama_nombre: 'Alta', urgencia: 'Media', estado: 'Pendiente', fecha_solicitud: '2024-06-15', aprobador_nombre: 'Laura Morales'             
+        {
+            id_solicitud: '5', codigo: 'SOL-005', usuario_nombre: 'Pedro Ramirez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'Laptop', gama_nombre: 'Alta', urgencia: 'Media', estado: 'Pendiente', fecha_solicitud: '2024-06-15', aprobador_nombre: 'Laura Morales'
         },
     ]
     const columns = useMemo<MRT_ColumnDef<Solicitud>[]>(
         () => [
-            { 
-                accessorKey: 'id_solicitud', 
+            {
+                accessorKey: 'id_solicitud',
                 header: 'Acción',
                 enableColumnFilter: false,
                 size: 50,
                 Cell: ({ row }) => (
-                     <div className="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-            <div className="btn-group " role="group" aria-label="First group">
-                    <Link className="btn btn-sm" 
-                          to={`/solicitudform/${row.original.id_solicitud}`}>
-                        <i className="fa-solid fa-pen-to-square fs-4 text-primary"></i>
-                    </Link>
-                    <Link className="btn btn-sm" 
-                          to={`/solicitudform/${row.original.id_solicitud}`}>
-                            <i className="fa-solid fa-check-to-slot  fs-4 text-success"></i>
-                        
-                    </Link>
-                     <Link className="btn btn-sm" 
-                          to={`/asignacionform/${row.original.id_solicitud}`}>
-                            <i className="fa-solid fa-user-plus  fs-4 text-dark"></i>
-                        
-                    </Link>
-                   </div>
-                   </div>
+                    <div className="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div className="btn-group " role="group" aria-label="First group">
+                            <Link className="btn btn-sm"
+                                to={`/solicitudform/${row.original.id_solicitud}`}>
+                                <i className="fa-solid fa-pen-to-square fs-4 text-primary"></i>
+                            </Link>
+                            <Link className="btn btn-sm"
+                                to={`/solicitudreporte/${row.original.id_solicitud}`}>
+                                <i className="fa-solid fa-file-pdf fs-4 text-primary"></i>
+                            </Link>
+                            <Link className="btn btn-sm"
+                                to={`/solicitudform/${row.original.id_solicitud}`}>
+                                <i className="fa-solid fa-check-to-slot  fs-4 text-success"></i>
+                            </Link>
+                            <Link className="btn btn-sm"
+                                to={`/asignacionform/${row.original.id_solicitud}`}>
+                                <i className="fa-solid fa-user-plus  fs-4 text-dark"></i>
+                            </Link>
+                        </div>
+                    </div>
                 ),
             },
             { accessorKey: 'codigo', header: 'Código' },
@@ -54,36 +61,37 @@ export function SolicitudPage() {
             { accessorKey: 'tipo_equipo_nombre', header: 'Tipo Equipo' },
             { accessorKey: 'gama_nombre', header: 'Gama' },
             { accessorKey: 'urgencia', header: 'Urgencia' },
-            { accessorKey: 'estado',
-        header: 'Estado', size: 10,
-        Cell: ({ row }) => {
-          const estadosolicitud = row.original.estado;
-          let colorClass = '';
-          let label = '';
-          switch (estadosolicitud) {
-            case 'Pendiente':
-              colorClass = 'badge badge-danger';
-              label = 'Pendiente';
-              break;
-            case 'Aprobada':
-              colorClass = 'badge badge-success';
-              label = 'Aprobada';
-              break;
-            case 'Rechazada':
-              colorClass = 'badge badge-dark';
-              label = 'Rechazada';
-              break;
-            case 'En Proceso':
-              colorClass = 'badge badge-warning';
-              label = 'En Proceso';
-              break;
-          }
+            {
+                accessorKey: 'estado',
+                header: 'Estado', size: 10,
+                Cell: ({ row }) => {
+                    const estadosolicitud = row.original.estado;
+                    let colorClass = '';
+                    let label = '';
+                    switch (estadosolicitud) {
+                        case 'Pendiente':
+                            colorClass = 'badge badge-danger';
+                            label = 'Pendiente';
+                            break;
+                        case 'Aprobada':
+                            colorClass = 'badge badge-success';
+                            label = 'Aprobada';
+                            break;
+                        case 'Rechazada':
+                            colorClass = 'badge badge-dark';
+                            label = 'Rechazada';
+                            break;
+                        case 'En Proceso':
+                            colorClass = 'badge badge-warning';
+                            label = 'En Proceso';
+                            break;
+                    }
 
-          return <span className={colorClass}>{label}</span>;
-        },
-      },
-            { 
-                accessorKey: 'fecha_solicitud', 
+                    return <span className={colorClass}>{label}</span>;
+                },
+            },
+            {
+                accessorKey: 'fecha_solicitud',
                 header: 'Fecha Solicitud',
                 Cell: ({ cell }) => {
                     const fecha = cell.getValue<string>();
@@ -120,17 +128,17 @@ export function SolicitudPage() {
                                     <Link to={"/solicitudform/crea"} className="btn btn-sm btn-primary">
                                         <i className="fa-solid fa-file fs-1x text-light"></i>
                                         Nueva Solicitud
-                                    </Link>                  
+                                    </Link>
                                 </div>
                             </div>
                             <div className="card-body">
-                                <MaterialReactTable 
-                                    columns={columns} 
+                                <MaterialReactTable
+                                    columns={columns}
                                     data={datos}
-                                    enableTopToolbar={false}  
+                                    enableTopToolbar={false}
                                     muiTableHeadCellProps={{
                                         className: 'bg-secondary text-dark',
-                                    }}            
+                                    }}
                                     initialState={{
                                         density: 'compact',
                                         showGlobalFilter: true,

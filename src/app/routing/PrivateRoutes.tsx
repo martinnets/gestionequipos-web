@@ -20,6 +20,7 @@ import CotizacionForm from '../pages/cotizacion/cotizacionform'
 import { AsignacionPage } from '../pages/asignacion/asignacion'
 import AsignacionForm from '../pages/asignacion/asignacionform'
 import { ReporteEquipoPage } from '../pages/reportes/equipos'
+import SolicitudReporte from '../pages/solicitud/reporte'
  
 
 const PrivateRoutes = () => {
@@ -49,6 +50,7 @@ const PrivateRoutes = () => {
 
         <Route path='/solicitud' element={<SolicitudPage />} />
         <Route path='/solicitudform/:id' element={< SolicitudForm />} />
+        <Route path='/solicitudreporte/:id' element={< SolicitudReporte />} />
 
         <Route path='/licencia' element={<LicenciaPage />} />
         <Route path='/licenciaform/:id' element={< LicenciaForm />} />

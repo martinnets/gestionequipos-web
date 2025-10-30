@@ -4,59 +4,71 @@ import solicitudDataService from "../../../_services/solicitud";
 import { useAuth } from "../../modules/auth";
 import { Solicitud } from "../../../_models/solicitud";
 
+// Interfaces para los datos del formulario
+interface TipoEquipo {
+    id: string;
+    nombre: string;
+}
+
+interface PerfilUsuario {
+    id: string;
+    nombre: string;
+    tipo_equipo_id: string;
+    caracteristicas: string;
+    costo_renting_mensual: number;
+    tiempo_renting_meses: number;
+}
+
+interface PuestoReal {
+    id: string;
+    nombre: string;
+    empresa_id: string;
+}
+
+interface Empresa {
+    id: string;
+    nombre: string;
+}
+
+interface Aprobador {
+    id: string;
+    nombre: string;
+    cargo: string;
+    empresa_id: string;
+}
+
+interface EquipoCustodia {
+    id: string;
+    tipo_equipo: string;
+    caracteristicas: string;
+    estado: string;
+}
+
 export default function SolicitudForm() {
     const { currentUser } = useAuth();
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
-    const [solicitud, setSolicitud] = useState<Solicitud>({});
     
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const answer = window.confirm("¿Está seguro de guardar la solicitud?");
-        if (answer) {
-            if (id === 'crea') {
-                solicitud.usu_crea = currentUser?.codigo;
-                solicitud.codigo_estado = '1';
-                solicitud.empresa_id = currentUser?.id_empresa;
-                solicitud.usu_crea = currentUser?.codigo;
-                solicitud.fecha_solicitud = new Date().toISOString().split('T')[0];
-                solicitud.estado = 'Pendiente';
-                
-                console.log(solicitud);
-                solicitudDataService.createsolicitud(solicitud)
-                    .then(function (response) {
-                        console.log(JSON.stringify(response.data));
-                        alert("Solicitud creada correctamente");
-                        navigate('/solicitud');
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            } else {
-                solicitud.usu_modi = currentUser?.codigo;
-                solicitud.id_solicitud = id;
-                solicitudDataService.updatesolicitud(id, solicitud)
-                    .then(function (response) {
-                        console.log(JSON.stringify(response.data));
-                        alert("Solicitud actualizada correctamente");
-                        navigate('/solicitud');
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            }
-        }
-    };
+    const [solicitud, setSolicitud] = useState<Solicitud>({});
+    const [tiposEquipo, setTiposEquipo] = useState<TipoEquipo[]>([]);
+    const [perfilesUsuario, setPerfilesUsuario] = useState<PerfilUsuario[]>([]);
+    const [perfilesFiltrados, setPerfilesFiltrados] = useState<PerfilUsuario[]>([]);
+    const [puestosReales, setPuestosReales] = useState<PuestoReal[]>([]);
+    const [empresas, setEmpresas] = useState<Empresa[]>([]);
+    const [aprobador, setAprobador] = useState<Aprobador | null>(null);
+    const [perfilSeleccionado, setPerfilSeleccionado] = useState<PerfilUsuario | null>(null);
+    const [equiposCustodia, setEquiposCustodia] = useState<EquipoCustodia[]>([]);
+    const [mostrarCustodia, setMostrarCustodia] = useState(false);
+    const [equipoCustodiaSeleccionado, setEquipoCustodiaSeleccionado] = useState<string>("");
+    const [mostrarResumen, setMostrarResumen] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setSolicitud((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
-
+    // Cargar datos iniciales
     useEffect(() => {
+        cargarTiposEquipo();
+        cargarPerfilesUsuario();
+        cargarEmpresas();
+        cargarEquiposCustodia();
+        
         if (id === 'crea') {
             console.log(id);
         } else {
@@ -72,13 +84,208 @@ export default function SolicitudForm() {
         }
     }, [id]);
 
+    // Cargar puestos reales cuando se selecciona una empresa
+    useEffect(() => {
+        if (solicitud.empresa_id) {
+            cargarPuestosRealesPorEmpresa(solicitud.empresa_id);
+            cargarAprobadorPorEmpresa(solicitud.empresa_id);
+        }
+    }, [solicitud.empresa_id]);
+
+    // Filtrar perfiles según tipo de equipo seleccionado
+    useEffect(() => {
+        if (solicitud.tipo_equipo_id) {
+            const perfilesFilt = perfilesUsuario.filter(
+                p => p.tipo_equipo_id === solicitud.tipo_equipo_id
+            );
+            setPerfilesFiltrados(perfilesFilt);
+        } else {
+            setPerfilesFiltrados([]);
+        }
+    }, [solicitud.tipo_equipo_id, perfilesUsuario]);
+
+    // Actualizar perfil seleccionado
+    
+
+    const cargarTiposEquipo = async () => {
+        // TODO: Implementar llamada al servicio
+        // Datos de ejemplo
+        setTiposEquipo([
+            { id: "1", nombre: "Laptop" },
+            { id: "2", nombre: "PC" },
+            { id: "3", nombre: "Celular" },
+            { id: "4", nombre: "Tablet" },
+            { id: "5", nombre: "Monitor" }
+        ]);
+    };
+
+    const cargarPerfilesUsuario = async () => {
+        // TODO: Implementar llamada al servicio
+        // Datos de ejemplo
+        setPerfilesUsuario([
+            {
+                id: "1",
+                nombre: "Practicante",
+                tipo_equipo_id: "1",
+                caracteristicas: "Laptop Lenovo ThinkPad E14, procesador i5 Gen 11, monitor 14\", RAM 8GB, HD 256GB SSD, Win 11",
+                costo_renting_mensual: 150.00,
+                tiempo_renting_meses: 24
+            },
+            {
+                id: "2",
+                nombre: "Asistente",
+                tipo_equipo_id: "1",
+                caracteristicas: "Laptop Lenovo ThinkPad E15, procesador i5 Gen 12, monitor 15.6\", RAM 8GB, HD 512GB SSD, Win 11",
+                costo_renting_mensual: 180.00,
+                tiempo_renting_meses: 36
+            },
+            {
+                id: "3",
+                nombre: "Analista",
+                tipo_equipo_id: "1",
+                caracteristicas: "Laptop Lenovo ThinkPad T14, procesador i7 Gen 12, monitor 14\", RAM 16GB, HD 512GB SSD, Win 11 Pro",
+                costo_renting_mensual: 250.00,
+                tiempo_renting_meses: 36
+            },
+            {
+                id: "4",
+                nombre: "Gerente",
+                tipo_equipo_id: "1",
+                caracteristicas: "Laptop Lenovo ThinkPad X1 Carbon, procesador i7 Gen 13, monitor 14\", RAM 32GB, HD 1TB SSD, Win 11 Pro",
+                costo_renting_mensual: 400.00,
+                tiempo_renting_meses: 36
+            },
+            {
+                id: "5",
+                nombre: "Practicante",
+                tipo_equipo_id: "2",
+                caracteristicas: "PC Dell OptiPlex 3090, procesador i5 Gen 11, RAM 8GB, HD 256GB SSD, Monitor 21\", Win 11",
+                costo_renting_mensual: 120.00,
+                tiempo_renting_meses: 24
+            },
+            {
+                id: "6",
+                nombre: "Analista",
+                tipo_equipo_id: "2",
+                caracteristicas: "PC Dell OptiPlex 7090, procesador i7 Gen 12, RAM 16GB, HD 512GB SSD, Monitor 24\", Win 11 Pro",
+                costo_renting_mensual: 220.00,
+                tiempo_renting_meses: 36
+            }
+        ]);
+    };
+
+    const cargarEmpresas = async () => {
+        // TODO: Implementar llamada al servicio
+        setEmpresas([
+            { id: "1", nombre: "EL" },
+            { id: "2", nombre: "ADAMS" },
+            { id: "3", nombre: "SAMITEx" },
+            { id: "4", nombre: "PanoramaBPPO" }
+        ]);
+    };
+
+    const cargarPuestosRealesPorEmpresa = async (empresaId: string) => {
+        // TODO: Implementar llamada al servicio Ofiplan
+        // Datos de ejemplo
+        setPuestosReales([
+            { id: "1", nombre: "Practicante Administrativo", empresa_id: empresaId },
+            { id: "2", nombre: "Asistente de Sistemas", empresa_id: empresaId },
+            { id: "3", nombre: "Analista de Datos", empresa_id: empresaId },
+            { id: "4", nombre: "Gerente de Tecnología", empresa_id: empresaId },
+            { id: "5", nombre: "Gerente General", empresa_id: empresaId }
+        ]);
+    };
+
+    const cargarAprobadorPorEmpresa = async (empresaId: string) => {
+        // TODO: Implementar llamada al servicio
+        // Por defecto se muestra el Gerente General
+        setAprobador({
+            id: "1",
+            nombre: "Lucio Levano",
+            cargo: "Gerente General",
+            empresa_id: empresaId
+        });
+    };
+
+    const cargarEquiposCustodia = async () => {
+        // TODO: Implementar llamada al servicio
+        setEquiposCustodia([
+            {
+                id: "1",
+                tipo_equipo: "Laptop",
+                caracteristicas: "Laptop HP EliteBook 840 G8, i7, 16GB RAM, 512GB SSD",
+                estado: "En Custodia Disponible"
+            },
+            {
+                id: "2",
+                tipo_equipo: "PC",
+                caracteristicas: "PC Dell OptiPlex 7080, i7, 16GB RAM, 512GB SSD, Monitor 24\"",
+                estado: "En Custodia Disponible"
+            }
+        ]);
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setSolicitud((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleMostrarResumen = (e: React.FormEvent) => {
+        e.preventDefault();
+        setMostrarResumen(true);
+    };
+
+    const handleEnviarAprobacion = async () => {
+        const answer = window.confirm("¿Está seguro de enviar la solicitud a aprobación?");
+        if (answer) {
+            solicitud.usu_crea = currentUser?.codigo;
+            solicitud.codigo_estado = '2'; // En Aprobación
+            solicitud.empresa_id = currentUser?.id_empresa;
+            solicitud.fecha_solicitud = new Date().toISOString().split('T')[0];
+            solicitud.estado = 'En Aprobación';
+            solicitud.aprobador_id = aprobador?.id;
+
+            console.log(solicitud);
+            try {
+                const response = await solicitudDataService.createsolicitud(solicitud);
+                console.log(JSON.stringify(response.data));
+                // TODO: Enviar correo al aprobador
+                alert("Solicitud enviada a aprobación. Se ha notificado al aprobador.");
+                navigate('/solicitud');
+            } catch (error) {
+                console.log(error);
+                alert("Error al crear la solicitud");
+            }
+        }
+    };
+
+    const handleCancelarSolicitud = () => {
+        setMostrarResumen(false);
+    };
+
+    const handleSeleccionarEquipoCustodia = (equipoId: string) => {
+        setEquipoCustodiaSeleccionado(equipoId);
+        const equipo = equiposCustodia.find(e => e.id === equipoId);
+        if (equipo) {
+            setSolicitud(prev => ({
+                ...prev,
+                equipo_custodia_id: equipoId,
+                caracteristicas_equipo: equipo.caracteristicas
+            }));
+        }
+        setMostrarCustodia(false);
+    };
+
     return (
         <>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleMostrarResumen}>
                 <div className="alert alert-secondary d-flex align-items-center p-5 bg-dark">
                     <div className="d-flex flex-column">
-                        <h3 className="mb-1 text-light">Registro de Solicitud</h3>
-                        <span className="text-light">Formulario de solicitud de equipos</span>
+                        <h3 className="mb-1 text-light">Nueva Solicitud de Equipo</h3>
+                        <span className="text-light">Complete el formulario para solicitar un equipo</span>
                     </div>
                     <div className="d-flex flex-row-fluid justify-content-end">
                         <Link to={"/solicitud"} 
@@ -86,128 +293,335 @@ export default function SolicitudForm() {
                             <i className="fa-solid fa-reply"></i>
                             Volver
                         </Link>
+                        <button 
+                            className='btn btn-info btn-sm ms-2' 
+                            type="button"
+                            onClick={() => setMostrarCustodia(!mostrarCustodia)}>
+                            <i className="fa-solid fa-box"></i>
+                            {mostrarCustodia ? 'Ocultar' : 'Ver'} Equipos en Custodia
+                        </button>
                         <button className='btn btn-primary btn-sm ms-2' type="submit">
-                            <i className="fa-solid fa-floppy-disk"></i>
-                            Guardar Solicitud
+                            <i className="fa-solid fa-paper-plane"></i>
+                            Continuar
                         </button>
                     </div>
                 </div>
+
+                {/* Modal de Equipos en Custodia */}
+                {mostrarCustodia && (
+                    <div className="card card-custom mb-5">
+                        <div className="card-header">
+                            <h3 className="card-title">Equipos en Custodia Disponibles</h3>
+                        </div>
+                        <div className="card-body">
+                            <div className="table-responsive">
+                                <table className="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo de Equipo</th>
+                                            <th>Características</th>
+                                            <th>Estado</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {equiposCustodia.map(equipo => (
+                                            <tr key={equipo.id}>
+                                                <td>{equipo.tipo_equipo}</td>
+                                                <td>{equipo.caracteristicas}</td>
+                                                <td>
+                                                    <span className="badge badge-success">
+                                                        {equipo.estado}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-sm btn-primary"
+                                                        onClick={() => handleSeleccionarEquipoCustodia(equipo.id)}>
+                                                        Seleccionar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 
                 <div className="card card-custom">
                     <div className="card-body pt-10">
                         <div className="form-group row">
-                            {/* Primera fila - Información básica */}
-                            <div className="col-lg-4 input-group-sm mb-5">
+                            {/* Primera fila - Empresa y Puesto Real */}
+                            <div className="col-lg-6 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <input type="text" name="codigo" defaultValue={solicitud.codigo}
-                                        className="form-control" onChange={handleChange} 
-                                        placeholder="Código automático" readOnly />
-                                    <label className="form-label">Código</label>
-                                </div>
-                            </div>
-                            <div className="col-lg-4 input-group-sm mb-5">
-                                <div className="form-floating">
-                                    <select name="tipo_solicitud" defaultValue={solicitud.tipo_solicitud} 
-                                        className="form-control" onChange={handleChange} required>
-                                        <option value="">Seleccionar tipo</option>
-                                        <option value="Nuevo">Nuevo</option>
-                                        <option value="Custodia">Custodia</option>
-                                        <option value="Personalizado">Personalizado</option>
+                                    <select 
+                                        name="empresa_id" 
+                                        value={solicitud.empresa_id || ''} 
+                                        className="form-control" 
+                                        onChange={handleChange} 
+                                        required>
+                                        <option value="">Seleccionar empresa</option>
+                                        {empresas.map(empresa => (
+                                            <option key={empresa.id} value={empresa.id}>
+                                                {empresa.nombre}
+                                            </option>
+                                        ))}
                                     </select>
-                                    <label className="form-label">Tipo Solicitud *</label>
-                                </div>
-                            </div>
-                            <div className="col-lg-4 input-group-sm mb-5">
-                                <div className="form-floating">
-                                    <select name="urgencia" defaultValue={solicitud.urgencia} 
-                                        className="form-control" onChange={handleChange} required>
-                                        <option value="">Seleccionar urgencia</option>
-                                        <option value="Baja">Baja</option>
-                                        <option value="Media">Media</option>
-                                        <option value="Alta">Alta</option>
-                                    </select>
-                                    <label className="form-label">Urgencia *</label>
+                                    <label className="form-label">Empresa *</label>
                                 </div>
                             </div>
 
-                            {/* Segunda fila - Especificaciones del equipo */}
                             <div className="col-lg-6 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <select name="tipo_equipo_id" defaultValue={solicitud.tipo_equipo_id} 
-                                        className="form-control" onChange={handleChange} required>
+                                    <select 
+                                        name="puesto" 
+                                        value={solicitud.puesto || ''} 
+                                        className="form-control" 
+                                        onChange={handleChange}
+                                        disabled={!solicitud.empresa_id}
+                                        required>
+                                        <option value="">Seleccionar puesto real</option>
+                                        {puestosReales.map(puesto => (
+                                            <option key={puesto.id} value={puesto.id}>
+                                                {puesto.nombre}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <label className="form-label">Puesto Real (Nómina) *</label>
+                                </div>
+                                {!solicitud.empresa_id && (
+                                    <small className="text-muted">
+                                        Primero seleccione una empresa
+                                    </small>
+                                )}
+                            </div>
+
+                            {/* Segunda fila - Tipo de Equipo */}
+                            <div className="col-lg-12 input-group-sm mb-5">
+                                <div className="form-floating">
+                                    <select 
+                                        name="tipo_equipo_id" 
+                                        value={solicitud.tipo_equipo_id || ''} 
+                                        className="form-control" 
+                                        onChange={handleChange} 
+                                        required>
                                         <option value="">Seleccionar tipo de equipo</option>
-                                        <option value="1">Laptop</option>
-                                        <option value="2">Desktop</option>
-                                        <option value="3">Servidor</option>
-                                        <option value="4">Impresora</option>
-                                        <option value="5">Tablet</option>
+                                        {tiposEquipo.map(tipo => (
+                                            <option key={tipo.id} value={tipo.id}>
+                                                {tipo.nombre}
+                                            </option>
+                                        ))}
                                     </select>
                                     <label className="form-label">Tipo de Equipo *</label>
                                 </div>
                             </div>
-                            <div className="col-lg-6 input-group-sm mb-5">
-                                <div className="form-floating">
-                                    <select name="gama_id" defaultValue={solicitud.gama_id} 
-                                        className="form-control" onChange={handleChange}>
-                                        <option value="">Seleccionar gama</option>
-                                        <option value="1">Básica</option>
-                                        <option value="2">Media</option>
-                                        <option value="3">Alta</option>
-                                        <option value="4">Especializada</option>
-                                    </select>
-                                    <label className="form-label">Gama</label>
-                                </div>
-                            </div>
 
-                            {/* Tercera fila - Aprobador y estado */}
-                            <div className="col-lg-6 input-group-sm mb-5">
-                                <div className="form-floating">
-                                    <select name="aprobador_id" defaultValue={solicitud.aprobador_id} 
-                                        className="form-control" onChange={handleChange}>
-                                        <option value="">Seleccionar aprobador</option>
-                                        <option value="1">Juan Pérez - Gerente IT</option>
-                                        <option value="2">María García - Directora Financiera</option>
-                                        <option value="3">Carlos López - Gerente General</option>
-                                    </select>
-                                    <label className="form-label">Aprobador</label>
+                            {/* Tercera fila - Perfil de Usuario */}
+                            {solicitud.tipo_equipo_id && (
+                                <div className="col-lg-12 input-group-sm mb-5">
+                                    <div className="form-floating">
+                                        <select 
+                                            name="perfil" 
+                                            value={solicitud.perfil || ''} 
+                                            className="form-control" 
+                                            onChange={handleChange}
+                                            required>
+                                            <option value="">Seleccionar perfil de usuario</option>
+                                            {perfilesFiltrados.map(perfil => (
+                                                <option key={perfil.id} value={perfil.id}>
+                                                    {perfil.nombre}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <label className="form-label">Perfil de Usuario *</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="col-lg-6 input-group-sm mb-5">
-                                <div className="form-floating">
-                                    <select name="estado" defaultValue={solicitud.estado} 
-                                        className="form-control" onChange={handleChange}>
-                                        <option value="Pendiente">Pendiente</option>
-                                        <option value="Aprobado">Aprobado</option>
-                                        <option value="Rechazado">Rechazado</option>
-                                        <option value="En Compra">En Compra</option>
-                                    </select>
-                                    <label className="form-label">Estado</label>
-                                </div>
-                            </div>
+                            )}
 
-                            {/* Cuarta fila - Text areas grandes */}
+                            {/* Cuarta fila - Características del Equipo */}
+                            {perfilSeleccionado && (
+                                <div className="col-lg-12 mb-5">
+                                    <div className="alert alert-info">
+                                        <h5 className="alert-heading">
+                                            <i className="fa-solid fa-laptop"></i> Características del Equipo
+                                        </h5>
+                                        <hr />
+                                        <p className="mb-2">
+                                            <strong>Perfil:</strong> {perfilSeleccionado.nombre}
+                                        </p>
+                                        <p className="mb-2">
+                                            <strong>Especificaciones:</strong><br />
+                                            {perfilSeleccionado.caracteristicas}
+                                        </p>
+                                        <hr />
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <p className="mb-0">
+                                                    <strong>Costo Renting Mensual:</strong> 
+                                                    <span className="text-success ms-2">
+                                                        S/ {perfilSeleccionado.costo_renting_mensual.toFixed(2)}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <p className="mb-0">
+                                                    <strong>Tiempo de Renting:</strong> 
+                                                    <span className="text-primary ms-2">
+                                                        {perfilSeleccionado.tiempo_renting_meses} meses
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Quinta fila - Aprobador (solo lectura) */}
+                            {aprobador && (
+                                <div className="col-lg-12 input-group-sm mb-5">
+                                    <div className="alert alert-warning">
+                                        <h6 className="mb-2">
+                                            <i className="fa-solid fa-user-check"></i> Aprobador Asignado
+                                        </h6>
+                                        <p className="mb-0">
+                                            <strong>{aprobador.nombre}</strong> - {aprobador.cargo}
+                                        </p>
+                                        <small className="text-muted">
+                                            Esta persona recibirá la notificación para aprobar su solicitud
+                                        </small>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Sexta fila - Justificación */}
                             <div className="col-lg-12 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <textarea name="justificacion" defaultValue={solicitud.justificacion}
-                                        className="form-control" onChange={handleChange} 
-                                        rows={3} placeholder="Describa el motivo de la solicitud"
+                                    <textarea 
+                                        name="justificacion" 
+                                        value={solicitud.justificacion || ''}
+                                        className="form-control" 
+                                        onChange={handleChange} 
+                                        style={{ minHeight: '100px' }}
+                                        placeholder="Describa el motivo de la solicitud"
                                         required />
-                                    <label className="form-label">Justificación *</label>
+                                    <label className="form-label">Justificación de la Solicitud *</label>
                                 </div>
                             </div>
 
+                            {/* Séptima fila - Observaciones */}
                             <div className="col-lg-12 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <textarea name="observaciones" defaultValue={solicitud.observaciones}
-                                        className="form-control" onChange={handleChange} 
-                                        rows={2} placeholder="Observaciones adicionales" />
+                                    <textarea 
+                                        name="observaciones" 
+                                        value={solicitud.observaciones || ''}
+                                        className="form-control" 
+                                        onChange={handleChange} 
+                                        style={{ minHeight: '80px' }}
+                                        placeholder="Observaciones adicionales (opcional)" />
                                     <label className="form-label">Observaciones</label>
                                 </div>
                             </div>
+
+                            {/* Alerta de equipo en custodia seleccionado */}
+                            {equipoCustodiaSeleccionado && (
+                                <div className="col-lg-12 mb-5">
+                                    <div className="alert alert-success">
+                                        <i className="fa-solid fa-check-circle"></i> 
+                                        <strong> Equipo en Custodia Seleccionado</strong>
+                                        <p className="mb-0 mt-2">
+                                            {equiposCustodia.find(e => e.id === equipoCustodiaSeleccionado)?.caracteristicas}
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
             </form>
+
+            {/* Modal de Resumen */}
+            {mostrarResumen && (
+                <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                    <div className="modal-dialog modal-lg modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header bg-primary text-white">
+                                <h5 className="modal-title">
+                                    <i className="fa-solid fa-file-invoice"></i> Resumen de la Solicitud
+                                </h5>
+                            </div>
+                            <div className="modal-body">
+                                <div className="row mb-3">
+                                    <div className="col-md-6">
+                                        <strong>Empresa:</strong><br />
+                                        {empresas.find(e => e.id === solicitud.empresa_id)?.nombre}
+                                    </div>
+                                    <div className="col-md-6">
+                                        <strong>Puesto :</strong><br />
+                                        {solicitud.puesto}
+                                         
+                                    </div>
+                                </div>
+                                <div className="row mb-3">
+                                    <div className="col-md-6">
+                                        <strong>Tipo de Equipo:</strong><br />
+                                        {tiposEquipo.find(t => t.id === solicitud.tipo_equipo_id)?.nombre}
+                                    </div>
+                                    <div className="col-md-6">
+                                        <strong>Perfil de Usuario:</strong><br />
+                                        <span>Asistente</span>
+                                    </div>
+                                </div>
+                                {perfilSeleccionado && (
+                                    <div className="alert alert-light mb-3">
+                                        <strong>Características:</strong><br />
+                                        {perfilSeleccionado.caracteristicas}
+                                        <hr />
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <strong>Costo Mensual:</strong> S/ {perfilSeleccionado.costo_renting_mensual.toFixed(2)}
+                                            </div>
+                                            <div className="col-md-6">
+                                                <strong>Plazo:</strong> {perfilSeleccionado.tiempo_renting_meses} meses
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="mb-3">
+                                    <strong>Aprobador:</strong><br />
+                                    {aprobador?.nombre} - {aprobador?.cargo}
+                                </div>
+                                <div className="mb-3">
+                                    <strong>Justificación:</strong><br />
+                                    {solicitud.justificacion}
+                                </div>
+                                {solicitud.observaciones && (
+                                    <div className="mb-3">
+                                        <strong>Observaciones:</strong><br />
+                                        {solicitud.observaciones}
+                                    </div>
+                                )}
+                            </div>
+                            <div className="modal-footer">
+                                <button 
+                                    type="button" 
+                                    className="btn btn-secondary"
+                                    onClick={handleCancelarSolicitud}>
+                                    <i className="fa-solid fa-times"></i> Cancelar
+                                </button>
+                                <button 
+                                    type="button" 
+                                    className="btn btn-success"
+                                    onClick={handleEnviarAprobacion}>
+                                    <i className="fa-solid fa-paper-plane"></i> Enviar a Aprobación
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

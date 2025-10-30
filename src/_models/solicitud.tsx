@@ -9,11 +9,14 @@ export interface Solicitud {
     gama_id?: string;
     gama_nombre?: string;
     justificacion?: string;
+    caracteristicas?: string;
     urgencia?: string;
     observaciones?: string;
     aprobador_id?: string;
     aprobador_nombre?: string;
     empresa_id?: string;
+    puesto?: string;
+    perfil?: string;
     fecha_solicitud?: string;
     estado?: string;
     usu_crea?: string;

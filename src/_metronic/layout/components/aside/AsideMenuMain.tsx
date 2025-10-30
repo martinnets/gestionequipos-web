@@ -70,8 +70,12 @@ export function AsideMenuMain() {
       <AsideMenuItemWithSub to='/maestro' title='Maestros' icon='some-files' visible={true}>
         <AsideMenuItem to='/empresa' title='Empresa'  hasBullet={true}  visible={currentUser?.opciones?.administracion}/>
         <AsideMenuItem to='/personal' title='Personal'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
+        <AsideMenuItem to='/aprobador' title='Aprobadoes'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
       </AsideMenuItemWithSub>
       <AsideMenuItemWithSub to='/parametro' title='Parametros' icon='questionnaire-tablet' visible={currentUser?.opciones?.administracion}>
+        <AsideMenuItem to='/parametro/perfil' pdominio='perfil' title='Perfil de Usuario' hasBullet={true} visible={currentUser?.opciones?.administracion} />
+        <AsideMenuItem to='/parametro/tipo_equipo' pdominio='tipo_equipo' title='Tipo de Equipo' hasBullet={true} visible={currentUser?.opciones?.administracion} />
+        <AsideMenuItem to='/parametro/puesto' pdominio='puesto' title='Puestos' hasBullet={true} visible={currentUser?.opciones?.administracion} />
         <AsideMenuItem to='/parametro/gama' pdominio='gama' title='Gama' hasBullet={true} visible={currentUser?.opciones?.administracion} />
         <AsideMenuItem to='/parametro/tipo_equipo' pdominio='tipo_equipo' title='Tipo Equipo'  hasBullet={true} visible={currentUser?.opciones?.administracion} />        
       </AsideMenuItemWithSub>
