@@ -203,7 +203,7 @@ export function EquipoPage() {
                 size: 50,
                 Cell: ({ row }) => (
                     <Link className="btn btn-sm" 
-                          to={`/equipoform/${row.original.id_equipo}`}>
+                          to={`/equipoform`}>
                         <i className="fa-solid fa-pen-to-square fs-4 text-primary"></i>
                     </Link>
                 ),
@@ -250,7 +250,7 @@ export function EquipoPage() {
                             <div className="card-header bg-dark">
                                 <h3 className="card-title text-light">Listado de Equipos</h3>
                                 <div className="card-toolbar">
-                                    <Link to={"/equipoform/0"} className="btn btn-sm btn-primary">
+                                    <Link to={"/equipoform"} className="btn btn-sm btn-primary">
                                         <i className="fa-solid fa-file fs-1x text-light"></i>
                                         Nuevo Equipo
                                     </Link>                  

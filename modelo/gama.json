@@ -1,0 +1,139 @@
+[
+    {
+        "id": 501,
+        "tipo_equipo_id": 1,
+        "codigo": "LAP-G1",
+        "descripcion": "Laptop gama alta",
+        "mnemotico": "G1",
+        "vigencias_compra": [
+            {
+            "fecha_desde": "2025-01-01",
+            "fecha_hasta": "2025-12-31",
+            "tope_monto": 3500
+            }
+        ],
+        "vigencias_costo": [
+            {
+            "mes_desde": 0,
+            "mes_hasta": 48,
+            "monto_mensual": 130
+            },
+            {
+            "mes_desde": 49,
+            "més_hasta": 60,
+            "monto_mensual": 80
+            }
+        ],
+        "caracteristicas": [
+            {
+                "id": 101,
+                "nombre": "RAM",
+                "valor": "16"
+            },
+            {
+                "id": 102,
+                "nombre": "Disco Duro",
+                "valor": "512"
+            },
+            {
+                "id": 103,
+                "nombre": "Procesador",
+                "valor": "Intel i7"
+            }
+        ],
+        "puestos": [
+            "Gerencia",
+            "TI",
+            "Jefatura"
+        ],
+        "fecha_vigencia_desde": "2025-01-01",
+        "fecha_vigencia_hasta": "2025-12-31",
+        "tope_monto": 3500,
+        "més_hasta": 60,
+        "monto_mensual": 80,
+        "estado": "Activa",
+        "creado_por": "admin",
+        "fecha_creacion": "2025-01-05",
+        "ultima_modificacion_por": "admin",
+        "fecha_modificacion": "2025-01-10",
+        "motivo": "Actualización tope"
+    },
+    {
+        "id": 502,
+        "tipo_equipo_id": 1,
+        "codigo": "LAP-G2",
+        "descripcion": "Laptop gama media",
+        "mnemotico": "G2",
+        "caracteristicas": [
+            {
+                "id": 101,
+                "nombre": "RAM",
+                "valor": "8"
+            },
+            {
+                "id": 102,
+                "nombre": "Disco Duro",
+                "valor": "256"
+            },
+            {
+                "id": 103,
+                "nombre": "Procesador",
+                "valor": "Intel i5"
+            }
+        ],
+        "puestos": [
+            "Administrativo",
+            "Soporte"
+        ],
+        "fecha_vigencia_desde": "2025-01-01",
+        "fecha_vigencia_hasta": "2025-12-31",
+        "tope_monto": 2000,
+        "més_hasta": 48,
+        "monto_mensual": 50,
+        "estado": "Activa",
+        "creado_por": "admin",
+        "fecha_creacion": "2025-01-05",
+        "ultima_modificacion_por": null,
+        "fecha_modificacion": null,
+        "motivo": null
+    },
+    {
+        "id": 503,
+        "tipo_equipo_id": 2,
+        "codigo": "CEL-G1",
+        "descripcion": "Celular gama alta",
+        "mnemotico": "CG1",
+        "caracteristicas": [
+            {
+                "id": 201,
+                "nombre": "Pantalla",
+                "valor": "6.5 pulgadas"
+            },
+            {
+                "id": 202,
+                "nombre": "Batería",
+                "valor": "4000 mAh"
+            },
+            {
+                "id": 203,
+                "nombre": "Cámara",
+                "valor": "12 MP"
+            }
+        ],
+        "puestos": [
+            "Ventas",
+            "Marketing"
+        ],
+        "fecha_vigencia_desde": "2025-01-01",
+        "fecha_vigencia_hasta": "2025-12-31",
+        "tope_monto": 1200,
+        "més_hasta": 36,
+        "monto_mensual": 40,
+        "estado": "Activa",
+        "creado_por": "admin",
+        "fecha_creacion": "2025-01-05",
+        "ultima_modificacion_por": null,
+        "fecha_modificacion": null,
+        "motivo": null
+    }
+]

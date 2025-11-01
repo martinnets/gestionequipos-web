@@ -21,6 +21,8 @@ import { AsignacionPage } from '../pages/asignacion/asignacion'
 import AsignacionForm from '../pages/asignacion/asignacionform'
 import { ReporteEquipoPage } from '../pages/reportes/equipos'
 import SolicitudReporte from '../pages/solicitud/reporte'
+import GamaForm from '../pages/gama/gamaform'
+import CaracteristicaForm from '../pages/caracteristica/caracteristicaform'
  
 
 const PrivateRoutes = () => {
@@ -46,7 +48,7 @@ const PrivateRoutes = () => {
         <Route path='/usuarioform/:id' element={< UsuarioForm />} />
 
         <Route path='/equipo' element={<EquipoPage />} />
-        <Route path='/equipoform/:id' element={<EquipoForm />} />
+        <Route path='/equipoform' element={<EquipoForm />} />
 
         <Route path='/solicitud' element={<SolicitudPage />} />
         <Route path='/solicitudform/:id' element={< SolicitudForm />} />
@@ -65,6 +67,9 @@ const PrivateRoutes = () => {
         <Route path='/asignacionform/:id' element={< AsignacionForm />} />
 
         <Route path='/reportexequipo' element={< ReporteEquipoPage />} />
+
+        <Route path='/gamaform' element={< GamaForm />} />
+        <Route path='/caracteristicaform' element={< CaracteristicaForm />} />
 
         {/* Page Not Found */}
         <Route path='*' element={<Navigate to='/error/404' />} />

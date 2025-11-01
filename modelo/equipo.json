@@ -1,0 +1,16 @@
+    {
+      "id": 9001,
+      "tipo_equipo_id": 1,
+      "gama_id": 501,
+      "codigo_activo": "ACT-000123",
+      "serie": "SNX12344ABC",
+      "orden_compra": "OC-202501-450",
+      "posicion_oc": "001",
+      "monto_compra": 2800,
+      "fecha_compra": "2025-02-01",
+      "parte_ingreso": "PI-202502-001",
+      "posicion_parte": "01",
+      "fecha_ingreso": "2025-02-02",
+      "proveedor": "TechSupplier SAC",
+      "destinatario": "Juan Perez"
+    }

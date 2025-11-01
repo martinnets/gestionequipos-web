@@ -1,0 +1,47 @@
+[
+    {
+        "id": 101,
+        "nombre": "RAM",
+        "tipo_dato": "numero",
+        "unidad": "GB",
+        "validacion_regex": "^[0-9]+$",
+        "obligatorio": "S",
+        "estado": "Activo",
+        "version": 2,
+        "creado_por": "admin",
+        "fecha_creacion": "2023-01-01",
+        "ultima_modificacion_por": "jlopez",
+        "fecha_modificacion": "2024-02-10",
+        "motivo": "Cambio de tipo numérico para validación"
+    },
+    {
+        "id": 102,
+        "nombre": "Disco Duro",
+        "tipo_dato": "numero",
+        "unidad": "GB",
+        "validacion_regex": "^[0-9]+$",
+        "obligatorio": "S",
+        "estado": "Activo",
+        "version": 1,
+        "creado_por": "admin",
+        "fecha_creacion": "2023-01-05",
+        "ultima_modificacion_por": null,
+        "fecha_modificacion": null,
+        "motivo": null
+    },
+    {
+        "id": 103,
+        "nombre": "Procesador",
+        "tipo_dato": "texto",
+        "unidad": null,
+        "validacion_regex": "^.+$",
+        "obligatorio": "S",
+        "estado": "Activo",
+        "version": 1,
+        "creado_por": "admin",
+        "fecha_creacion": "2023-01-10",
+        "ultima_modificacion_por": null,
+        "fecha_modificacion": null,
+        "motivo": null
+    }]
+
