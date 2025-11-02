@@ -1,0 +1,46 @@
+[{
+    "id":"1",
+    "tipo_equipo":"laptop",
+    "perfil":"administrador",
+    "nivel_acceso":"alto",
+    "gama":"LAP-G1",
+    "costo_renting_mensual":130,
+    "tiempo_renting_meses":60
+},
+{
+    "id":"5",
+    "tipo_equipo":"laptop",
+    "perfil":"desarrollador",
+    "nivel_acceso":"alto",
+    "gama":"LAP-G1",
+    "costo_renting_mensual":130,
+    "tiempo_renting_meses":60
+},
+{
+    "id":"2",
+    "tipo_equipo":"desktop",
+    "perfil":"usuario",
+    "nivel_acceso":"medio",
+    "gama":"DES-M1",
+    "costo_renting_mensual":130,
+    "tiempo_renting_meses":60
+},
+{
+    "id":"3",
+    "tipo_equipo":"celular",
+    "perfil":"soporte",
+    "nivel_acceso":"bajo",
+    "gama":"CEL-G1",
+    "costo_renting_mensual":130,
+    "tiempo_renting_meses":60
+},
+{
+    "id":"4",
+    "tipo_equipo":"tablet",
+    "perfil":"ventas",
+    "nivel_acceso":"medio",
+    "gama":"TAB-M1",
+    "costo_renting_mensual":130,
+    "tiempo_renting_meses":60
+}
+]

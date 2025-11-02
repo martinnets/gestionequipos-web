@@ -4,7 +4,7 @@ export interface Solicitud {
     usuario_id?: string;
     usuario_nombre?: string;
     tipo_solicitud?: string;
-    tipo_equipo_id?: string;
+    tipo_equipo?: string;
     tipo_equipo_nombre?: string;
     gama_id?: string;
     gama_nombre?: string;

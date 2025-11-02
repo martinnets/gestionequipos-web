@@ -3,6 +3,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import solicitudDataService from "../../../_services/solicitud";
 import { useAuth } from "../../modules/auth";
 import { Solicitud } from "../../../_models/solicitud";
+import empresaJSON from "../../../../modelo/empresa.json"
+import perfilJSON from "../../../../modelo/perfil.json"
+import gamaJSON from "../../../../modelo/gama.json"
 
 // Interfaces para los datos del formulario
 interface TipoEquipo {
@@ -12,11 +15,11 @@ interface TipoEquipo {
 
 interface PerfilUsuario {
     id: string;
-    nombre: string;
-    tipo_equipo_id: string;
-    caracteristicas: string;
-    costo_renting_mensual: number;
-    tiempo_renting_meses: number;
+    perfil: string;
+    tipo_equipo: string;
+    gama: string;
+    costo_renting_mensual?: number;
+    tiempo_renting_meses?: number;
 }
 
 interface PuestoReal {
@@ -27,7 +30,7 @@ interface PuestoReal {
 
 interface Empresa {
     id: string;
-    nombre: string;
+    empresa: string;
 }
 
 interface Aprobador {
@@ -43,7 +46,18 @@ interface EquipoCustodia {
     caracteristicas: string;
     estado: string;
 }
-
+interface Caracteristica {
+  id: number;
+  nombre: string;
+  valor: string;
+}
+interface Gama {
+  id: number;
+  codigo: string;
+  tipo_equipo_id: number;
+  descripcion: string;
+  caracteristicas: Caracteristica[];
+}
 export default function SolicitudForm() {
     const { currentUser } = useAuth();
     const navigate = useNavigate();
@@ -61,6 +75,7 @@ export default function SolicitudForm() {
     const [mostrarCustodia, setMostrarCustodia] = useState(false);
     const [equipoCustodiaSeleccionado, setEquipoCustodiaSeleccionado] = useState<string>("");
     const [mostrarResumen, setMostrarResumen] = useState(false);
+  const [caracteristicasGama, setCaracteristicasGama] = useState<Caracteristica[]>([]);
 
     // Cargar datos iniciales
     useEffect(() => {
@@ -94,15 +109,15 @@ export default function SolicitudForm() {
 
     // Filtrar perfiles según tipo de equipo seleccionado
     useEffect(() => {
-        if (solicitud.tipo_equipo_id) {
+        if (solicitud.tipo_equipo) {
             const perfilesFilt = perfilesUsuario.filter(
-                p => p.tipo_equipo_id === solicitud.tipo_equipo_id
+                p => p.tipo_equipo === solicitud.tipo_equipo
             );
             setPerfilesFiltrados(perfilesFilt);
         } else {
             setPerfilesFiltrados([]);
         }
-    }, [solicitud.tipo_equipo_id, perfilesUsuario]);
+    }, [solicitud.tipo_equipo, perfilesUsuario]);
 
     // Actualizar perfil seleccionado
     
@@ -111,77 +126,78 @@ export default function SolicitudForm() {
         // TODO: Implementar llamada al servicio
         // Datos de ejemplo
         setTiposEquipo([
-            { id: "1", nombre: "Laptop" },
-            { id: "2", nombre: "PC" },
-            { id: "3", nombre: "Celular" },
-            { id: "4", nombre: "Tablet" },
-            { id: "5", nombre: "Monitor" }
+            { id: "1", nombre: "laptop" },
+            { id: "2", nombre: "desktop" },
+            { id: "3", nombre: "celular" },
+            { id: "4", nombre: "tablet" },
+            { id: "5", nombre: "monitor" }
         ]);
     };
 
     const cargarPerfilesUsuario = async () => {
         // TODO: Implementar llamada al servicio
         // Datos de ejemplo
-        setPerfilesUsuario([
-            {
-                id: "1",
-                nombre: "Practicante",
-                tipo_equipo_id: "1",
-                caracteristicas: "Laptop Lenovo ThinkPad E14, procesador i5 Gen 11, monitor 14\", RAM 8GB, HD 256GB SSD, Win 11",
-                costo_renting_mensual: 150.00,
-                tiempo_renting_meses: 24
-            },
-            {
-                id: "2",
-                nombre: "Asistente",
-                tipo_equipo_id: "1",
-                caracteristicas: "Laptop Lenovo ThinkPad E15, procesador i5 Gen 12, monitor 15.6\", RAM 8GB, HD 512GB SSD, Win 11",
-                costo_renting_mensual: 180.00,
-                tiempo_renting_meses: 36
-            },
-            {
-                id: "3",
-                nombre: "Analista",
-                tipo_equipo_id: "1",
-                caracteristicas: "Laptop Lenovo ThinkPad T14, procesador i7 Gen 12, monitor 14\", RAM 16GB, HD 512GB SSD, Win 11 Pro",
-                costo_renting_mensual: 250.00,
-                tiempo_renting_meses: 36
-            },
-            {
-                id: "4",
-                nombre: "Gerente",
-                tipo_equipo_id: "1",
-                caracteristicas: "Laptop Lenovo ThinkPad X1 Carbon, procesador i7 Gen 13, monitor 14\", RAM 32GB, HD 1TB SSD, Win 11 Pro",
-                costo_renting_mensual: 400.00,
-                tiempo_renting_meses: 36
-            },
-            {
-                id: "5",
-                nombre: "Practicante",
-                tipo_equipo_id: "2",
-                caracteristicas: "PC Dell OptiPlex 3090, procesador i5 Gen 11, RAM 8GB, HD 256GB SSD, Monitor 21\", Win 11",
-                costo_renting_mensual: 120.00,
-                tiempo_renting_meses: 24
-            },
-            {
-                id: "6",
-                nombre: "Analista",
-                tipo_equipo_id: "2",
-                caracteristicas: "PC Dell OptiPlex 7090, procesador i7 Gen 12, RAM 16GB, HD 512GB SSD, Monitor 24\", Win 11 Pro",
-                costo_renting_mensual: 220.00,
-                tiempo_renting_meses: 36
-            }
-        ]);
+        setPerfilesUsuario(perfilJSON as PerfilUsuario[]);
+        // setPerfilesUsuario([
+        //     {
+        //         id: "1",
+        //         nombre: "Practicante",
+        //         tipo_equipo: "1",
+        //         caracteristicas: "Laptop Lenovo ThinkPad E14, procesador i5 Gen 11, monitor 14\", RAM 8GB, HD 256GB SSD, Win 11",
+        //         costo_renting_mensual: 150.00,
+        //         tiempo_renting_meses: 24
+        //     },
+        //     {
+        //         id: "2",
+        //         nombre: "Asistente",
+        //         tipo_equipo: "1",
+        //         caracteristicas: "Laptop Lenovo ThinkPad E15, procesador i5 Gen 12, monitor 15.6\", RAM 8GB, HD 512GB SSD, Win 11",
+        //         costo_renting_mensual: 180.00,
+        //         tiempo_renting_meses: 36
+        //     },
+        //     {
+        //         id: "3",
+        //         nombre: "Analista",
+        //         tipo_equipo: "1",
+        //         caracteristicas: "Laptop Lenovo ThinkPad T14, procesador i7 Gen 12, monitor 14\", RAM 16GB, HD 512GB SSD, Win 11 Pro",
+        //         costo_renting_mensual: 250.00,
+        //         tiempo_renting_meses: 36
+        //     },
+        //     {
+        //         id: "4",
+        //         nombre: "Gerente",
+        //         tipo_equipo: "1",
+        //         caracteristicas: "Laptop Lenovo ThinkPad X1 Carbon, procesador i7 Gen 13, monitor 14\", RAM 32GB, HD 1TB SSD, Win 11 Pro",
+        //         costo_renting_mensual: 400.00,
+        //         tiempo_renting_meses: 36
+        //     },
+        //     {
+        //         id: "5",
+        //         nombre: "Practicante",
+        //         tipo_equipo: "2",
+        //         caracteristicas: "PC Dell OptiPlex 3090, procesador i5 Gen 11, RAM 8GB, HD 256GB SSD, Monitor 21\", Win 11",
+        //         costo_renting_mensual: 120.00,
+        //         tiempo_renting_meses: 24
+        //     },
+        //     {
+        //         id: "6",
+        //         nombre: "Analista",
+        //         tipo_equipo: "2",
+        //         caracteristicas: "PC Dell OptiPlex 7090, procesador i7 Gen 12, RAM 16GB, HD 512GB SSD, Monitor 24\", Win 11 Pro",
+        //         costo_renting_mensual: 220.00,
+        //         tiempo_renting_meses: 36
+        //     }
+        // ]);
     };
 
     const cargarEmpresas = async () => {
         // TODO: Implementar llamada al servicio
-        setEmpresas([
-            { id: "1", nombre: "EL" },
-            { id: "2", nombre: "ADAMS" },
-            { id: "3", nombre: "SAMITEx" },
-            { id: "4", nombre: "PanoramaBPPO" }
-        ]);
+         //const data = (empresaJSON as Empresa[])
+        // empresa.json tiene ids numéricos; convertirlos a string para que coincidan con la interfaz Empresa
+        setEmpresas((empresaJSON as { id: number; empresa: string }[]).map(e => ({
+            id: String(e.id),
+            empresa: e.empresa
+        })));
     };
 
     const cargarPuestosRealesPorEmpresa = async (empresaId: string) => {
@@ -224,13 +240,22 @@ export default function SolicitudForm() {
             }
         ]);
     };
-
+    const cargarDetalleGama = (codigo?: string) => {
+        if (!codigo) return;
+        const gama = (gamaJSON as Gama[]).find((g) => g.codigo === codigo);
+        setCaracteristicasGama(gama?.caracteristicas || []);
+    };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setSolicitud((prev) => ({
             ...prev,
             [name]: value,
         }));
+        if (name === 'perfil') {
+            const perfil = perfilesUsuario.find(p => p.id === value) || null;
+            setPerfilSeleccionado(perfil);
+            cargarDetalleGama(perfil?.gama);
+        }
     };
 
     const handleMostrarResumen = (e: React.FormEvent) => {
@@ -366,7 +391,7 @@ export default function SolicitudForm() {
                                         <option value="">Seleccionar empresa</option>
                                         {empresas.map(empresa => (
                                             <option key={empresa.id} value={empresa.id}>
-                                                {empresa.nombre}
+                                                {empresa.empresa}
                                             </option>
                                         ))}
                                     </select>
@@ -403,14 +428,14 @@ export default function SolicitudForm() {
                             <div className="col-lg-12 input-group-sm mb-5">
                                 <div className="form-floating">
                                     <select 
-                                        name="tipo_equipo_id" 
-                                        value={solicitud.tipo_equipo_id || ''} 
+                                        name="tipo_equipo" 
+                                        value={solicitud.tipo_equipo || ''} 
                                         className="form-control" 
                                         onChange={handleChange} 
                                         required>
                                         <option value="">Seleccionar tipo de equipo</option>
                                         {tiposEquipo.map(tipo => (
-                                            <option key={tipo.id} value={tipo.id}>
+                                            <option key={tipo.id} value={tipo.nombre}>
                                                 {tipo.nombre}
                                             </option>
                                         ))}
@@ -420,7 +445,7 @@ export default function SolicitudForm() {
                             </div>
 
                             {/* Tercera fila - Perfil de Usuario */}
-                            {solicitud.tipo_equipo_id && (
+                            {solicitud.tipo_equipo && (
                                 <div className="col-lg-12 input-group-sm mb-5">
                                     <div className="form-floating">
                                         <select 
@@ -432,7 +457,7 @@ export default function SolicitudForm() {
                                             <option value="">Seleccionar perfil de usuario</option>
                                             {perfilesFiltrados.map(perfil => (
                                                 <option key={perfil.id} value={perfil.id}>
-                                                    {perfil.nombre}
+                                                    {perfil.perfil}
                                                 </option>
                                             ))}
                                         </select>
@@ -443,6 +468,7 @@ export default function SolicitudForm() {
 
                             {/* Cuarta fila - Características del Equipo */}
                             {perfilSeleccionado && (
+                                <>
                                 <div className="col-lg-12 mb-5">
                                     <div className="alert alert-info">
                                         <h5 className="alert-heading">
@@ -450,11 +476,11 @@ export default function SolicitudForm() {
                                         </h5>
                                         <hr />
                                         <p className="mb-2">
-                                            <strong>Perfil:</strong> {perfilSeleccionado.nombre}
+                                            <strong>Perfil:</strong> {perfilSeleccionado.perfil}
                                         </p>
                                         <p className="mb-2">
                                             <strong>Especificaciones:</strong><br />
-                                            {perfilSeleccionado.caracteristicas}
+                                            {perfilSeleccionado.gama}
                                         </p>
                                         <hr />
                                         <div className="row">
@@ -462,7 +488,7 @@ export default function SolicitudForm() {
                                                 <p className="mb-0">
                                                     <strong>Costo Renting Mensual:</strong> 
                                                     <span className="text-success ms-2">
-                                                        S/ {perfilSeleccionado.costo_renting_mensual.toFixed(2)}
+                                                        S/ {perfilSeleccionado.costo_renting_mensual}
                                                     </span>
                                                 </p>
                                             </div>
@@ -477,8 +503,31 @@ export default function SolicitudForm() {
                                         </div>
                                     </div>
                                 </div>
+                                 <div className="mb-4 border p-3 rounded bg-light">
+            <h5><i className="fa fa-microchip me-2"></i>Características de la Gama</h5>
+            <table className="table table-bordered table-sm">
+              <thead>
+                <tr>
+                  <th>Característica</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                {caracteristicasGama.map((c) => (
+                  <tr key={c.id}>
+                    <td>{c.nombre}</td>
+                    <td>{c.valor}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+                                </>
                             )}
-
+ {/* Tabla características */}
+        {caracteristicasGama.length > 0 && (
+          <></>
+        )}
                             {/* Quinta fila - Aprobador (solo lectura) */}
                             {aprobador && (
                                 <div className="col-lg-12 input-group-sm mb-5">
@@ -556,7 +605,7 @@ export default function SolicitudForm() {
                                 <div className="row mb-3">
                                     <div className="col-md-6">
                                         <strong>Empresa:</strong><br />
-                                        {empresas.find(e => e.id === solicitud.empresa_id)?.nombre}
+                                        {empresas.find(e => e.id === solicitud.empresa_id)?.empresa}
                                     </div>
                                     <div className="col-md-6">
                                         <strong>Puesto :</strong><br />
@@ -567,7 +616,7 @@ export default function SolicitudForm() {
                                 <div className="row mb-3">
                                     <div className="col-md-6">
                                         <strong>Tipo de Equipo:</strong><br />
-                                        {tiposEquipo.find(t => t.id === solicitud.tipo_equipo_id)?.nombre}
+                                        {tiposEquipo.find(t => t.id === solicitud.tipo_equipo)?.nombre}
                                     </div>
                                     <div className="col-md-6">
                                         <strong>Perfil de Usuario:</strong><br />
@@ -577,11 +626,12 @@ export default function SolicitudForm() {
                                 {perfilSeleccionado && (
                                     <div className="alert alert-light mb-3">
                                         <strong>Características:</strong><br />
-                                        {perfilSeleccionado.caracteristicas}
+                                        {perfilSeleccionado.gama}
                                         <hr />
                                         <div className="row">
                                             <div className="col-md-6">
-                                                <strong>Costo Mensual:</strong> S/ {perfilSeleccionado.costo_renting_mensual.toFixed(2)}
+                                                <strong>Costo Mensual:</strong> 
+                                                S/ {perfilSeleccionado.costo_renting_mensual}
                                             </div>
                                             <div className="col-md-6">
                                                 <strong>Plazo:</strong> {perfilSeleccionado.tiempo_renting_meses} meses
