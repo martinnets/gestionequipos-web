@@ -62,8 +62,13 @@ export default function SolicitudForm() {
     const { currentUser } = useAuth();
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
-    
+   
     const [solicitud, setSolicitud] = useState<Solicitud>({});
+     {id==='ver' ? 
+        solicitud.estado = 'En Aprobación' :
+        solicitud.empresa_id = '1'
+    }
+
     const [tiposEquipo, setTiposEquipo] = useState<TipoEquipo[]>([]);
     const [perfilesUsuario, setPerfilesUsuario] = useState<PerfilUsuario[]>([]);
     const [perfilesFiltrados, setPerfilesFiltrados] = useState<PerfilUsuario[]>([]);
@@ -75,7 +80,7 @@ export default function SolicitudForm() {
     const [mostrarCustodia, setMostrarCustodia] = useState(false);
     const [equipoCustodiaSeleccionado, setEquipoCustodiaSeleccionado] = useState<string>("");
     const [mostrarResumen, setMostrarResumen] = useState(false);
-  const [caracteristicasGama, setCaracteristicasGama] = useState<Caracteristica[]>([]);
+    const [caracteristicasGama, setCaracteristicasGama] = useState<Caracteristica[]>([]);
 
     // Cargar datos iniciales
     useEffect(() => {
@@ -137,57 +142,7 @@ export default function SolicitudForm() {
     const cargarPerfilesUsuario = async () => {
         // TODO: Implementar llamada al servicio
         // Datos de ejemplo
-        setPerfilesUsuario(perfilJSON as PerfilUsuario[]);
-        // setPerfilesUsuario([
-        //     {
-        //         id: "1",
-        //         nombre: "Practicante",
-        //         tipo_equipo: "1",
-        //         caracteristicas: "Laptop Lenovo ThinkPad E14, procesador i5 Gen 11, monitor 14\", RAM 8GB, HD 256GB SSD, Win 11",
-        //         costo_renting_mensual: 150.00,
-        //         tiempo_renting_meses: 24
-        //     },
-        //     {
-        //         id: "2",
-        //         nombre: "Asistente",
-        //         tipo_equipo: "1",
-        //         caracteristicas: "Laptop Lenovo ThinkPad E15, procesador i5 Gen 12, monitor 15.6\", RAM 8GB, HD 512GB SSD, Win 11",
-        //         costo_renting_mensual: 180.00,
-        //         tiempo_renting_meses: 36
-        //     },
-        //     {
-        //         id: "3",
-        //         nombre: "Analista",
-        //         tipo_equipo: "1",
-        //         caracteristicas: "Laptop Lenovo ThinkPad T14, procesador i7 Gen 12, monitor 14\", RAM 16GB, HD 512GB SSD, Win 11 Pro",
-        //         costo_renting_mensual: 250.00,
-        //         tiempo_renting_meses: 36
-        //     },
-        //     {
-        //         id: "4",
-        //         nombre: "Gerente",
-        //         tipo_equipo: "1",
-        //         caracteristicas: "Laptop Lenovo ThinkPad X1 Carbon, procesador i7 Gen 13, monitor 14\", RAM 32GB, HD 1TB SSD, Win 11 Pro",
-        //         costo_renting_mensual: 400.00,
-        //         tiempo_renting_meses: 36
-        //     },
-        //     {
-        //         id: "5",
-        //         nombre: "Practicante",
-        //         tipo_equipo: "2",
-        //         caracteristicas: "PC Dell OptiPlex 3090, procesador i5 Gen 11, RAM 8GB, HD 256GB SSD, Monitor 21\", Win 11",
-        //         costo_renting_mensual: 120.00,
-        //         tiempo_renting_meses: 24
-        //     },
-        //     {
-        //         id: "6",
-        //         nombre: "Analista",
-        //         tipo_equipo: "2",
-        //         caracteristicas: "PC Dell OptiPlex 7090, procesador i7 Gen 12, RAM 16GB, HD 512GB SSD, Monitor 24\", Win 11 Pro",
-        //         costo_renting_mensual: 220.00,
-        //         tiempo_renting_meses: 36
-        //     }
-        // ]);
+        setPerfilesUsuario(perfilJSON as PerfilUsuario[]);       
     };
 
     const cargarEmpresas = async () => {
@@ -309,13 +264,18 @@ export default function SolicitudForm() {
             <form onSubmit={handleMostrarResumen}>
                 <div className="alert alert-secondary d-flex align-items-center p-5 bg-dark">
                     <div className="d-flex flex-column">
-                        <h3 className="mb-1 text-light">Nueva Solicitud de Equipo</h3>
-                        <span className="text-light">Complete el formulario para solicitar un equipo</span>
+                        {id==='crea' && 
+                            <h3 className="mb-1 text-light">Nueva Solicitud de Equipo</h3>                        
+                        }
+                        {id==='ver' && 
+                            <h3 className="mb-1 text-light">Aprobar/Rechazar Solicitud de Equipo</h3>                        
+                        }
+                        <span className="text-light">Detalle del formulario para solicitar un equipo</span>
                     </div>
                     <div className="d-flex flex-row-fluid justify-content-end">
                         <Link to={"/solicitud"} 
-                            className="btn btn-icon-white btn-text-white btn-danger btn-sm">
-                            <i className="fa-solid fa-reply"></i>
+                            className="btn btn-icon-white btn-text-dark btn-secondary btn-sm">
+                            <i className="fa-solid fa-reply text-dark"></i>
                             Volver
                         </Link>
                         <button 
@@ -325,10 +285,28 @@ export default function SolicitudForm() {
                             <i className="fa-solid fa-box"></i>
                             {mostrarCustodia ? 'Ocultar' : 'Ver'} Equipos en Custodia
                         </button>
-                        <button className='btn btn-primary btn-sm ms-2' type="submit">
+                        {id==='ver' && (
+                            <>
+                             <button 
+                                className='btn btn-danger btn-sm ms-2'>
+                                <i className="fa-solid fa-square-xmark"></i>
+                                Rechazar
+                                </button>
+                                <button 
+                                    className='btn btn-success btn-sm ms-2'>
+                                    <i className="fa-solid fa-check"></i>
+                                    Aprobar y Guardar
+                                </button>
+                                </>
+                                )
+                        }
+                        {id==='crea' &&
+                         <button className='btn btn-primary btn-sm ms-2' type="submit">
                             <i className="fa-solid fa-paper-plane"></i>
-                            Continuar
+                            Guardar Solicitud
                         </button>
+                        }
+                       
                     </div>
                 </div>
 

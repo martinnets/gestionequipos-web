@@ -6,7 +6,6 @@
         personal?:string
         email?:string
         puesto?:string
-        licencia?:string
         telefono?:string
         codigo_estado?:string
         usu_crea?:string

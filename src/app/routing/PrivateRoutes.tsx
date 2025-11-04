@@ -23,6 +23,8 @@ import { ReporteEquipoPage } from '../pages/reportes/equipos'
 import SolicitudReporte from '../pages/solicitud/reporte'
 import GamaForm from '../pages/gama/gamaform'
 import CaracteristicaForm from '../pages/caracteristica/caracteristicaform'
+import { PersonalPage } from '../pages/personal/personal'
+import { AprobadorPage } from '../pages/aprobador/aprobador'
  
 
 const PrivateRoutes = () => {
@@ -70,6 +72,9 @@ const PrivateRoutes = () => {
 
         <Route path='/gamaform' element={< GamaForm />} />
         <Route path='/caracteristicaform' element={< CaracteristicaForm />} />
+
+        <Route path='/personal' element={< PersonalPage />} />
+        <Route path='/aprobador' element={< AprobadorPage />} />
 
         {/* Page Not Found */}
         <Route path='*' element={<Navigate to='/error/404' />} />

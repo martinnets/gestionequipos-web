@@ -36,21 +36,14 @@ export function SolicitudPage() {
                     <div className="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                         <div className="btn-group " role="group" aria-label="First group">
                             <Link className="btn btn-sm"
-                                to={`/solicitudform/${row.original.id_solicitud}`}>
-                                <i className="fa-solid fa-pen-to-square fs-4 text-primary"></i>
+                                to={`/solicitudform/ver`}>
+                                <i className="fa-solid fa-square-check fs-2x text-primary"></i>
                             </Link>
                             <Link className="btn btn-sm"
                                 to={`/solicitudreporte/${row.original.id_solicitud}`}>
-                                <i className="fa-solid fa-file-pdf fs-4 text-primary"></i>
+                                <i className="fa-solid fa-file-pdf fs-4 text-danger"></i>
                             </Link>
-                            <Link className="btn btn-sm"
-                                to={`/solicitudform/${row.original.id_solicitud}`}>
-                                <i className="fa-solid fa-check-to-slot  fs-4 text-success"></i>
-                            </Link>
-                            <Link className="btn btn-sm"
-                                to={`/asignacionform/${row.original.id_solicitud}`}>
-                                <i className="fa-solid fa-user-plus  fs-4 text-dark"></i>
-                            </Link>
+                            
                         </div>
                     </div>
                 ),

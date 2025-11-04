@@ -1,0 +1,47 @@
+[ 
+    {
+        "id": 1,
+        "empresa":"EL",
+        "nro_doc_identidad":"12345678",
+        "nombres":"Juan",
+        "apellidos":"Perez",
+        "cargo":"Gerente",  
+        "centro_costo":"Ventas"
+    },
+    {
+        "id": 2,
+        "empresa":"ADAMS",
+        "nro_doc_identidad":"87654321",
+        "nombres":"Maria",
+        "apellidos":"Gomez",
+        "cargo":"Analista",  
+        "centro_costo":"Marketing"
+    },
+    {
+        "id": 3,
+        "empresa":"PANORAMABP",
+        "nro_doc_identidad":"11223344",
+        "nombres":"Luis",
+        "apellidos":"Ramirez",
+        "cargo":"Supervisor",  
+        "centro_costo":"Operaciones"
+    },
+    {
+        "id": 4,
+        "empresa":"SAMITEX",
+        "nro_doc_identidad":"44332211",
+        "nombres":"Ana",
+        "apellidos":"Lopez",
+        "cargo":"Coordinadora",  
+        "centro_costo":"Logística"
+    },
+    {
+        "id": 5,
+        "empresa":"TEXCORP",
+        "nro_doc_identidad":"55667788",
+        "nombres":"Carlos",
+        "apellidos":"Sanchez",
+        "cargo":"Director",  
+        "centro_costo":"Finanzas"
+    }   
+]
