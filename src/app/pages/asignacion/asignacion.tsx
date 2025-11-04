@@ -4,34 +4,29 @@ import asignacionDataService from "../../../_services/asignacion";
 import { useAuth } from "../../modules/auth";
 import { MaterialReactTable, MRT_ColumnDef } from 'material-react-table';
 import { Asignacion } from "../../../_models/asignacion";
+import asignadoJSON from "../../../../modelo/asignado.json"
 
 export function AsignacionPage() {
     const { currentUser } = useAuth();
     const [asignaciones, setAsignaciones] = useState<Asignacion[]>([]);
-    const datos =[
-        { id_asignacion: '1', codigo: 'ASIG-001', solicitud_codigo: 'SOL-001', equipo_codigo: 'EQ-001', usuario_nombre: 'Juan Perez', fecha_asignacion: '2024-05-01', fecha_devolucion: '2024-06-01', estado_fisico: 'Bueno', estado: 'Activa' },   
-        { id_asignacion: '2', codigo: 'ASIG-002', solicitud_codigo: 'SOL-002', equipo_codigo: 'EQ-002', usuario_nombre: 'Ana Lopez', fecha_asignacion: '2024-05-15', fecha_devolucion: '2024-06-15', estado_fisico: 'Excelente', estado: 'Activa' },
-        { id_asignacion: '3', codigo: 'ASIG-003', solicitud_codigo: 'SOL-003', equipo_codigo: 'EQ-003', usuario_nombre: 'Luis Martinez', fecha_asignacion: '2024-06-01', fecha_devolucion: '2024-07-01', estado_fisico: 'Regular', estado: 'Devuelta' },
-
-    ]
+    const datos = asignadoJSON;
     const columns = useMemo<MRT_ColumnDef<Asignacion>[]>(
         () => [
             { 
-                accessorKey: 'id_asignacion', 
+                accessorKey: 'id', 
                 header: 'Acción',
                 enableColumnFilter: false,
                 size: 50,
                 Cell: ({ row }) => (
-                    <Link className="btn btn-sm" 
-                          to={`/asignacionform/${row.original.id_asignacion}`}>
-                        <i className="fa-solid fa-pen-to-square fs-4 text-primary"></i>
+                    <Link className="btn btn-icon btn-light-primary btn-sm" 
+                          to={`/devolucion`}>
+                        <i className="fa-solid fa-circle-left fs-2x  "></i>
                     </Link>
                 ),
             },
-            { accessorKey: 'codigo', header: 'Código' },
-            { accessorKey: 'solicitud_codigo', header: 'Solicitud' },
-            { accessorKey: 'equipo_codigo', header: 'Equipo' },
-            { accessorKey: 'usuario_nombre', header: 'Usuario Asignado' },
+            { accessorKey: 'tipo', header: 'Tipo' },
+            { accessorKey: 'nro_doc', header: 'Nro Doc' },            
+            { accessorKey: 'personal', header: 'Personal' },
             { 
                 accessorKey: 'fecha_asignacion', 
                 header: 'Fecha Asignación',
@@ -40,15 +35,37 @@ export function AsignacionPage() {
                     return fecha ? new Date(fecha).toLocaleDateString() : '';
                 }
             },
+            { accessorKey: 'gama', header: 'Gama' },
             { 
-                accessorKey: 'fecha_devolucion', 
-                header: 'Fecha Devolución',
+                accessorKey: 'caracteristicas', 
+                header: 'Características',
                 Cell: ({ cell }) => {
-                    const fecha = cell.getValue<string>();
-                    return fecha ? new Date(fecha).toLocaleDateString() : '';
-                }
+                    const caracteristicas = cell.getValue<any>();
+                    
+                    // Si es un objeto, formatearlo como lista
+                    if (caracteristicas && typeof caracteristicas === 'object') {
+                        return (
+                            <div className="caracteristicas-container">
+                                {Object.entries(caracteristicas).map(([key, value]) => (
+                                    <div key={key} className="d-flex justify-content-between gap-2">
+                                        <span className="fw-semibold text-muted">{key}:</span>
+                                        <span>{value as string}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        );
+                    }
+                    
+                    // Si es string, mostrar normalmente
+                    return <div style={{ whiteSpace: 'pre-wrap' }}>{caracteristicas}</div>;
+                },
+                // Opcional: agregar tooltip para mejor visualización
+                muiTableBodyCellProps: {
+                    sx: {
+                        maxWidth: '200px',
+                    },
+                },
             },
-            { accessorKey: 'estado_fisico', header: 'Estado Físico' },
             { accessorKey: 'estado', header: 'Estado' },
         ],
         [],
@@ -76,10 +93,7 @@ export function AsignacionPage() {
                             <div className="card-header bg-dark">
                                 <h3 className="card-title text-light">Listado de Asignaciones</h3>
                                 <div className="card-toolbar">
-                                    <Link to={"/asignacionform/crea"} className="btn btn-sm btn-primary">
-                                        <i className="fa-solid fa-file fs-1x text-light"></i>
-                                        Nueva Asignación
-                                    </Link>                  
+                                                   
                                 </div>
                             </div>
                             <div className="card-body">

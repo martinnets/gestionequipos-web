@@ -47,24 +47,25 @@ interface EquipoCustodia {
     estado: string;
 }
 interface Caracteristica {
-  id: number;
-  nombre: string;
-  valor: string;
+    id: number;
+    nombre: string;
+    valor: string;
 }
 interface Gama {
-  id: number;
-  codigo: string;
-  tipo_equipo_id: number;
-  descripcion: string;
-  caracteristicas: Caracteristica[];
+    id: number;
+    codigo: string;
+    tipo_equipo_id: number;
+    descripcion: string;
+    caracteristicas: Caracteristica[];
 }
 export default function SolicitudForm() {
     const { currentUser } = useAuth();
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
-   
+
     const [solicitud, setSolicitud] = useState<Solicitud>({});
-     {id==='ver' ? 
+    {
+        id === 'ver' ?
         solicitud.estado = 'En Aprobación' :
         solicitud.empresa_id = '1'
     }
@@ -88,7 +89,7 @@ export default function SolicitudForm() {
         cargarPerfilesUsuario();
         cargarEmpresas();
         cargarEquiposCustodia();
-        
+
         if (id === 'crea') {
             console.log(id);
         } else {
@@ -125,7 +126,7 @@ export default function SolicitudForm() {
     }, [solicitud.tipo_equipo, perfilesUsuario]);
 
     // Actualizar perfil seleccionado
-    
+
 
     const cargarTiposEquipo = async () => {
         // TODO: Implementar llamada al servicio
@@ -142,12 +143,12 @@ export default function SolicitudForm() {
     const cargarPerfilesUsuario = async () => {
         // TODO: Implementar llamada al servicio
         // Datos de ejemplo
-        setPerfilesUsuario(perfilJSON as PerfilUsuario[]);       
+        setPerfilesUsuario(perfilJSON as PerfilUsuario[]);
     };
 
     const cargarEmpresas = async () => {
         // TODO: Implementar llamada al servicio
-         //const data = (empresaJSON as Empresa[])
+        //const data = (empresaJSON as Empresa[])
         // empresa.json tiene ids numéricos; convertirlos a string para que coincidan con la interfaz Empresa
         setEmpresas((empresaJSON as { id: number; empresa: string }[]).map(e => ({
             id: String(e.id),
@@ -264,49 +265,49 @@ export default function SolicitudForm() {
             <form onSubmit={handleMostrarResumen}>
                 <div className="alert alert-secondary d-flex align-items-center p-5 bg-dark">
                     <div className="d-flex flex-column">
-                        {id==='crea' && 
-                            <h3 className="mb-1 text-light">Nueva Solicitud de Equipo</h3>                        
+                        {id === 'crea' &&
+                            <h3 className="mb-1 text-light">Nueva Solicitud de Equipo</h3>
                         }
-                        {id==='ver' && 
-                            <h3 className="mb-1 text-light">Aprobar/Rechazar Solicitud de Equipo</h3>                        
+                        {id === 'ver' &&
+                            <h3 className="mb-1 text-light">Aprobar/Rechazar Solicitud de Equipo</h3>
                         }
                         <span className="text-light">Detalle del formulario para solicitar un equipo</span>
                     </div>
                     <div className="d-flex flex-row-fluid justify-content-end">
-                        <Link to={"/solicitud"} 
+                        <Link to={"/solicitud"}
                             className="btn btn-icon-white btn-text-dark btn-secondary btn-sm">
                             <i className="fa-solid fa-reply text-dark"></i>
                             Volver
                         </Link>
-                        <button 
-                            className='btn btn-info btn-sm ms-2' 
+                        <button
+                            className='btn btn-info btn-sm ms-2'
                             type="button"
                             onClick={() => setMostrarCustodia(!mostrarCustodia)}>
                             <i className="fa-solid fa-box"></i>
                             {mostrarCustodia ? 'Ocultar' : 'Ver'} Equipos en Custodia
                         </button>
-                        {id==='ver' && (
+                        {id === 'ver' && (
                             <>
-                             <button 
-                                className='btn btn-danger btn-sm ms-2'>
-                                <i className="fa-solid fa-square-xmark"></i>
-                                Rechazar
+                                <button
+                                    className='btn btn-danger btn-sm ms-2'>
+                                    <i className="fa-solid fa-square-xmark"></i>
+                                    Rechazar
                                 </button>
-                                <button 
+                                <button
                                     className='btn btn-success btn-sm ms-2'>
                                     <i className="fa-solid fa-check"></i>
                                     Aprobar y Guardar
                                 </button>
-                                </>
-                                )
+                            </>
+                        )
                         }
-                        {id==='crea' &&
-                         <button className='btn btn-primary btn-sm ms-2' type="submit">
-                            <i className="fa-solid fa-paper-plane"></i>
-                            Guardar Solicitud
-                        </button>
+                        {id === 'crea' &&
+                            <button className='btn btn-primary btn-sm ms-2' type="submit">
+                                <i className="fa-solid fa-paper-plane"></i>
+                                Guardar Solicitud
+                            </button>
                         }
-                       
+
                     </div>
                 </div>
 
@@ -353,18 +354,18 @@ export default function SolicitudForm() {
                         </div>
                     </div>
                 )}
-                
+
                 <div className="card card-custom">
                     <div className="card-body pt-10">
                         <div className="form-group row">
                             {/* Primera fila - Empresa y Puesto Real */}
                             <div className="col-lg-6 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <select 
-                                        name="empresa_id" 
-                                        value={solicitud.empresa_id || ''} 
-                                        className="form-control" 
-                                        onChange={handleChange} 
+                                    <select
+                                        name="empresa_id"
+                                        value={solicitud.empresa_id || ''}
+                                        className="form-control"
+                                        onChange={handleChange}
                                         required>
                                         <option value="">Seleccionar empresa</option>
                                         {empresas.map(empresa => (
@@ -379,10 +380,10 @@ export default function SolicitudForm() {
 
                             <div className="col-lg-6 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <select 
-                                        name="puesto" 
-                                        value={solicitud.puesto || ''} 
-                                        className="form-control" 
+                                    <select
+                                        name="puesto"
+                                        value={solicitud.puesto || ''}
+                                        className="form-control"
                                         onChange={handleChange}
                                         disabled={!solicitud.empresa_id}
                                         required>
@@ -405,11 +406,11 @@ export default function SolicitudForm() {
                             {/* Segunda fila - Tipo de Equipo */}
                             <div className="col-lg-12 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <select 
-                                        name="tipo_equipo" 
-                                        value={solicitud.tipo_equipo || ''} 
-                                        className="form-control" 
-                                        onChange={handleChange} 
+                                    <select
+                                        name="tipo_equipo"
+                                        value={solicitud.tipo_equipo || ''}
+                                        className="form-control"
+                                        onChange={handleChange}
                                         required>
                                         <option value="">Seleccionar tipo de equipo</option>
                                         {tiposEquipo.map(tipo => (
@@ -426,10 +427,10 @@ export default function SolicitudForm() {
                             {solicitud.tipo_equipo && (
                                 <div className="col-lg-12 input-group-sm mb-5">
                                     <div className="form-floating">
-                                        <select 
-                                            name="perfil" 
-                                            value={solicitud.perfil || ''} 
-                                            className="form-control" 
+                                        <select
+                                            name="perfil"
+                                            value={solicitud.perfil || ''}
+                                            className="form-control"
                                             onChange={handleChange}
                                             required>
                                             <option value="">Seleccionar perfil de usuario</option>
@@ -447,65 +448,65 @@ export default function SolicitudForm() {
                             {/* Cuarta fila - Características del Equipo */}
                             {perfilSeleccionado && (
                                 <>
-                                <div className="col-lg-12 mb-5">
-                                    <div className="alert alert-info">
-                                        <h5 className="alert-heading">
-                                            <i className="fa-solid fa-laptop"></i> Características del Equipo
-                                        </h5>
-                                        <hr />
-                                        <p className="mb-2">
-                                            <strong>Perfil:</strong> {perfilSeleccionado.perfil}
-                                        </p>
-                                        <p className="mb-2">
-                                            <strong>Especificaciones:</strong><br />
-                                            {perfilSeleccionado.gama}
-                                        </p>
-                                        <hr />
-                                        <div className="row">
-                                            <div className="col-md-6">
-                                                <p className="mb-0">
-                                                    <strong>Costo Renting Mensual:</strong> 
-                                                    <span className="text-success ms-2">
-                                                        S/ {perfilSeleccionado.costo_renting_mensual}
-                                                    </span>
-                                                </p>
-                                            </div>
-                                            <div className="col-md-6">
-                                                <p className="mb-0">
-                                                    <strong>Tiempo de Renting:</strong> 
-                                                    <span className="text-primary ms-2">
-                                                        {perfilSeleccionado.tiempo_renting_meses} meses
-                                                    </span>
-                                                </p>
+                                    <div className="col-lg-12 mb-5">
+                                        <div className="alert alert-info">
+                                            <h5 className="alert-heading">
+                                                <i className="fa-solid fa-laptop"></i> Características del Equipo
+                                            </h5>
+                                            <hr />
+                                            <p className="mb-2">
+                                                <strong>Perfil:</strong> {perfilSeleccionado.perfil}
+                                            </p>
+                                            <p className="mb-2">
+                                                <strong>Especificaciones:</strong><br />
+                                                {perfilSeleccionado.gama}
+                                            </p>
+                                            <hr />
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <p className="mb-0">
+                                                        <strong>Costo Renting Mensual:</strong>
+                                                        <span className="text-success ms-2">
+                                                            S/ {perfilSeleccionado.costo_renting_mensual}
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <p className="mb-0">
+                                                        <strong>Tiempo de Renting:</strong>
+                                                        <span className="text-primary ms-2">
+                                                            {perfilSeleccionado.tiempo_renting_meses} meses
+                                                        </span>
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                 <div className="mb-4 border p-3 rounded bg-light">
-            <h5><i className="fa fa-microchip me-2"></i>Características de la Gama</h5>
-            <table className="table table-bordered table-sm">
-              <thead>
-                <tr>
-                  <th>Característica</th>
-                  <th>Valor</th>
-                </tr>
-              </thead>
-              <tbody>
-                {caracteristicasGama.map((c) => (
-                  <tr key={c.id}>
-                    <td>{c.nombre}</td>
-                    <td>{c.valor}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                                    <div className="mb-4 border p-3 rounded bg-light">
+                                        <h5><i className="fa fa-microchip me-2"></i>Características de la Gama</h5>
+                                        <table className="table table-bordered table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Característica</th>
+                                                    <th>Valor</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {caracteristicasGama.map((c) => (
+                                                    <tr key={c.id}>
+                                                        <td>{c.nombre}</td>
+                                                        <td>{c.valor}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </>
                             )}
- {/* Tabla características */}
-        {caracteristicasGama.length > 0 && (
-          <></>
-        )}
+                            {/* Tabla características */}
+                            {caracteristicasGama.length > 0 && (
+                                <></>
+                            )}
                             {/* Quinta fila - Aprobador (solo lectura) */}
                             {aprobador && (
                                 <div className="col-lg-12 input-group-sm mb-5">
@@ -526,11 +527,11 @@ export default function SolicitudForm() {
                             {/* Sexta fila - Justificación */}
                             <div className="col-lg-12 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <textarea 
-                                        name="justificacion" 
+                                    <textarea
+                                        name="justificacion"
                                         value={solicitud.justificacion || ''}
-                                        className="form-control" 
-                                        onChange={handleChange} 
+                                        className="form-control"
+                                        onChange={handleChange}
                                         style={{ minHeight: '100px' }}
                                         placeholder="Describa el motivo de la solicitud"
                                         required />
@@ -541,11 +542,11 @@ export default function SolicitudForm() {
                             {/* Séptima fila - Observaciones */}
                             <div className="col-lg-12 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <textarea 
-                                        name="observaciones" 
+                                    <textarea
+                                        name="observaciones"
                                         value={solicitud.observaciones || ''}
-                                        className="form-control" 
-                                        onChange={handleChange} 
+                                        className="form-control"
+                                        onChange={handleChange}
                                         style={{ minHeight: '80px' }}
                                         placeholder="Observaciones adicionales (opcional)" />
                                     <label className="form-label">Observaciones</label>
@@ -556,7 +557,7 @@ export default function SolicitudForm() {
                             {equipoCustodiaSeleccionado && (
                                 <div className="col-lg-12 mb-5">
                                     <div className="alert alert-success">
-                                        <i className="fa-solid fa-check-circle"></i> 
+                                        <i className="fa-solid fa-check-circle"></i>
                                         <strong> Equipo en Custodia Seleccionado</strong>
                                         <p className="mb-0 mt-2">
                                             {equiposCustodia.find(e => e.id === equipoCustodiaSeleccionado)?.caracteristicas}
@@ -588,7 +589,7 @@ export default function SolicitudForm() {
                                     <div className="col-md-6">
                                         <strong>Puesto :</strong><br />
                                         {solicitud.puesto}
-                                         
+
                                     </div>
                                 </div>
                                 <div className="row mb-3">
@@ -608,7 +609,7 @@ export default function SolicitudForm() {
                                         <hr />
                                         <div className="row">
                                             <div className="col-md-6">
-                                                <strong>Costo Mensual:</strong> 
+                                                <strong>Costo Mensual:</strong>
                                                 S/ {perfilSeleccionado.costo_renting_mensual}
                                             </div>
                                             <div className="col-md-6">
@@ -633,14 +634,14 @@ export default function SolicitudForm() {
                                 )}
                             </div>
                             <div className="modal-footer">
-                                <button 
-                                    type="button" 
+                                <button
+                                    type="button"
                                     className="btn btn-secondary"
                                     onClick={handleCancelarSolicitud}>
                                     <i className="fa-solid fa-times"></i> Cancelar
                                 </button>
-                                <button 
-                                    type="button" 
+                                <button
+                                    type="button"
                                     className="btn btn-success"
                                     onClick={handleEnviarAprobacion}>
                                     <i className="fa-solid fa-paper-plane"></i> Enviar a Aprobación

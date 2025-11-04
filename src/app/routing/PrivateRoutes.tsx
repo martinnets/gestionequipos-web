@@ -25,6 +25,9 @@ import GamaForm from '../pages/gama/gamaform'
 import CaracteristicaForm from '../pages/caracteristica/caracteristicaform'
 import { PersonalPage } from '../pages/personal/personal'
 import { AprobadorPage } from '../pages/aprobador/aprobador'
+import SolicitudJefePage from '../pages/solicitud/jefe'
+import SolicitudUsuarioPage from '../pages/solicitud/usuario'
+import DevolucionPage from '../pages/asignacion/devolucion'
  
 
 const PrivateRoutes = () => {
@@ -55,6 +58,8 @@ const PrivateRoutes = () => {
         <Route path='/solicitud' element={<SolicitudPage />} />
         <Route path='/solicitudform/:id' element={< SolicitudForm />} />
         <Route path='/solicitudreporte/:id' element={< SolicitudReporte />} />
+        <Route path='/solicitudjefe' element={< SolicitudJefePage />} />
+        <Route path='/solicitudusuario' element={< SolicitudUsuarioPage />} />
 
         <Route path='/licencia' element={<LicenciaPage />} />
         <Route path='/licenciaform/:id' element={< LicenciaForm />} />
@@ -75,6 +80,7 @@ const PrivateRoutes = () => {
 
         <Route path='/personal' element={< PersonalPage />} />
         <Route path='/aprobador' element={< AprobadorPage />} />
+        <Route path='/devolucion' element={< DevolucionPage />} />
 
         {/* Page Not Found */}
         <Route path='*' element={<Navigate to='/error/404' />} />

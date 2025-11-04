@@ -1,0 +1,74 @@
+[
+    {
+        "id": 1,
+        "tipo":"laptop",
+        "estado": "Asignado",
+        "nro_doc": "12345678",
+        "personal": "Juan Perez",
+        "puestos": "Desarrollador",
+        "fecha_asignacion": "2024-03-20",
+        "empresa": "EL",
+        "fecha_creacion": "2024-03-15",
+        "gama": "LAP-G1",
+        "descripcion": "Laptop gama alta",
+        "caracteristicas": {
+            "RAM": "16",
+            "Disco Duro": "512",
+            "Procesador": "Intel i7"
+        }
+    },
+    {
+        "id": 2,
+        "tipo":"desktop",
+        "estado": "Asignado",
+        "nro_doc": "87654321",
+        "personal": "Maria Gomez",
+        "puestos": "Analista",
+        "fecha_asignacion": "2024-04-10",
+        "empresa": "EL",
+        "fecha_creacion": "2024-04-05",
+        "gama": "DES-G2",
+        "descripcion": "Desktop gama media",
+        "caracteristicas": {
+            "RAM": "8",
+            "Disco Duro": "256",
+            "Procesador": "Intel i5"
+        }
+    },
+    {
+        "id": 3,
+        "tipo":"tablet",
+        "estado": "Asignado",
+        "nro_doc": "11223344",
+        "personal": "Carlos Ruiz",
+        "puestos": "Ventas",
+        "fecha_asignacion": "2024-05-15",
+        "empresa": "EL",
+        "fecha_creacion": "2024-05-10",
+        "gama": "TAB-G1",
+        "descripcion": "Tablet gama básica",
+        "caracteristicas": {
+            "RAM": "4",
+            "Disco Duro": "128",
+            "Procesador": "ARM Cortex"
+        }
+    },
+    {
+        "id": 4,
+        "tipo":"laptop",
+        "estado": "Asignado",
+        "nro_doc": "55667788",
+        "personal": "Ana Torres",
+        "puestos": "Marketing",
+        "fecha_asignacion": "2024-06-01",
+        "empresa": "EL",
+        "fecha_creacion": "2024-05-28",
+        "gama": "LAP-G2",
+        "descripcion": "Laptop gama media",
+        "caracteristicas": {
+            "RAM": "8",
+            "Disco Duro": "256",
+            "Procesador": "Intel i5"
+        }
+    }
+  ]

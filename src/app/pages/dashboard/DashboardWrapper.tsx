@@ -50,19 +50,36 @@ const DashboardWrapper = () => {
                 enableColumnFilter: false,
                 size: 50,
                 Cell: ({ row }) => (
-                     <div className="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-            <div className="btn-group " role="group" aria-label="First group">
-                    <Link className="btn btn-sm" 
-                          to={`/solicitudform/${row.original.id_solicitud}`}>
-                        <i className="fa-solid fa-pen-to-square fs-4 text-primary"></i>
-                    </Link>
-                    <Link className="btn btn-sm" 
-                          to={`/solicitudform/${row.original.id_solicitud}`}>
-                            <i className="fa-solid fa-check-to-slot  fs-4 text-success"></i>
-                        
-                    </Link>
-                   </div>
-                   </div>
+                      <div className="d-flex gap-1 justify-content-start">
+                                                <Link className="btn btn-icon btn-light-primary btn-sm" 
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
+                                                    title="Aprobar / Rechazar"
+                                                    to={`/solicitudform/ver`}>
+                                                    <i className="fa-solid fa-clipboard-check fs-4  "></i>
+                                                </Link>
+                                                <Link className="btn btn-icon btn-light-danger btn-sm" 
+                                                data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
+                                                    title="Solicitud en PDF"
+                                                    to={`/solicitudreporte/${row.original.id_solicitud}`}>
+                                                    <i className="fa-solid fa-file-pdf fs-4  "></i>
+                                                </Link>
+                                                <Link className="btn btn-icon btn-light-info btn-sm" 
+                                                data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
+                                                    title="Jefe Inmediato"
+                                                    to={`/solicitudjefe`}>
+                                                    <i className="fa-solid fa-user-tie fs-4 "></i>
+                                                </Link>
+                                                <Link className="btn btn-icon btn-light-success btn-sm" 
+                                                data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
+                                                    title="Usuario"
+                                                    to={`/solicitudusuario`}>
+                                                    <i className="fa-solid fa-user fs-4 "></i>
+                                                </Link>  
+                                        </div>
                 ),
             },
             { accessorKey: 'codigo', header: 'Código' },
@@ -150,6 +167,7 @@ const DashboardWrapper = () => {
               description='Devoluciones de equipos'
               titleColor='gray-100'
               descriptionColor='gray-100'
+              link='/asignacion'
             />
           </div>
                 

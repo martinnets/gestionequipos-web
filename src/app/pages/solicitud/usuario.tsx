@@ -3,17 +3,29 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { usePDF } from 'react-to-pdf';
 import empresaDataService from "../../../_services/empresa";
 import solicitudDataService from "../../../_services/solicitud";
-import { Empresa } from '../../../_models/empresa';
+
 import { toAbsoluteUrl } from '../../../_metronic/helpers';
 import { Solicitud } from '../../../_models/solicitud';
 import { useAuth } from '../../modules/auth';
+import { Personal } from '../../../_models/personal';
+import personalJSON from "../../../../modelo/personal.json"
 
-const SolicitudReporte = () => {
-  const [empresa, setEmpresa] = useState<Empresa>({});
+const SolicitudUsuarioPage = () => {
+  const [personal, setPersonal] = useState<Personal[]>([]);
   const [solicitud, setSolicitud] = useState<Solicitud>({});
   const { currentUser } = useAuth();
   const { id } = useParams<{ id: string }>();
-
+  const cargarPErsonal = async () => {
+    // TODO: Implementar llamada al servicio
+    //const data = (empresaJSON as Empresa[])
+    // empresa.json tiene ids numéricos; convertirlos a string para que coincidan con la interfaz Empresa
+    setPersonal((personalJSON as { id: number; nombres: string; apellidos: string }[]).map(e => ({
+      id: String(e.id),
+      nombres: e.nombres,
+      apellidos: e.apellidos,
+      personal: e.nombres + ' ' + e.apellidos
+    })));
+  };
   // Configuración de PDF
   const { toPDF, targetRef } = usePDF({
     filename: 'Solicitud-' + solicitud.codigo + '.pdf',
@@ -74,16 +86,7 @@ const SolicitudReporte = () => {
 
   useEffect(() => {
     // Cargar datos de la empresa
-    empresaDataService.getempresaById(currentUser?.id_empresa)
-      .then(response => response.json())
-      .then(result => {
-        setEmpresa(result);
-        console.log(result);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-
+    cargarPErsonal();
     // Cargar datos de la solicitud
     solicitudDataService.getsolicitudById(id)
       .then(response => response.json())
@@ -100,8 +103,8 @@ const SolicitudReporte = () => {
     <div className="d-flex flex-column flex-column-fluid">
       <div className="row m-5">
         <div className="card card-custom">
-          <div className="card-header bg-dark">
-            <h3 className="card-title text-light">Reporte de Solicitud de Equipo</h3>
+          <div className="card-header bg-info">
+            <h3 className="card-title text-light">Recepcion de Equipo</h3>
             <div className="card-toolbar">
               <Link
                 to={"/solicitud"}
@@ -111,10 +114,16 @@ const SolicitudReporte = () => {
                 Volver
               </Link>
               <button
-                className="btn btn-primary btn-sm"
+                className="btn btn-secondary btn-sm"
                 onClick={generarPDF}
               >
-                <i className="bi bi-file-pdf"></i> Descargar PDF
+                <i className="fa-solid fa-file-pdf text-dark"></i> Descargar PDF
+              </button>
+
+              <button
+                className='btn btn-primary btn-sm ms-2'>
+                <i className="fa-solid fa-check"></i>
+                Conformidad
               </button>
             </div>
           </div>
@@ -134,7 +143,7 @@ const SolicitudReporte = () => {
           </div>
           <div className="col-4 text-center">
             <div className="border border-1 border-dotted border-dark p-4">
-              <h4 className="fw-bold mb-2">SOLICITUD DE EQUIPO</h4>
+              <h4 className="fw-bold mb-2">RECEPCION DE EQUIPO</h4>
               <p className="mb-0 fw-bold fs-1">{solicitud.codigo}</p>
               <div className="mt-3">
                 <span className={`badge ${getEstadoBadgeClass(solicitud.estado)} fs-6 px-4 py-2`}>
@@ -289,7 +298,6 @@ const SolicitudReporte = () => {
             </p>
           </div>
           <div className="col-6">
-
             <p className="mb-2">
               <strong>Fecha de Aprobación:</strong>{' '}
               30-10-2025
@@ -300,50 +308,69 @@ const SolicitudReporte = () => {
                 {solicitud.estado}
               </span>
             </p>
-
           </div>
-
           <div className="col-12 mt-3">
             <p className="mb-1"><strong>Comentarios del Aprobador:</strong></p>
             <p style={{ textAlign: 'justify' }}>
               Comentarios de ejemplo del aprobador sobre la solicitud.
             </p>
           </div>
-
         </div>
 
-        {/* Firmas */}
-        <div className="row mt-10" >
-          <div className="col-6 text-center">
-            <div className="border-top border-dark pt-2" style={{ marginTop: '80px' }}>
-              <p className="mb-0 fw-bold">SOLICITANTE</p>
-              <p className="mb-0">Donny Lopez</p>
-              <p className="mb-0">Gerente RRHH</p>
+        {/* Datos a Completar */}
+        <form>
+          <div className="row mb-8">
+            <div className="col-lg-6 input-group-sm mb-5">
+              <div className="form-floating">
+                <select
+                  name="empresa_id"
+                  className="form-control"
+                  required>
+                  <option value="">Seleccionar Empleado</option>
+                  {personal.map(personal => (
+                    <option key={personal.id} value={personal.id}>
+                      {personal.nombres} {personal.apellidos}
+                    </option>
+                  ))}
+                </select>
+                <label className="form-label">Empleado *</label>
+              </div>
+            </div>
+            <div className="col-lg-6 input-group-sm mb-5">
+              <div className="form-floating">
+                <select
+                  name="empresa_id"
+                  className="form-control"
+                  required>
+                  <option value="">Seleccionar Jefe Inmediato</option>
+                  {personal.map(personal => (
+                    <option key={personal.id} value={personal.id}>
+                      {personal.nombres} {personal.apellidos}
+                    </option>
+                  ))}
+                </select>
+                <label className="form-label">Jefe Inmediato *</label>
+              </div>
+            </div>
+            <div className="col-lg-12 input-group-sm mb-5">
+              <div className="form-floating">
+                <input
+                  type='text'
+                  className='form-control'
+                  id='comentarios'
+                  placeholder='Comentarios'
+                />
+                <label htmlFor="comentarios" className="form-label">Comentarios</label>
+              </div>
             </div>
           </div>
-          <div className="col-6 text-center">
-            <div className="border-top border-dark pt-2" style={{ marginTop: '80px' }}>
-              <p className="mb-0 fw-bold">APROBADOR</p>
-              <p className="mb-0">Lucio Levano</p>
-              <p className="mb-0">Gerente General</p>
-            </div>
-          </div>
-        </div>
+        </form>
 
-        {/* Footer */}
-        <div className="row mt-8"  >
-          <div className="col-12 text-center border-top pt-3">
-            <p className="mb-1">
-              Sistema de Gestión de Equipos - JERUTH
-            </p>
-            <p className="mb-0">
-              Documento generado el {formatearFecha(new Date().toISOString())}
-            </p>
-          </div>
-        </div>
+
+
       </div>
     </div>
   );
 };
 
-export default SolicitudReporte;
+export default SolicitudUsuarioPage;

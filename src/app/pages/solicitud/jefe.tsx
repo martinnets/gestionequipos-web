@@ -8,7 +8,7 @@ import { toAbsoluteUrl } from '../../../_metronic/helpers';
 import { Solicitud } from '../../../_models/solicitud';
 import { useAuth } from '../../modules/auth';
 
-const SolicitudReporte = () => {
+const SolicitudJefePage = () => {
   const [empresa, setEmpresa] = useState<Empresa>({});
   const [solicitud, setSolicitud] = useState<Solicitud>({});
   const { currentUser } = useAuth();
@@ -101,7 +101,7 @@ const SolicitudReporte = () => {
       <div className="row m-5">
         <div className="card card-custom">
           <div className="card-header bg-dark">
-            <h3 className="card-title text-light">Reporte de Solicitud de Equipo</h3>
+            <h3 className="card-title text-light">Solicitud de Equipo - Jefe Inmediato</h3>
             <div className="card-toolbar">
               <Link
                 to={"/solicitud"}
@@ -110,12 +110,23 @@ const SolicitudReporte = () => {
                 <i className="fa-solid fa-reply text-dark"></i>
                 Volver
               </Link>
-              <button
-                className="btn btn-primary btn-sm"
+                <button
+                className="btn btn-secondary btn-sm"
                 onClick={generarPDF}
               >
-                <i className="bi bi-file-pdf"></i> Descargar PDF
+                <i className="fa-solid fa-file-pdf"></i> Descargar PDF
               </button>
+              <button type='submit'
+                                    className='btn btn-danger btn-sm ms-2'>
+                                    <i className="fa-solid fa-square-xmark"></i>
+                                    Rechazar
+                                </button>
+                                <button type='submit'
+                                    className='btn btn-primary btn-sm ms-2'>
+                                    <i className="fa-solid fa-check"></i>
+                                    Aprobar
+                                </button>
+            
             </div>
           </div>
         </div>
@@ -290,60 +301,35 @@ const SolicitudReporte = () => {
           </div>
           <div className="col-6">
 
-            <p className="mb-2">
-              <strong>Fecha de Aprobación:</strong>{' '}
-              30-10-2025
-            </p>
-            <p className="mb-2">
-              <strong>Estado:</strong>{' '}
-              <span className={`badge ${getEstadoBadgeClass(solicitud.estado)}`}>
-                {solicitud.estado}
-              </span>
-            </p>
 
           </div>
 
           <div className="col-12 mt-3">
-            <p className="mb-1"><strong>Comentarios del Aprobador:</strong></p>
-            <p style={{ textAlign: 'justify' }}>
-              Comentarios de ejemplo del aprobador sobre la solicitud.
-            </p>
+          
           </div>
 
         </div>
+        {/* Datos a Completar */}
+<form>
+  <div className="row mb-8">
+    <div className="col-lg-12 input-group-sm mb-5">
+      <div className="form-floating">
+        <input 
+          type='text' 
+          className='form-control'
+          id='comentarios'
+          placeholder='Comentarios'
+        />
+        <label htmlFor="comentarios" className="form-label">Comentarios</label>
+      </div>
+    </div>
+  </div>
+</form>
 
-        {/* Firmas */}
-        <div className="row mt-10" >
-          <div className="col-6 text-center">
-            <div className="border-top border-dark pt-2" style={{ marginTop: '80px' }}>
-              <p className="mb-0 fw-bold">SOLICITANTE</p>
-              <p className="mb-0">Donny Lopez</p>
-              <p className="mb-0">Gerente RRHH</p>
-            </div>
-          </div>
-          <div className="col-6 text-center">
-            <div className="border-top border-dark pt-2" style={{ marginTop: '80px' }}>
-              <p className="mb-0 fw-bold">APROBADOR</p>
-              <p className="mb-0">Lucio Levano</p>
-              <p className="mb-0">Gerente General</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="row mt-8"  >
-          <div className="col-12 text-center border-top pt-3">
-            <p className="mb-1">
-              Sistema de Gestión de Equipos - JERUTH
-            </p>
-            <p className="mb-0">
-              Documento generado el {formatearFecha(new Date().toISOString())}
-            </p>
-          </div>
-        </div>
+       
       </div>
     </div>
   );
 };
 
-export default SolicitudReporte;
+export default SolicitudJefePage;
