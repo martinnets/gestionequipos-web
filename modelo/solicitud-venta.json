@@ -1,0 +1,52 @@
+[
+    {
+        "id": 1,
+        "tipo":"laptop",
+        "solicitante":"Juan Perez",
+        "departamento":"Ventas",
+        "equipo":"Dell XPS 13",
+        "justificacion":"Necesito una laptop para trabajar remotamente",
+        "empresa":"EL",
+        "aprobado_por":"Maria Gomez"
+    },
+    {
+        "id": 2,
+        "tipo":"monitor",
+        "solicitante":"Ana Martinez",
+        "departamento":"Marketing",
+        "equipo":"LG UltraFine 5K",
+        "justificacion":"Requiero un monitor de alta resolución para diseño gráfico",
+        "empresa":"EL",
+        "aprobado_por":"Carlos Ruiz"
+    },
+    {
+        "id": 3,
+        "tipo":"impresora",
+        "solicitante":"Luis Fernandez",
+        "departamento":"Administración",
+        "equipo":"HP LaserJet Pro",
+        "justificacion":"Necesitamos una impresora para el departamento administrativo",
+        "empresa":"EL",
+        "aprobado_por":"Sofia Lopez"
+    },
+    {
+        "id": 4,
+        "tipo":"tablet",
+        "solicitante":"Carla Sanchez",
+        "departamento":"Ventas",
+        "equipo":"iPad Pro",
+        "justificacion":"Requiero una tablet para presentaciones a clientes",
+        "empresa":"EL",
+        "aprobado_por":"Miguel Torres"
+    },
+    {
+        "id": 5,
+        "tipo":"smartphone",
+        "solicitante":"Jorge Ramirez",
+        "departamento":"Soporte Técnico",
+        "equipo":"Samsung Galaxy S21",
+        "justificacion":"Necesito un smartphone para pruebas de aplicaciones móviles",
+        "empresa":"EL",
+        "aprobado_por":"Laura Diaz"
+    }
+]

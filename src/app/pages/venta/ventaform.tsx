@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import ventaDataService from "../../../_services/venta";
+import equipoDataService from "../../../_services/equipo";
 import { useAuth } from "../../modules/auth";
 import { Venta } from "../../../_models/venta";
+import { Equipo } from "../../../_models/equipo";
 
 export default function VentaForm() {
     const { currentUser } = useAuth();
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
     const [solicitudVenta, setSolicitudVenta] = useState<Venta>({});
+    const [equiposDisponibles, setEquiposDisponibles] = useState<Equipo[]>([]);
+    const [equipoSeleccionado, setEquipoSeleccionado] = useState<Equipo | null>(null);
+    const [especificarEquipo, setEspecificarEquipo] = useState(false);
     
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -18,12 +23,18 @@ export default function VentaForm() {
                 solicitudVenta.usu_crea = currentUser?.codigo;
                 solicitudVenta.codigo_estado = '1';
                 solicitudVenta.empresa_id = currentUser?.id_empresa;
-                solicitudVenta.usu_crea = currentUser?.codigo;
+                
                 solicitudVenta.fecha_solicitud = new Date().toISOString().split('T')[0];
-                solicitudVenta.estado = 'En Cotización';
+                solicitudVenta.estado = 'Pendiente';
+                
+                // Si se seleccionó un equipo existente, usar sus datos
+                // if (!especificarEquipo && equipoSeleccionado) {
+                //     solicitudVenta.equipo_id = equipoSeleccionado.id_equipo;
+                //     solicitudVenta.equipo_solicitado = `${equipoSeleccionado.marca} ${equipoSeleccionado.modelo}`;
+                // }
                 
                 console.log(solicitudVenta);
-                ventaDataService.createventa(solicitudVenta)
+                ventaDataService.createSolicitudVenta(solicitudVenta)
                     .then(function (response) {
                         console.log(JSON.stringify(response.data));
                         alert("Solicitud de venta creada correctamente");
@@ -35,7 +46,7 @@ export default function VentaForm() {
             } else {
                 solicitudVenta.usu_modi = currentUser?.codigo;
                 solicitudVenta.id_venta = id;
-                ventaDataService.updateventa(id, solicitudVenta)
+                ventaDataService.updateSolicitudVenta(id, solicitudVenta)
                     .then(function (response) {
                         console.log(JSON.stringify(response.data));
                         alert("Solicitud de venta actualizada correctamente");
@@ -56,21 +67,57 @@ export default function VentaForm() {
         }));
     };
 
+    const handleEquipoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const equipoId = e.target.value;
+        if (equipoId) {
+            const equipo = equiposDisponibles.find(eq => eq.id_equipo === equipoId);
+            setEquipoSeleccionado(equipo || null);
+            setEspecificarEquipo(false);
+        }
+    };
+
+    const toggleEspecificarEquipo = () => {
+        setEspecificarEquipo(!especificarEquipo);
+        setEquipoSeleccionado(null);
+        if (!especificarEquipo) {
+            // Limpiar campos de equipo cuando se cambia a especificar manualmente
+            setSolicitudVenta(prev => ({
+                ...prev,
+                equipo_id: undefined,
+                equipo_solicitado: ''
+            }));
+        }
+    };
+
     useEffect(() => {
+        // Cargar equipos disponibles
+       
+
         if (id === 'crea') {
             console.log(id);
         } else {
-            ventaDataService.getSolicitudVentaById(id)
+            ventaDataService.getVentaById(id)
                 .then(response => response.json())
                 .then(result => {
                     setSolicitudVenta(result);
+                    // Determinar si está especificando equipo manualmente
+                    if (result.equipo_id) {
+                        setEspecificarEquipo(false);
+                        equipoDataService.getEquipoById(result.equipo_id)
+                            .then(response => response.json())
+                            .then(equipo => {
+                                setEquipoSeleccionado(equipo);
+                            });
+                    } else {
+                        setEspecificarEquipo(true);
+                    }
                     console.log(result);
                 })
                 .catch(e => {
                     console.log(e);
                 });
         }
-    }, [id]);
+    }, [id, currentUser?.id_empresa]);
 
     return (
         <>
@@ -96,7 +143,7 @@ export default function VentaForm() {
                 <div className="card card-custom">
                     <div className="card-body pt-10">
                         <div className="form-group row">
-                            {/* Primera fila - Información básica */}
+                            {/* Información básica */}
                             <div className="col-lg-4 input-group-sm mb-5">
                                 <div className="form-floating">
                                     <input type="text" name="codigo" defaultValue={solicitudVenta.codigo}
@@ -107,78 +154,180 @@ export default function VentaForm() {
                             </div>
                             <div className="col-lg-4 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <input type="number" name="cantidad" defaultValue={solicitudVenta.cantidad}
+                                    <input type="text" name="solicitante" defaultValue={solicitudVenta.solicitante}
                                         className="form-control" onChange={handleChange} 
-                                        placeholder="Cantidad" min="1" required />
-                                    <label className="form-label">Cantidad *</label>
+                                        placeholder="Nombre del solicitante" required />
+                                    <label className="form-label">Solicitante *</label>
                                 </div>
                             </div>
                             <div className="col-lg-4 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <select name="estado" defaultValue={solicitudVenta.estado} 
-                                        className="form-control" onChange={handleChange}>
-                                        <option value="En Cotización">En Cotización</option>
-                                        <option value="Cotizado">Cotizado</option>
-                                        <option value="En Aprobación">En Aprobación</option>
-                                        <option value="En Compra">En Compra</option>
-                                        <option value="Vendido">Vendido</option>
-                                    </select>
-                                    <label className="form-label">Estado</label>
+                                    <input type="text" name="departamento" defaultValue={solicitudVenta.area}
+                                        className="form-control" onChange={handleChange} 
+                                        placeholder="Departamento" required />
+                                    <label className="form-label">Departamento *</label>
                                 </div>
                             </div>
 
-                            {/* Segunda fila - Tipo de equipo y descripción */}
+                            {/* Selección de tipo de equipo */}
                             <div className="col-lg-6 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <input type="text" name="tipo_equipo" defaultValue={solicitudVenta.tipo_equipo}
-                                        className="form-control" onChange={handleChange} 
-                                        placeholder="Tipo de equipo" required />
+                                    <select name="tipo_equipo" defaultValue={solicitudVenta.tipo_equipo} 
+                                        className="form-control" onChange={handleChange} required>
+                                        <option value="">Seleccionar tipo</option>
+                                        <option value="laptop">Laptop</option>
+                                        <option value="monitor">Monitor</option>
+                                        <option value="impresora">Impresora</option>
+                                        <option value="tablet">Tablet</option>
+                                        <option value="smartphone">Smartphone</option>
+                                        <option value="desktop">Desktop</option>
+                                        <option value="servidor">Servidor</option>
+                                        <option value="accesorio">Accesorio</option>
+                                    </select>
                                     <label className="form-label">Tipo de Equipo *</label>
                                 </div>
                             </div>
+
+                            {/* Selección/Elección de equipo */}
+                            <div className="col-lg-6 input-group-sm mb-5">
+                                <div className="d-flex align-items-center mb-2">
+                                    <label className="form-check form-check-custom form-check-solid me-5">
+                                        <input 
+                                            className="form-check-input" 
+                                            type="checkbox" 
+                                            checked={!especificarEquipo}
+                                            onChange={() => setEspecificarEquipo(false)}
+                                        />
+                                        <span className="form-check-label">Seleccionar de equipos disponibles</span>
+                                    </label>
+                                    <label className="form-check form-check-custom form-check-solid">
+                                        <input 
+                                            className="form-check-input" 
+                                            type="checkbox" 
+                                            checked={especificarEquipo}
+                                            onChange={() => setEspecificarEquipo(true)}
+                                        />
+                                        <span className="form-check-label">Especificar equipo manualmente</span>
+                                    </label>
+                                </div>
+
+                                {!especificarEquipo ? (
+                                    <div className="form-floating">
+                                        <select 
+                                            className="form-control" 
+                                            onChange={handleEquipoChange}
+                                            value={equipoSeleccionado?.id_equipo || ''}
+                                        >
+                                            <option value="">Seleccionar equipo disponible</option>
+                                            {equiposDisponibles.map(equipo => (
+                                                <option key={equipo.id_equipo} value={equipo.id_equipo}>
+                                                    {equipo.codigo} - {equipo.marca} {equipo.modelo} ({equipo.estado})
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <label className="form-label">Equipo Disponible</label>
+                                    </div>
+                                ) : (
+                                    <div className="form-floating">
+                                        <input 
+                                            type="text" 
+                                            name="equipo_solicitado" 
+                                             
+                                            className="form-control" 
+                                            onChange={handleChange} 
+                                            placeholder="Especificar equipo requerido" 
+                                            required 
+                                        />
+                                        <label className="form-label">Equipo Solicitado *</label>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Información del equipo seleccionado (solo lectura) */}
+                            {equipoSeleccionado && !especificarEquipo && (
+                                <div className="col-lg-12 mb-5">
+                                    <div className="card bg-light-success">
+                                        <div className="card-body py-4">
+                                            <h6 className="card-title">Información del Equipo Seleccionado</h6>
+                                            <div className="row">
+                                                <div className="col-lg-3">
+                                                    <strong>Marca/Modelo:</strong> {equipoSeleccionado.marca} {equipoSeleccionado.modelo}
+                                                </div>
+                                                <div className="col-lg-3">
+                                                    <strong>Procesador:</strong> {equipoSeleccionado.procesador}
+                                                </div>
+                                                <div className="col-lg-2">
+                                                    <strong>RAM:</strong> {equipoSeleccionado.ram}
+                                                </div>
+                                                <div className="col-lg-2">
+                                                    <strong>Almacenamiento:</strong> {equipoSeleccionado.disco}
+                                                </div>
+                                                <div className="col-lg-2">
+                                                    <strong>Estado:</strong> 
+                                                    <span className={`badge ms-1 ${
+                                                        equipoSeleccionado.estado === 'Disponible' ? 'bg-success' : 
+                                                        equipoSeleccionado.estado === 'Asignado' ? 'bg-warning' : 'bg-secondary'
+                                                    }`}>
+                                                        {equipoSeleccionado.estado}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Empresa y Aprobador */}
                             <div className="col-lg-6 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <input type="text" name="modelo" defaultValue={solicitudVenta.modelo}
-                                        className="form-control" onChange={handleChange} 
-                                        placeholder="Modelo específico" />
-                                    <label className="form-label">Modelo</label>
+                                    <select name="empresa" defaultValue={solicitudVenta.empresa} 
+                                        className="form-control" onChange={handleChange} required>
+                                        <option value="">Seleccionar empresa</option>
+                                        <option value="EL">EL</option>
+                                        <option value="OT">OT</option>
+                                        <option value="EX">EX</option>
+                                    </select>
+                                    <label className="form-label">Empresa *</label>
+                                </div>
+                            </div>
+                            <div className="col-lg-6 input-group-sm mb-5">
+                                <div className="form-floating">
+                                    <select name="aprobado_por" defaultValue={solicitudVenta.aprobador} 
+                                        className="form-control" onChange={handleChange}>
+                                        <option value="">Seleccionar aprobador</option>
+                                        <option value="Maria Gomez">Maria Gomez</option>
+                                        <option value="Carlos Ruiz">Carlos Ruiz</option>
+                                        <option value="Sofia Lopez">Sofia Lopez</option>
+                                        <option value="Miguel Torres">Miguel Torres</option>
+                                        <option value="Laura Diaz">Laura Diaz</option>
+                                    </select>
+                                    <label className="form-label">Aprobado Por</label>
                                 </div>
                             </div>
 
-                            {/* Tercera fila - Descripción y referencia */}
+                            {/* Justificación */}
                             <div className="col-lg-12 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <input type="text" name="descripcion" defaultValue={solicitudVenta.descripcion}
+                                    <textarea name="justificacion" defaultValue={solicitudVenta.justificacion}
                                         className="form-control" onChange={handleChange} 
-                                        placeholder="Descripción detallada" required />
-                                    <label className="form-label">Descripción *</label>
+                                        rows={4} placeholder="Describa la justificación de la solicitud" 
+                                        required />
+                                    <label className="form-label">Justificación *</label>
                                 </div>
                             </div>
 
-                            <div className="col-lg-6 input-group-sm mb-5">
+                            {/* Estado */}
+                            <div className="col-lg-4 input-group-sm mb-5">
                                 <div className="form-floating">
-                                    <input type="text" name="referencia" defaultValue={solicitudVenta.referencia}
-                                        className="form-control" onChange={handleChange} 
-                                        placeholder="Referencia o SKU" />
-                                    <label className="form-label">Referencia</label>
-                                </div>
-                            </div>
-                            <div className="col-lg-6 input-group-sm mb-5">
-                                <div className="form-floating">
-                                    <input type="email" name="notificar_email" defaultValue={solicitudVenta.notificar_email}
-                                        className="form-control" onChange={handleChange} 
-                                        placeholder="email@ejemplo.com" />
-                                    <label className="form-label">Email Notificación</label>
-                                </div>
-                            </div>
-
-                            {/* Cuarta fila - Observaciones */}
-                            <div className="col-lg-12 input-group-sm mb-5">
-                                <div className="form-floating">
-                                    <textarea name="observaciones" defaultValue={solicitudVenta.observaciones}
-                                        className="form-control" onChange={handleChange} 
-                                        rows={3} placeholder="Observaciones adicionales" />
-                                    <label className="form-label">Observaciones</label>
+                                    <select name="estado" defaultValue={solicitudVenta.estado} 
+                                        className="form-control" onChange={handleChange}>
+                                        <option value="Pendiente">Pendiente</option>
+                                        <option value="Aprobado">Aprobado</option>
+                                        <option value="Rechazado">Rechazado</option>
+                                        <option value="En Proceso">En Proceso</option>
+                                        <option value="Completado">Completado</option>
+                                    </select>
+                                    <label className="form-label">Estado</label>
                                 </div>
                             </div>
                         </div>

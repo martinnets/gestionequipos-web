@@ -3,6 +3,7 @@ export interface Equipo {
     codigo?: string;
     tipo_id?: string;
     tipo_nombre?: string;
+    equipo_id?: number;
     marca?: string;
     modelo?: string;
     procesador?: string;

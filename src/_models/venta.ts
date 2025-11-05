@@ -3,6 +3,11 @@ export interface Venta {
     codigo?: string;
     usuario_id?: string;
     usuario_nombre?: string;
+    solicitante?: string;
+    aprobador?: string;
+    area?:string;
+    empresa?:string;
+    justificacion?: string;
     empresa_id?: string;
     tipo_equipo?: string;
     descripcion?: string;
