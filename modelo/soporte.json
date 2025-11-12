@@ -1,0 +1,83 @@
+[
+    {
+        "id":1,
+        "personal":"Juan Perez",
+        "tipo_equipo": "laptop",
+        "id_solicitud":1,
+        "solicitud":"SOL-001",
+        "empresa":"EL",
+        "checklist":[
+            {
+                "id_item": 1,                
+                "descripcion": "Instalar sistema operativo Windows 11 Pro",
+                "categoria": "Software",
+                "orden": 1,
+                "estado":"pendiente"
+            },
+            {
+                "id_item": 2,
+                "descripcion": "Configurar antivirus corporativo",
+                "categoria": "Seguridad",
+                "orden": 2,
+                "estado":"pendiente"
+            }
+        ],
+        "fecha_inicio":"11/11/2025",
+        "fecha_fin":"15/11/2025",
+        "estado":"pendiente"
+    },
+    {
+        "id":2,
+        "personal":"Juan Gomez",
+        "tipo_equipo": "laptop",
+        "id_solicitud":1,
+        "solicitud":"SOL-002",
+        "empresa":"EL",
+        "checklist":[
+            {
+                "id_item": 1,                
+                "descripcion": "Instalar sistema operativo Windows 11 Pro",
+                "categoria": "Software",
+                "orden": 1,
+                "estado":"pendiente"
+            },
+            {
+                "id_item": 2,
+                "descripcion": "Configurar antivirus corporativo",
+                "categoria": "Seguridad",
+                "orden": 2,
+                "estado":"pendiente"
+            }
+        ],
+        "fecha_inicio":"11/11/2025",
+        "fecha_fin":"15/11/2025",
+        "estado":"pendiente"
+    },
+     {
+        "id":2,
+        "personal":"Carlos Sals",
+        "tipo_equipo": "laptop",
+        "id_solicitud":1,
+        "solicitud":"SOL-003",
+        "empresa":"ADAMS",
+        "checklist":[
+            {
+                "id_item": 1,                
+                "descripcion": "Instalar sistema operativo Windows 11 Pro",
+                "categoria": "Software",
+                "orden": 1,
+                "estado":"pendiente"
+            },
+            {
+                "id_item": 2,
+                "descripcion": "Configurar antivirus corporativo",
+                "categoria": "Seguridad",
+                "orden": 2,
+                "estado":"pendiente"
+            }
+        ],
+        "fecha_inicio":"11/11/2025",
+        "fecha_fin":"15/11/2025",
+        "estado":"pendiente"
+    }
+]

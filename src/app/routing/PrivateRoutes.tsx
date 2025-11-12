@@ -34,6 +34,7 @@ import { GamaPage } from '../pages/gama/gama'
 import { CaracteristicaPage } from '../pages/caracteristica/caracteristica'
 import AprobadorForm from '../pages/aprobador/aprobadorform'
 import SoporteForm from '../pages/soporte/soporteform'
+import { SoportePage } from '../pages/soporte/soporte'
  
 
 const PrivateRoutes = () => {
@@ -97,6 +98,7 @@ const PrivateRoutes = () => {
         <Route path='/proveedor' element={<ProveedorPage />} />
         <Route path='/proveedorform' element={< ProveedorForm />} />
 
+        <Route path='/soporte' element={< SoportePage />} />
         <Route path='/soporteform' element={< SoporteForm />} />
 
         {/* Page Not Found */}

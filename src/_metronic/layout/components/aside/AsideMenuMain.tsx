@@ -50,6 +50,16 @@ export function AsideMenuMain() {
         </Link>
       </div>
       <div className='menu-item'>
+        <Link to="/soporte" className='menu-link' >
+          <span className='menu-icon'>
+            <span  >
+              <KTIcon iconName='basket' className='fs-2' />
+            </span>{' '}
+          </span>
+          <span className='menu-title'>Soporte</span>
+        </Link>
+      </div>
+      <div className='menu-item'>
         <Link to="/licencia" className='menu-link' >
           <span className='menu-icon'>
             <span  >
