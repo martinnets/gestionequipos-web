@@ -33,8 +33,11 @@ export function AprobadorPage() {
                             <div className="card-header bg-dark">
                                 <h3 className="card-title text-light">Listado de Aprobadores</h3>
                                 <div className="card-toolbar">
-                                                    
-                                </div>
+                                                    <Link to={"/aprobadorform"} className="btn btn-sm btn-primary ">
+                                                      <i className="fa-solid fa-file fs-1x text-light"></i>
+                                                      Nuevo Aprobador
+                                                    </Link>                  
+                                                  </div>
                             </div>
                             <div className="card-body">
                                 <MaterialReactTable 

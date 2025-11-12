@@ -6,7 +6,9 @@
         "nombres":"Juan",
         "apellidos":"Perez",
         "cargo":"Gerente",  
-        "centro_costo":"Ventas"
+        "centro_costo":"Ventas",
+        "email":"demo@jeruth.pe",
+        "perfil":"aprobador"
     },
     {
         "id": 2,
@@ -15,7 +17,9 @@
         "nombres":"Maria",
         "apellidos":"Gomez",
         "cargo":"Analista",  
-        "centro_costo":"Marketing"
+        "centro_costo":"Marketing",
+        "email":"demo@jeruth.pe",
+        "perfil":"solicitante"
     },
     {
         "id": 3,
@@ -24,7 +28,9 @@
         "nombres":"Luis",
         "apellidos":"Ramirez",
         "cargo":"Supervisor",  
-        "centro_costo":"Operaciones"
+        "centro_costo":"Operaciones",
+        "email":"demo@jeruth.pe",
+        "perfil":"solicitante"
     },
     {
         "id": 4,
@@ -33,7 +39,9 @@
         "nombres":"Ana",
         "apellidos":"Lopez",
         "cargo":"Coordinadora",  
-        "centro_costo":"Logística"
+        "centro_costo":"Logística",
+        "email":"demo@jeruth.pe",
+        "perfil":"solicitante"
     },
     {
         "id": 5,
@@ -42,6 +50,8 @@
         "nombres":"Carlos",
         "apellidos":"Sanchez",
         "cargo":"Director",  
-        "centro_costo":"Finanzas"
+        "centro_costo":"Finanzas",
+        "email":"demo@jeruth.pe",
+        "perfil":"aprobador"        
     }   
 ]

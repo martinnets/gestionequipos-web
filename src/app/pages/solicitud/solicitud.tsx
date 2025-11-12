@@ -41,6 +41,13 @@ export function SolicitudPage() {
                                 to={`/solicitudform/ver`}>
                                 <i className="fa-solid fa-clipboard-check fs-4  "></i>
                             </Link>
+                            <Link className="btn btn-icon btn-light-warning btn-sm" 
+                            data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                title="Asignacion Soporte Técnico"
+                                to={`/soporteform`}>
+                                <i className="fa-solid fa-list-ol fs-4  "></i>
+                            </Link>
                             <Link className="btn btn-icon btn-light-danger btn-sm" 
                             data-bs-toggle="tooltip"
                                 data-bs-placement="top"

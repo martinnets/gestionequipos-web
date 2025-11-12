@@ -1,6 +1,6 @@
 ﻿export interface Personal {
     id_empresa?:string
-    id?:string  
+    id?:number  
         tipo_doc?:string
         nro_doc?:string
         nombres?:string

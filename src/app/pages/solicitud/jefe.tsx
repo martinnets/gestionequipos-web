@@ -101,7 +101,7 @@ const SolicitudJefePage = () => {
       <div className="row m-5">
         <div className="card card-custom">
           <div className="card-header bg-dark">
-            <h3 className="card-title text-light">Solicitud de Equipo - Jefe Inmediato</h3>
+            <h3 className="card-title text-light">Aprobacion de Solicitud - Jefe Inmediato</h3>
             <div className="card-toolbar">
               <Link
                 to={"/solicitud"}

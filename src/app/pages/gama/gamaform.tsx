@@ -13,6 +13,7 @@ import gamaDataService from "../../../_services/gama";
 interface Caracteristica {
   id: number;
   nombre: string;
+  unidad: string;
   valor?: string;
 }
 
@@ -68,9 +69,9 @@ export default function GamaForm() {
     ]);
 
     setCatalogoCaracteristicas([
-      { id: 101, nombre: "RAM" },
-      { id: 102, nombre: "Disco Duro" },
-      { id: 103, nombre: "Procesador" },
+      { id: 101, nombre: "RAM",unidad:"GB" },
+      { id: 102, nombre: "Disco Duro",unidad:"GB" },
+      { id: 103, nombre: "Procesador",unidad:"GHZ" },
     ]);
 
     if (id && id !== "crea") {
@@ -163,14 +164,16 @@ export default function GamaForm() {
       <form onSubmit={handleSubmit}>
         
         {/* header */}
-        <div className="alert alert-dark p-4 d-flex justify-content-between">
+        <div className="alert alert-dark p-4 d-flex justify-content-between bg-dark text-light">
           <div>
-            <h3>{id==="crea" ? "Nueva Gama" : "Editar Gama"}</h3>
+            <h3 className="text-light">{id==="crea" ? "Nueva Gama" : "Editar Gama"}</h3>
             <span>Definir parámetros de gama</span>
           </div>
           <div>
-            <Link to="/gama" className="btn btn-secondary btn-sm me-2">Volver</Link>
-            <button className="btn btn-primary btn-sm">Guardar</button>
+            <Link to="/gama" className="btn btn-danger btn-sm me-2">
+            <i className="fa-solid fa-reply "></i>Volver</Link>
+            <button className="btn btn-primary btn-sm">
+               <i className="fa-solid fa-floppy-disk"></i>Guardar</button>
           </div>
         </div>
 
@@ -228,7 +231,7 @@ export default function GamaForm() {
             <tbody>
               {(gama.caracteristicas || []).map((c,i)=>(
                 <tr key={i}>
-                  <td>{c.nombre}</td>
+                  <td>{c.nombre}({c.unidad})</td>
                   <td>
                     <input className="form-control form-control-sm"
                       value={c.valor || ""}
@@ -406,7 +409,12 @@ const ModalSeleccionCaracteristicas = ({catalogo, existentes, onClose, onSelect}
   return (
     <ModalBase title="Seleccionar Características" onClose={onClose}>
       <table className="table table-hover">
-        <thead><tr><th></th><th>Nombre</th></tr></thead>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Nombre</th>
+            <th>Unidad</th>
+          </tr></thead>
         <tbody>
         {catalogo.map((c:any)=>(
           <tr key={c.id}>
@@ -418,6 +426,7 @@ const ModalSeleccionCaracteristicas = ({catalogo, existentes, onClose, onSelect}
               />
             </td>
             <td>{c.nombre}</td>
+            <td>{c.unidad}</td>
           </tr>
         ))}
         </tbody>

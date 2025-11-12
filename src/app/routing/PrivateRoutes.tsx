@@ -28,6 +28,12 @@ import { AprobadorPage } from '../pages/aprobador/aprobador'
 import SolicitudJefePage from '../pages/solicitud/jefe'
 import SolicitudUsuarioPage from '../pages/solicitud/usuario'
 import DevolucionPage from '../pages/asignacion/devolucion'
+import { ProveedorPage } from '../pages/proveedor/proveedor'
+import ProveedorForm from '../pages/proveedor/proveedorform'
+import { GamaPage } from '../pages/gama/gama'
+import { CaracteristicaPage } from '../pages/caracteristica/caracteristica'
+import AprobadorForm from '../pages/aprobador/aprobadorform'
+import SoporteForm from '../pages/soporte/soporteform'
  
 
 const PrivateRoutes = () => {
@@ -75,12 +81,23 @@ const PrivateRoutes = () => {
 
         <Route path='/reportexequipo' element={< ReporteEquipoPage />} />
 
+        <Route path='/gama' element={< GamaPage />} />
         <Route path='/gamaform' element={< GamaForm />} />
+
+        <Route path='/caracteristica' element={< CaracteristicaPage />} />
         <Route path='/caracteristicaform' element={< CaracteristicaForm />} />
 
         <Route path='/personal' element={< PersonalPage />} />
+
         <Route path='/aprobador' element={< AprobadorPage />} />
+        <Route path='/aprobadorform' element={< AprobadorForm />} />
+
         <Route path='/devolucion' element={< DevolucionPage />} />
+
+        <Route path='/proveedor' element={<ProveedorPage />} />
+        <Route path='/proveedorform' element={< ProveedorForm />} />
+
+        <Route path='/soporteform' element={< SoporteForm />} />
 
         {/* Page Not Found */}
         <Route path='*' element={<Navigate to='/error/404' />} />

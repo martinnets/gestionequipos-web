@@ -69,14 +69,14 @@ export function AsideMenuMain() {
       </AsideMenuItemWithSub>
       <AsideMenuItemWithSub to='/maestro' title='Maestros' icon='some-files' visible={true}>
         <AsideMenuItem to='/empresa' title='Empresa'  hasBullet={true}  visible={currentUser?.opciones?.administracion}/>
+        <AsideMenuItem to='/proveedor' title='Proveedor'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
         <AsideMenuItem to='/personal' title='Personal'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
-        <AsideMenuItem to='/aprobador' title='Aprobadoes'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
+        <AsideMenuItem to='/aprobador' title='Aprobadores'  hasBullet={true} visible={currentUser?.opciones?.ventas} />
       </AsideMenuItemWithSub>
       <AsideMenuItemWithSub to='/parametro' title='Parametros' icon='questionnaire-tablet' visible={currentUser?.opciones?.administracion}>
-        <AsideMenuItem to='/caracteristicaform' title='Caracterustica' hasBullet={true} visible={currentUser?.opciones?.administracion} />
-        
+        <AsideMenuItem to='/caracteristica' title='Caracteristicas' hasBullet={true} visible={currentUser?.opciones?.administracion} />
         <AsideMenuItem to='/parametro/puesto' pdominio='puesto' title='Puestos' hasBullet={true} visible={currentUser?.opciones?.administracion} />
-        <AsideMenuItem to='/gamaform' pdominio='gama' title='Gama' hasBullet={true} visible={currentUser?.opciones?.administracion} />
+        <AsideMenuItem to='/gama' pdominio='gama' title='Gama' hasBullet={true} visible={currentUser?.opciones?.administracion} />
         <AsideMenuItem to='/parametro/tipo_equipo' pdominio='tipo_equipo' title='Tipo Equipo'  hasBullet={true} visible={currentUser?.opciones?.administracion} />        
       </AsideMenuItemWithSub>
       <div className='menu-item'>

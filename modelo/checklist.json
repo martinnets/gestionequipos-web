@@ -1,0 +1,57 @@
+[
+  {
+    "id_item": 1,
+    "tipo_equipo": "laptop",
+    "descripcion": "Instalar sistema operativo Windows 11 Pro",
+    "categoria": "Software",
+    "tipo_validacion": "checkbox",
+    "obligatorio": true,
+    "orden": 1,
+    "valor_esperado": "Instalación completada y activada",
+    "instrucciones": "Verificar activación digital con licencia corporativa."
+  },
+  {
+    "id_item": 2,
+    "tipo_equipo": "laptop",
+    "descripcion": "Configurar antivirus corporativo",
+    "categoria": "Seguridad",
+    "tipo_validacion": "checkbox",
+    "obligatorio": true,
+    "orden": 2,
+    "valor_esperado": "Defender activado con políticas empresariales",
+    "instrucciones": "Validar sincronización con servidor de seguridad."
+  },
+  {
+    "id_item": 3,
+   "tipo_equipo": "laptop",
+    "descripcion": "Instalar paquete Office 365 Empresa",
+    "categoria": "Software",
+    "tipo_validacion": "checkbox",
+    "obligatorio": true,
+    "orden": 3,
+    "valor_esperado": "Office instalado y activado",
+    "instrucciones": "Usar credenciales de dominio para validación."
+  },
+  {
+    "id_item": 4,
+   "tipo_equipo": "laptop",
+    "descripcion": "Verificar periféricos (teclado, mouse, cámara, micrófono)",
+    "categoria": "Hardware",
+    "tipo_validacion": "checkbox",
+    "obligatorio": false,
+    "orden": 4,
+    "valor_esperado": "Funcionamiento correcto",
+    "instrucciones": "Comprobar dispositivos en el panel de control."
+  },
+  {
+    "id_item": 5,
+    "id_checklist": 101,
+    "descripcion": "Adjuntar foto del equipo configurado",
+    "categoria": "Evidencia",
+    "tipo_validacion": "foto",
+    "obligatorio": false,
+    "orden": 5,
+    "valor_esperado": "Foto visible del escritorio configurado",
+    "instrucciones": "Subir imagen en formato JPG o PNG."
+  }
+]

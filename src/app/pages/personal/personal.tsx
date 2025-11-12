@@ -10,13 +10,27 @@ export function PersonalPage() {
     const { currentUser } = useAuth();
     const [equipos, setEquipos] = useState<Personal[]>([]);
     const datos = personalJSON as Personal[];
-     const columns = useMemo<MRT_ColumnDef<Personal>[]>(
+    const columns = useMemo<MRT_ColumnDef<Personal>[]>(
         () => [
             { accessorKey: 'id', header: 'ID ', },
             { accessorKey: 'nombres', header: 'Nombre', },
             { accessorKey: 'apellidos', header: 'Apellido', },
-            { accessorKey: 'nro_doc_identidad', header: 'DNI', },
-        
+            { accessorKey: 'email', header: 'Email', },
+            { accessorKey: 'empresa', header: 'Empresa', },
+            { accessorKey: 'perfil', header: 'Perfil',
+                Cell: ({ cell }) => {
+                    const perfil = cell.getValue<string>();
+                    return (
+                        <span className={`badge ${
+                            perfil === 'solicitante' ? 'text-light bg-success' : 
+                            perfil === 'aprobador' ? 'text-light    bg-danger' : 'bg-secondary'
+                        }`}>
+                            {perfil}
+                        </span>
+                    );
+                }
+             },
+            
         ],
         [],
     );

@@ -62,7 +62,7 @@ const [gamas, setGamas] = useState<Gama[]>([]);
       { id: 3, nombre: "Tablet" },
     ]);
   }; 
-const cargarGamas = (tipo_equipo_id?: number) => {
+  const cargarGamas = (tipo_equipo_id?: number) => {
     if (!tipo_equipo_id) return;
     const filtradas = (gamaJSON as Gama[]).filter(
       (g) => g.tipo_equipo_id === Number(tipo_equipo_id)

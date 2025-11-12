@@ -1,26 +1,23 @@
 export interface Equipo {
-    id_equipo?: string;
-    codigo?: string;
-    tipo_id?: string;
-    tipo_nombre?: string;
-    equipo_id?: number;
-    marca?: string;
-    modelo?: string;
-    procesador?: string;
-    ram?: string;
-    disco?: string;
-    so?: string;
-    proveedor?: string;
+    id?: number;
+    tipo_equipo_id?: number;
+    gama_id?: number;
+    codigo_activo?: string;
+    serie?: string;
+    orden_compra?: string;
+    posicion_oc?: string;
+    monto_compra?: number;
     fecha_compra?: string;
-    costo?: number;
-    numero_serie?: string;
-    activo_fijo?: string;
-    ubicacion?: string;
-    empresa_id?: string;
-    gama_id?: string;
-    estado?: string;
-    imagen_url?: string;
-    usu_crea?: string;
-    usu_modi?: string;
-    codigo_estado?: string;
+    parte_ingreso?: string;
+    posicion_parte?: string;
+    fecha_ingreso?: string;
+    proveedor?: string;
+    destinatario?: string;
+    caracteristicas?: CaracteristicaEquipo[];
+}
+
+export interface CaracteristicaEquipo {
+    id: number;
+    nombre: string;
+    valor?: string;
 }
