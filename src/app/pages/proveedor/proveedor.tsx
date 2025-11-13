@@ -32,15 +32,7 @@ export function ProveedorPage() {
     [],
     );
     useEffect(() => {
-        proveedorDataService.getproveedor(currentUser?.id_empresa)
-          .then(response => response.json())
-          .then(response => {
-            setproveedor(response)
-            console.log(response)
-          })
-          .catch(e => {
-            console.log(e);
-          });
+        
       }, []);
     return (
     <>

@@ -35,6 +35,7 @@ import { CaracteristicaPage } from '../pages/caracteristica/caracteristica'
 import AprobadorForm from '../pages/aprobador/aprobadorform'
 import SoporteForm from '../pages/soporte/soporteform'
 import { SoportePage } from '../pages/soporte/soporte'
+import SolicitudView from '../pages/solicitud/solicitudview'
  
 
 const PrivateRoutes = () => {
@@ -67,6 +68,7 @@ const PrivateRoutes = () => {
         <Route path='/solicitudreporte/:id' element={< SolicitudReporte />} />
         <Route path='/solicitudjefe' element={< SolicitudJefePage />} />
         <Route path='/solicitudusuario' element={< SolicitudUsuarioPage />} />
+        <Route path='/solicitudvista/:id' element={< SolicitudView />} />
 
         <Route path='/licencia' element={<LicenciaPage />} />
         <Route path='/licenciaform/:id' element={< LicenciaForm />} />
@@ -111,3 +113,4 @@ const PrivateRoutes = () => {
  
 
 export {PrivateRoutes}
+
