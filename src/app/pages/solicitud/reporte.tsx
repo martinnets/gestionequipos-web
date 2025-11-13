@@ -101,7 +101,7 @@ const SolicitudReporte = () => {
       <div className="row m-5">
         <div className="card card-custom">
           <div className="card-header bg-dark">
-            <h3 className="card-title text-light">Reporte de Solicitud de Equipo</h3>
+            <h3 className="card-title text-light">Solicitud de Equipo</h3>
             <div className="card-toolbar">
               <Link
                 to={"/solicitud"}
@@ -155,7 +155,7 @@ const SolicitudReporte = () => {
               <strong>Fecha de Solicitud:</strong> 30-10-2025
             </p>
             <p className="mb-2">
-              <strong>Tipo de Solicitud:</strong>LAPTOP
+              <strong>Tipo de Solicitud:</strong>Equipo Nuevo
             </p>
             <p className="mb-2">
               <strong>Urgencia:</strong>{' '}
@@ -188,20 +188,17 @@ const SolicitudReporte = () => {
                 <tbody >
                   <tr>
                     <td style={{ width: '30%' }}><strong>Tipo de Equipo</strong></td>
-                    <td>{solicitud.tipo_equipo_nombre}</td>
+                    <td>Laptop</td>
                   </tr>
                   <tr>
                     <td><strong>Perfil de Usuario</strong></td>
-                    <td>{solicitud.perfil}</td>
+                    <td>Administrativo</td>
                   </tr>
                   <tr>
                     <td><strong>Gama</strong></td>
-                    <td>{solicitud.gama_nombre}</td>
+                    <td>GAL-023</td>
                   </tr>
-                  <tr>
-                    <td><strong>Características</strong></td>
-                    <td>{solicitud.caracteristicas}</td>
-                  </tr>
+
                 </tbody>
               </table>
             </div>
@@ -223,11 +220,7 @@ const SolicitudReporte = () => {
                     <td>48 meses</td>
                   </tr>
                   <tr>
-                    <td><strong>Costo Total del Contrato</strong></td>
-                    <td className="fw-bold">
-                      S/{' '}
-                      9999.00
-                    </td>
+
                   </tr>
                 </tbody>
               </table>
@@ -240,15 +233,31 @@ const SolicitudReporte = () => {
         {/* Equipo en Custodia */}
 
         <div className="row mb-8">
-          <div className="col-12">
-            <div className="alert alert-info mb-0">
-              <h6 className="fw-bold mb-2">
-                <i className="bi bi-box-seam"></i> EQUIPO EN CUSTODIA SELECCIONADO
-              </h6>
-              <p className="mb-0" >
-                Este equipo proviene del inventario en custodia disponible
-              </p>
-            </div>
+          <div className="mb-4 border p-3 rounded bg-light">
+            <h5><i className="fa fa-microchip me-2"></i>Características de la Gama</h5>
+            <table className="table table-bordered table-sm">
+              <thead>
+                <tr>
+                  <th>Característica</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr key='1'>
+                  <td>RAM</td>
+                  <td>32GB</td>
+                </tr>
+                <tr key='1'>
+                  <td>Disco Duro</td>
+                  <td>2048GB</td>
+                </tr>
+                <tr key='1'>
+                  <td>Core i7</td>
+                  <td>3.5GHZ</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -276,7 +285,7 @@ const SolicitudReporte = () => {
         )}
 
         {/* Información de Aprobación */}
-        <div className="row mb-8">
+        <div className="row mb-2">
           <div className="col-12">
             <h6 className="fw-bold mb-3 border-bottom pb-2">INFORMACIÓN DE APROBACIÓN</h6>
           </div>
@@ -313,7 +322,7 @@ const SolicitudReporte = () => {
         </div>
 
         {/* Firmas */}
-        <div className="row mt-10" >
+        <div className="row mt-2" >
           <div className="col-6 text-center">
             <div className="border-top border-dark pt-2" style={{ marginTop: '80px' }}>
               <p className="mb-0 fw-bold">SOLICITANTE</p>

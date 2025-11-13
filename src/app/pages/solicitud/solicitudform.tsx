@@ -223,7 +223,7 @@ export default function SolicitudForm() {
         const answer = window.confirm("¿Está seguro de enviar la solicitud a aprobación?");
         if (answer) {
             solicitud.usu_crea = currentUser?.codigo;
-            solicitud.codigo_estado = '2'; // En Aprobación
+            solicitud.codigo_estado = 2; // En Aprobación
             solicitud.empresa_id = currentUser?.id_empresa;
             solicitud.fecha_solicitud = new Date().toISOString().split('T')[0];
             solicitud.estado = 'En Aprobación';

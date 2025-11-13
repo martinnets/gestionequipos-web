@@ -11,6 +11,10 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import solicitudDataService from "../../../_services/solicitud";
 import { useAuth } from "../../modules/auth";
+import { Checklist } from "../../../_models/checklist";
+import checklistJSON from "../../../../modelo/checklist.json"
+import personalJSON from "../../../../modelo/personal.json"
+import { Personal } from "../../../_models/personal";
 
 // ------------------ Interfaces ---------------------
 interface Solicitud {
@@ -55,6 +59,8 @@ export default function SolicitudView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const datos = checklistJSON as Checklist[];
+  const personal = personalJSON as Personal[];
   const [solicitud, setSolicitud] = useState<Solicitud>({});
   const [asignacion, setAsignacion] = useState<AsignacionSoporte>({
     estado: "Pendiente",
@@ -94,7 +100,7 @@ export default function SolicitudView() {
           colorHeader: 'bg-light-success',
           icono: 'fa-clock'
         };
-        case '3': // En Compra
+      case '3': // En Compra
         return {
           estadoId,
           titulo: 'Solicitud en Proceso de Compra',
@@ -122,9 +128,9 @@ export default function SolicitudView() {
           colorHeader: 'bg-light-success',
           icono: 'fa-check-circle'
         };
-      
-      
-      
+
+
+
       case '5': // Comprado
         return {
           estadoId,
@@ -139,9 +145,9 @@ export default function SolicitudView() {
           colorHeader: 'bg-light-warning',
           icono: 'fa-box'
         };
-      
-       
-      
+
+
+
       case '6': // Preparado
         return {
           estadoId,
@@ -156,7 +162,7 @@ export default function SolicitudView() {
           colorHeader: 'bg-light-primary',
           icono: 'fa-check-double'
         };
-      
+
       case '7': // Entregado
         return {
           estadoId,
@@ -171,7 +177,7 @@ export default function SolicitudView() {
           colorHeader: 'bg-light-info',
           icono: 'fa-handshake'
         };
-      
+
       case '9': // Rechazado
         return {
           estadoId,
@@ -186,7 +192,7 @@ export default function SolicitudView() {
           colorHeader: 'bg-dark',
           icono: 'fa-times-circle'
         };
-      
+
       default: // Nueva asignación
         return {
           estadoId,
@@ -204,8 +210,8 @@ export default function SolicitudView() {
     }
   };
 
-// Obtener configuración según el estado
-const estadoConfig = getEstadoConfig(id || 'crea');
+  // Obtener configuración según el estado
+  const estadoConfig = getEstadoConfig(id || 'crea');
   // ------------------ Init ------------------------
   useEffect(() => {
     // Cargar técnicos disponibles
@@ -329,31 +335,32 @@ const estadoConfig = getEstadoConfig(id || 'crea');
     }
   };
 
-  
+
   // ---------------- Submit ------------------------
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setAlert({ message: '✅ Checklist completado correctamente', type: 'success' });
+    setTimeout(() => navigate('/solicitud'), 1500);
 
-   
   };
 
-const handleAprobar = () => {
-  const confirmacion = window.confirm('¿Está seguro de aprobar esta solicitud?');
-  if (confirmacion) {
-    // Lógica para aprobar
-    setAlert({ message: '✅ Solicitud aprobada correctamente', type: 'success' });
-    setTimeout(() => navigate('/solicitud'), 1500);
-  }
-};
+  const handleAprobar = () => {
+    const confirmacion = window.confirm('¿Está seguro de aprobar esta solicitud?');
+    if (confirmacion) {
+      // Lógica para aprobar
+      setAlert({ message: '✅ Solicitud aprobada correctamente', type: 'success' });
+      setTimeout(() => navigate('/solicitud'), 1500);
+    }
+  };
 
-const handleRechazar = () => {
-  const motivo = window.prompt('Ingrese el motivo del rechazo:');
-  if (motivo) {
-    // Lógica para rechazar
-    setAlert({ message: '✅ Solicitud rechazada correctamente', type: 'success' });
-    setTimeout(() => navigate('/solicitud'), 1500);
-  }
-};
+  const handleRechazar = () => {
+    const motivo = window.prompt('Ingrese el motivo del rechazo:');
+    if (motivo) {
+      // Lógica para rechazar
+      setAlert({ message: '✅ Solicitud rechazada correctamente', type: 'success' });
+      setTimeout(() => navigate('/solicitud'), 1500);
+    }
+  };
 
   // ------------------ UI --------------------------
   return (
@@ -372,11 +379,11 @@ const handleRechazar = () => {
         <div className={`alert alert-dark p-4 d-flex justify-content-between ${estadoConfig.colorHeader} text-light`}>
           <div>
             <h3 className="text-dark">
-               <i className={`fa ${estadoConfig.icono} me-2`}></i>
-               {estadoConfig.titulo}
+              <i className={`fa ${estadoConfig.icono} me-2`}></i>
+              {estadoConfig.titulo}
             </h3>
             <span className="text-dark">{estadoConfig.subtitulo}</span>
-             
+
           </div>
           <div>
             <Link to="/solicitud" className="btn btn-secondary btn-sm me-2">
@@ -387,13 +394,13 @@ const handleRechazar = () => {
                 <i className="fa fa-check"></i> Aprobar
               </button>
             )}
-            
+
             {estadoConfig.mostrarBotones.rechazar && (
               <button type="button" onClick={handleRechazar} className="btn btn-danger btn-sm me-2">
                 <i className="fa fa-times"></i> Rechazar
               </button>
             )}
-            
+
             {estadoConfig.mostrarBotones.guardar && (
               <button type="submit" className="btn btn-primary btn-sm">
                 <i className="fa-solid fa-floppy-disk"></i> Guardar
@@ -405,7 +412,7 @@ const handleRechazar = () => {
         <div className="card p-2">
 
           {/* ------------------ Datos de la Solicitud (Readonly) -------------------- */}
-          <div className="alert alert-info">
+          <div className="alert alert-info text-dark">
             <h5 className="mb-3">
               <i className="fa fa-file-alt"></i> Datos de la Solicitud
             </h5>
@@ -413,7 +420,7 @@ const handleRechazar = () => {
               <div className="col-lg-2">
                 <p className="mb-2">
                   <strong>Código:</strong><br />
-                  <span className="badge bg-dark fs-6 text-light">SOL-00000001</span>
+                  <span className="badge bg-info fs-6 text-light">SOL-00000001</span>
                 </p>
               </div>
               <div className="col-lg-2">
@@ -468,170 +475,354 @@ const handleRechazar = () => {
                 </p>
               </div>
             </div>
+            <div className="row  ">
+              <div className="col-lg-12 mt-2">
+                <h5><i className="fa fa-microchip me-2"></i>Características de la Gama</h5>
+                <table className="table table-bordered table-sm">
+                  <thead>
+                    <tr>
+                      <th>Característica</th>
+                      <th>Valor</th>
+                    </tr>
+                  </thead>
+                  <tbody>
 
+                    <tr key='1'>
+                      <td>RAM</td>
+                      <td>32GB</td>
+                    </tr>
+                    <tr key='1'>
+                      <td>Disco Duro</td>
+                      <td>2048GB</td>
+                    </tr>
+                    <tr key='1'>
+                      <td>Core i7</td>
+                      <td>3.5GHZ</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
 
           <hr />
-          {estadoConfig.estadoId==='4' && (
-               <>
-               {/* ------------------ Asignación de Técnico -------------------- */}
-          <h5 className="mb-3 mt-4">
-            <i className="fa fa-user-cog"></i> Asignación de Técnico
-          </h5>
-          <div className="row mb-4">
-            <div className="col-md-6">
+          {/* ------------------ Aprobar  -------------------- */}
+          {estadoConfig.estadoId === '1' && (
+            <>
+              <div className="col-lg-12 input-group-sm mb-5">
+                <div className="form-floating">
+                  <select name="perfil" defaultValue={"marketing"}
+                    className="form-control" onChange={handleChange} required>
+                    <option value="">Seleccionar perfil de Usuario</option>
+                    <option value="administrador">Administrador</option>
+                    <option value="desarrollador">Desarrollador</option>
+                    <option value="usuario">Usuario</option>
+                    <option value="soporte">Soporte</option>
+                    <option value="ventas">Ventas</option>
+                    <option value="marketing">Marketing</option>
+                    <option value="gerencia">Gerencia</option>
+                    <option value="consultor">Consultor</option>
+                  </select>
+                  <label className="form-label">Perfil de Usuario *</label>
+                </div>
+              </div>
+            </>
+          )}
+          {/* ------------------ Proceso de Compra  -------------------- */}
+          {estadoConfig.estadoId === '2' && (
+            <>
+            <div className="row">
+            <div className="col-md-6 mb-3 form-floating">
+              <input className="form-control" name="codigo_activo" onChange={handleChange} required />
+              <label>Código de Activo *</label>
+            </div>
+
+            <div className="col-md-6 mb-3 form-floating">
+              <input className="form-control" name="serie"  onChange={handleChange} required />
+              <label>Serie *</label>
+            </div>
+            <div className="col-md-4 mb-3 form-floating">
+              <input className="form-control" name="orden_compra"  onChange={handleChange} required />
+              <label>Orden de Compra *</label>
+            </div>
+
+            <div className="col-md-2 mb-3 form-floating">
+              <input className="form-control" name="posicion_oc"  onChange={handleChange} required />
+              <label>Posición OC *</label>
+            </div>
+
+            <div className="col-md-3 mb-3 form-floating">
+              <input type="number" className="form-control" name="monto_compra"  onChange={handleChange} required />
+              <label>Monto Compra *</label>
+            </div>
+
+            <div className="col-md-3 mb-3 form-floating">
+              <input type="date" className="form-control" name="fecha_compra"  onChange={handleChange} required />
+              <label>Fecha Compra *</label>
+            </div>
+          </div>
+            </>
+          )}
+          {/* ------------------ Asignación de Técnico -------------------- */}
+          {estadoConfig.estadoId === '4' && (
+            <>
+              <h5 className="mb-3 mt-4">
+                <i className="fa fa-user-cog"></i> Asignación de Técnico
+              </h5>
+              <div className="row mb-4">
+                <div className="col-md-6">
+                  <div className="form-floating">
+                    <select
+                      className="form-control"
+                      name="id_tecnico"
+                      value={asignacion.id_tecnico || ""}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">Seleccione un técnico</option>
+                      {tecnicos.map(t => (
+                        <option key={t.id} value={t.id}>
+                          {t.nombres} {t.apellidos} - {t.especialidad}
+                        </option>
+                      ))}
+                    </select>
+                    <label>Técnico Asignado *</label>
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <div className="form-floating">
+                    <select
+                      className="form-control"
+                      name="estado"
+                      value={asignacion.estado || "Pendiente"}
+                      onChange={handleChange}
+                    >
+                      <option value="Pendiente">Pendiente</option>
+                      <option value="En Proceso">En Proceso</option>
+                      <option value="Completado">Completado</option>
+                      <option value="Cancelado">Cancelado</option>
+                    </select>
+                    <label>Estado</label>
+                  </div>
+                </div>
+              </div>
+              <h5 className="mb-3 mt-4">
+                <i className="fa fa-calendar"></i> Fechas de Ejecución
+              </h5>
+              <div className="row mb-4">
+                <div className="col-md-6">
+                  <div className="form-floating">
+                    <input
+                      type="date"
+                      className="form-control"
+                      name="fecha_inicio"
+                      value={asignacion.fecha_inicio || ""}
+                      onChange={handleChange}
+                      required
+                    />
+                    <label>Fecha de Inicio *</label>
+                  </div>
+                </div>
+
+                <div className="col-md-6">
+                  <div className="form-floating">
+                    <input
+                      type="date"
+                      className="form-control"
+                      name="fecha_fin"
+                      value={asignacion.fecha_fin || ""}
+                      onChange={handleChange}
+                      required
+                    />
+                    <label>Fecha de Fin *</label>
+                  </div>
+                </div>
+              </div>
+              <hr />
+              <div className="d-flex justify-content-between mb-3 mt-4">
+                <h5>
+                  <i className="fa fa-tasks"></i> Checklist de Tareas
+                  <span className="badge bg-primary ms-2">{asignacion.checklist?.length || 0} items</span>
+                </h5>
+                <button
+                  type="button"
+                  className="btn btn-success btn-sm"
+                  onClick={() => setShowChecklistModal(true)}
+                >
+                  <i className="fa fa-plus"></i> Agregar Items
+                </button>
+              </div>
+              {(!asignacion.checklist || asignacion.checklist.length === 0) ? (
+                <div className="alert alert-warning">
+                  <i className="fa fa-exclamation-triangle me-2"></i>
+                  No hay items de checklist agregados. Use el botón "Agregar Items" para seleccionarlos.
+                </div>
+              ) : (
+                <div className="table-responsive">
+                  <table className="table table-bordered table-hover">
+                    <thead className="table-light">
+                      <tr>
+                        <th style={{ width: '50px' }}>Orden</th>
+                        <th>Descripción</th>
+                        <th style={{ width: '120px' }}>Categoría</th>
+                        <th style={{ width: '100px' }}>Tipo</th>
+                        <th style={{ width: '100px' }}>Obligatorio</th>
+                        <th style={{ width: '80px' }}>Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {asignacion.checklist
+                        .sort((a, b) => a.orden - b.orden)
+                        .map((item) => (
+                          <tr key={item.id_item}>
+                            <td className="text-center">{item.orden}</td>
+                            <td>
+                              <strong>{item.descripcion}</strong>
+                              {item.instrucciones && (
+                                <small className="d-block text-muted mt-1">
+                                  <i className="fa fa-info-circle me-1"></i>
+                                  {item.instrucciones}
+                                </small>
+                              )}
+                            </td>
+                            <td>
+                              <span className="badge bg-secondary ">{item.categoria}</span>
+                            </td>
+                            <td>
+                              <span className={`badge ${item.tipo_validacion === 'checkbox' ? 'text-light bg-info' : 'bg-warning'
+                                }`}>
+                                {item.tipo_validacion}
+                              </span>
+                            </td>
+                            <td className="text-center">
+                              {item.obligatorio ? (
+                                <span className="badge bg-danger text-light">Sí</span>
+                              ) : (
+                                <span className="badge bg-secondary text-light">No</span>
+                              )}
+                            </td>
+                            <td className="text-center">
+                              <button
+                                type="button"
+                                className="btn btn-sm btn-icon btn-light-danger"
+                                onClick={() => removeChecklistItem(item.id_item)}
+                                title="Eliminar item"
+                              >
+                                <i className="fa fa-trash"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              <hr />
+            </>
+          )}
+          {/* ------------------ Termina Tareas de Checklist -------------------- */}
+          {estadoConfig.estadoId === '5' && (
+            <>
+            <div className="row">
+              <div className="col-md-6 mb-3 form-floating">
+                <input type="date" className="form-control" name="fecha" 
+                onChange={handleChange} required />
+                <label>Fecha *</label>
+              </div>
+              <div className="table-responsive">
+    <table className="table table-bordered table-hover">
+        <thead className="bg-secondary text-dark">
+            <tr>
+                <th >Completado</th>
+                <th>Descripción</th>
+                <th>Categoría</th>
+                <th>Obligatorio</th>
+                <th>Valor Esperado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {datos.map((item) => (
+                <tr key={item.id_item}>
+                    <td className="text-center">
+                        <div className="form-check form-check-custom form-check-solid">
+                            <input 
+                                className="form-check-input" 
+                                type="checkbox" 
+                                value={item.id_item}
+                                 
+                            />
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <strong>{item.descripcion}</strong>
+                            {item.instrucciones && (
+                                <small className="text-muted d-block mt-1">
+                                    <i className="fa-solid fa-info-circle me-1"></i>
+                                    {item.instrucciones}
+                                </small>
+                            )}
+                        </div>
+                    </td>
+                    <td>
+                        <span className={`badge ${
+                            item.categoria === 'Software' ? 'text-light bg-primary' :
+                            item.categoria === 'Seguridad' ? 'text-light  bg-danger' :
+                            item.categoria === 'Hardware' ? 'text-light  bg-warning' :
+                            item.categoria === 'Evidencia' ? 'text-light  bg-success' : 'bg-secondary'
+                        }`}>
+                            {item.categoria}
+                        </span>
+                    </td>
+                    
+                    <td className="text-center">
+                        {item.obligatorio ? (
+                            <span className="badge bg-danger text-light ">Obligatorio</span>
+                        ) : (
+                            <span className="badge bg-secondary">Opcional</span>
+                        )}
+                    </td>
+                   
+                    <td>
+                        <small className="text-muted">{item.valor_esperado}</small>
+                    </td>
+                </tr>
+            ))}
+        </tbody>
+    </table>
+</div>
+            </div>
+            </>
+          )}
+          {/* ------------------ Conformidad de Usuario  -------------------- */}
+          {estadoConfig.estadoId === '6' && (
+            <>
+            <div className="row">
+              <div className="col-md-6 mb-3 form-floating">
+                <input type="date" className="form-control" name="fecha" 
+                onChange={handleChange} required />
+                <label>Fecha *</label>
+              </div>
+              <div className="col-lg-6 input-group-sm mb-5">
               <div className="form-floating">
                 <select
+                  name="empresa_id"
                   className="form-control"
-                  name="id_tecnico"
-                  value={asignacion.id_tecnico || ""}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Seleccione un técnico</option>
-                  {tecnicos.map(t => (
-                    <option key={t.id} value={t.id}>
-                      {t.nombres} {t.apellidos} - {t.especialidad}
+                  required>
+                  <option value="">Seleccionar Empleado</option>
+                  {personal.map(personal => (
+                    <option key={personal.id} value={personal.id}>
+                      {personal.nombres} {personal.apellidos}
                     </option>
                   ))}
                 </select>
-                <label>Técnico Asignado *</label>
+                <label className="form-label">Empleado *</label>
               </div>
             </div>
-
-            <div className="col-md-6">
-              <div className="form-floating">
-                <select
-                  className="form-control"
-                  name="estado"
-                  value={asignacion.estado || "Pendiente"}
-                  onChange={handleChange}
-                >
-                  <option value="Pendiente">Pendiente</option>
-                  <option value="En Proceso">En Proceso</option>
-                  <option value="Completado">Completado</option>
-                  <option value="Cancelado">Cancelado</option>
-                </select>
-                <label>Estado</label>
-              </div>
             </div>
-          </div>
-          <h5 className="mb-3 mt-4">
-            <i className="fa fa-calendar"></i> Fechas de Ejecución
-          </h5>
-          <div className="row mb-4">
-            <div className="col-md-6">
-              <div className="form-floating">
-                <input
-                  type="date"
-                  className="form-control"
-                  name="fecha_inicio"
-                  value={asignacion.fecha_inicio || ""}
-                  onChange={handleChange}
-                  required
-                />
-                <label>Fecha de Inicio *</label>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="form-floating">
-                <input
-                  type="date"
-                  className="form-control"
-                  name="fecha_fin"
-                  value={asignacion.fecha_fin || ""}
-                  onChange={handleChange}
-                  required
-                />
-                <label>Fecha de Fin *</label>
-              </div>
-            </div>
-          </div>
-          <hr />
-          <div className="d-flex justify-content-between mb-3 mt-4">
-            <h5>
-              <i className="fa fa-tasks"></i> Checklist de Tareas
-              <span className="badge bg-primary ms-2">{asignacion.checklist?.length || 0} items</span>
-            </h5>
-            <button
-              type="button"
-              className="btn btn-success btn-sm"
-              onClick={() => setShowChecklistModal(true)}
-            >
-              <i className="fa fa-plus"></i> Agregar Items
-            </button>
-          </div>
-          {(!asignacion.checklist || asignacion.checklist.length === 0) ? (
-            <div className="alert alert-warning">
-              <i className="fa fa-exclamation-triangle me-2"></i>
-              No hay items de checklist agregados. Use el botón "Agregar Items" para seleccionarlos.
-            </div>
-          ) : (
-            <div className="table-responsive">
-              <table className="table table-bordered table-hover">
-                <thead className="table-light">
-                  <tr>
-                    <th style={{ width: '50px' }}>Orden</th>
-                    <th>Descripción</th>
-                    <th style={{ width: '120px' }}>Categoría</th>
-                    <th style={{ width: '100px' }}>Tipo</th>
-                    <th style={{ width: '100px' }}>Obligatorio</th>
-                    <th style={{ width: '80px' }}>Acción</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {asignacion.checklist
-                    .sort((a, b) => a.orden - b.orden)
-                    .map((item) => (
-                      <tr key={item.id_item}>
-                        <td className="text-center">{item.orden}</td>
-                        <td>
-                          <strong>{item.descripcion}</strong>
-                          {item.instrucciones && (
-                            <small className="d-block text-muted mt-1">
-                              <i className="fa fa-info-circle me-1"></i>
-                              {item.instrucciones}
-                            </small>
-                          )}
-                        </td>
-                        <td>
-                          <span className="badge bg-secondary ">{item.categoria}</span>
-                        </td>
-                        <td>
-                          <span className={`badge ${item.tipo_validacion === 'checkbox' ? 'text-light bg-info' : 'bg-warning'
-                            }`}>
-                            {item.tipo_validacion}
-                          </span>
-                        </td>
-                        <td className="text-center">
-                          {item.obligatorio ? (
-                            <span className="badge bg-danger text-light">Sí</span>
-                          ) : (
-                            <span className="badge bg-secondary text-light">No</span>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          <button
-                            type="button"
-                            className="btn btn-sm btn-icon btn-light-danger"
-                            onClick={() => removeChecklistItem(item.id_item)}
-                            title="Eliminar item"
-                          >
-                            <i className="fa fa-trash"></i>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
+            </>
           )}
-          <hr />
-               </>
-            )}
-          
-
           {/* ------------------ Comentarios -------------------- */}
           <h5 className="mb-3 mt-4">
             <i className="fa fa-comment"></i> Comentarios
@@ -740,9 +931,6 @@ const ModalSeleccionChecklist = ({ catalogo, existentes, tipoEquipo, onClose, on
 
   return (
     <ModalBase title={`Seleccionar Items de Checklist - ${tipoEquipo.toUpperCase()}`} onClose={onClose}>
-
-
-
       {catalogoFiltrado.length === 0 ? (
         <div className="alert alert-warning">
           <i className="fa fa-exclamation-triangle me-2"></i>

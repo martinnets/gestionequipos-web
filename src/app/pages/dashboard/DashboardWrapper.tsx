@@ -9,9 +9,11 @@ import {  StatisticsWidget5 } from '../../../_metronic/partials/widgets';
 import solicitudDataService from "../../../_services/solicitud";
 import { MaterialReactTable, MRT_ColumnDef } from 'material-react-table';
 import { Solicitud } from "../../../_models/solicitud";
- 
+ import solicitudJSON from "../../../../modelo/solicitud.json"
+
 const DashboardWrapper = () => {
   const currentUser = useAuth();
+  const datos = solicitudJSON as Solicitud[];
   const [opciones,setOpciones]= useState({
     ventas: currentUser.currentUser?.opciones?.ventas,
     compras: currentUser.currentUser?.opciones?.compras,
@@ -30,102 +32,100 @@ const DashboardWrapper = () => {
     }, [currentUser, navigate]);
   const intl = useIntl()
     const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
-    const datos =[
-        { id_solicitud: '1', codigo: 'SOL-001', usuario_nombre: 'Juan Perez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'Laptop', gama_nombre: 'Alta', urgencia: 'Alta', estado: 'Pendiente', fecha_solicitud: '2024-06-01', aprobador_nombre: 'Maria Gomez' 
-        },
-        { id_solicitud: '2', codigo: 'SOL-002', usuario_nombre: 'Ana Lopez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'Desktop', gama_nombre: 'Media', urgencia: 'Media', estado: 'Aprobada', fecha_solicitud: '2024-06-05', aprobador_nombre: 'Carlos Ruiz' 
-        },
-        { id_solicitud: '3', codigo: 'SOL-003', usuario_nombre: 'Luis Martinez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'N/A', gama_nombre: 'N/A', urgencia: 'Baja', estado: 'Rechazada', fecha_solicitud: '2024-06-10', aprobador_nombre: 'Sofia Fernandez'             
-        },
-        { id_solicitud: '4', codigo: 'SOL-004', usuario_nombre: 'Marta Sanchez', tipo_solicitud: 'Reparación', tipo_equipo_nombre: 'Tablet', gama_nombre: 'Baja', urgencia: 'Alta', estado: 'En Proceso', fecha_solicitud: '2024-06-12', aprobador_nombre: 'Diego Torres'            
-        },
-        { id_solicitud: '5', codigo: 'SOL-005', usuario_nombre: 'Pedro Ramirez', tipo_solicitud: 'Nuevo Equipo', tipo_equipo_nombre: 'Laptop', gama_nombre: 'Alta', urgencia: 'Media', estado: 'Pendiente', fecha_solicitud: '2024-06-15', aprobador_nombre: 'Laura Morales'             
-        },
-    ]
+    
     const columns = useMemo<MRT_ColumnDef<Solicitud>[]>(
-        () => [
-            { 
-                accessorKey: 'id_solicitud', 
-                header: 'Acción',
-                enableColumnFilter: false,
-                size: 50,
-                Cell: ({ row }) => (
-                      <div className="d-flex gap-1 justify-content-start">
-                                                <Link className="btn btn-icon btn-light-primary btn-sm" 
-                                                    data-bs-toggle="tooltip"
-                                                    data-bs-placement="top"
-                                                    title="Aprobar / Rechazar"
-                                                    to={`/solicitudform/ver`}>
-                                                    <i className="fa-solid fa-clipboard-check fs-4  "></i>
-                                                </Link>
-                                                <Link className="btn btn-icon btn-light-danger btn-sm" 
-                                                data-bs-toggle="tooltip"
-                                                    data-bs-placement="top"
-                                                    title="Solicitud en PDF"
-                                                    to={`/solicitudreporte/${row.original.id_solicitud}`}>
-                                                    <i className="fa-solid fa-file-pdf fs-4  "></i>
-                                                </Link>
-                                                <Link className="btn btn-icon btn-light-info btn-sm" 
-                                                data-bs-toggle="tooltip"
-                                                    data-bs-placement="top"
-                                                    title="Jefe Inmediato"
-                                                    to={`/solicitudjefe`}>
-                                                    <i className="fa-solid fa-user-tie fs-4 "></i>
-                                                </Link>
-                                                <Link className="btn btn-icon btn-light-success btn-sm" 
-                                                data-bs-toggle="tooltip"
-                                                    data-bs-placement="top"
-                                                    title="Usuario"
-                                                    to={`/solicitudusuario`}>
-                                                    <i className="fa-solid fa-user fs-4 "></i>
-                                                </Link>  
-                                        </div>
-                ),
-            },
-            { accessorKey: 'codigo', header: 'Código' },
-            { accessorKey: 'usuario_nombre', header: 'Solicitante' },
-            { accessorKey: 'tipo_equipo_nombre', header: 'Tipo Equipo' },
-            { accessorKey: 'gama_nombre', header: 'Gama' },
-            { accessorKey: 'estado',
-        header: 'Estado', size: 10,
-        Cell: ({ row }) => {
-          const estadosolicitud = row.original.estado;
-          let colorClass = '';
-          let label = '';
-          switch (estadosolicitud) {
-            case 'Pendiente':
-              colorClass = 'badge badge-danger';
-              label = 'Pendiente';
-              break;
-            case 'Aprobada':
-              colorClass = 'badge badge-success';
-              label = 'Aprobada';
-              break;
-            case 'Rechazada':
-              colorClass = 'badge badge-dark';
-              label = 'Rechazada';
-              break;
-            case 'En Proceso':
-              colorClass = 'badge badge-warning';
-              label = 'En Proceso';
-              break;
-          }
-
-          return <span className={colorClass}>{label}</span>;
-        },
-      },
-            { 
-                accessorKey: 'fecha_solicitud', 
-                header: 'Fecha Solicitud',
-                Cell: ({ cell }) => {
-                    const fecha = cell.getValue<string>();
-                    return fecha ? new Date(fecha).toLocaleDateString() : '';
-                }
-            },
-            { accessorKey: 'aprobador_nombre', header: 'Aprobador' },
-        ],
-        [],
-    );
+            () => [
+                {
+                    accessorKey: 'id_solicitud',
+                    header: 'Acción',
+                    enableColumnFilter: false,
+                    size: 50,
+                    Cell: ({ row }) => (
+                         <div className="d-flex gap-1 justify-content-start">
+                                <Link className="btn btn-icon btn-light-primary btn-sm" 
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title="Aprobar / Rechazar"
+                                    to={`/solicitudreporte/1`}>
+                                    <i className="fa-solid fa-file-pdf fs-4 text-danger  "></i>
+                                </Link>
+                                
+                                <Link className="btn btn-icon btn-light-success btn-sm" 
+                                data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title="Vista de Solicitud"
+                                    to={`/solicitudvista/${row.original.codigo_estado}`}>
+                                    <i className="fa-solid fa-eye fs-4 "></i>
+                                </Link>  
+                        </div>
+                    ),
+                },
+                { accessorKey: 'codigo', header: 'Código' },
+                { accessorKey: 'codigo_estado',
+                    header: 'Estado', size: 10,
+                    Cell: ({ row }) => {
+                        const estadosolicitud = row.original.codigo_estado;
+                        let colorClass = '';
+                        let label = '';
+                        switch (estadosolicitud) {
+                            case 1:
+                                colorClass = 'badge badge-danger';
+                                label = 'Pendiente';
+                                break;
+                            case 2:
+                                colorClass = 'badge badge-success';
+                                label = 'Aprobada';
+                                break;
+                            case 3:
+                                colorClass = 'badge badge-warning';
+                                label = 'En Compra';
+                                break;
+                            case 4:
+                                colorClass = 'badge badge-success';
+                                label = 'Comprado';
+                                break;
+                            case 5:
+                                colorClass = 'badge badge-warning';
+                                label = 'En Preparacion';
+                                break;
+                            case 6:
+                                colorClass = 'badge badge-primary';
+                                label = 'Preparado';
+                                break;
+                            case 7:
+                                colorClass = 'badge badge-info';
+                                label = 'Entregado';
+                                break;
+                            case 9:
+                                colorClass = 'badge badge-secondary';
+                                label = 'Rechazada';
+                                break;
+                        }
+    
+                        return <span className={colorClass}>{label}</span>;
+                    },
+                },
+                { accessorKey: 'solicitante', header: 'Solicitante' },
+                { accessorKey: 'tipo_solicitud', header: 'Tipo Solicitud' },
+                { accessorKey: 'tipo_equipo', header: 'Tipo Equipo' },
+                { accessorKey: 'gama', header: 'Gama' },
+                { accessorKey: 'empresa', header: 'Empresa' },
+                { accessorKey: 'puesto', header: 'Puesto' },
+                { accessorKey: 'perfil', header: 'Perfil' },
+                { accessorKey: 'urgencia', header: 'Urgencia' },
+                
+                {
+                    accessorKey: 'fecha_solicitud',
+                    header: 'Fecha Solicitud',
+                    Cell: ({ cell }) => {
+                        const fecha = cell.getValue<string>();
+                        return fecha ? new Date(fecha).toLocaleDateString() : '';
+                    }
+                },
+                { accessorKey: 'aprobador', header: 'Aprobador' },
+            ],
+            [],
+        );
   return (
     <>
       <PageTitle breadcrumbs={[]}>{intl.formatMessage({ id: 'MENU.DASHBOARD' })}</PageTitle>

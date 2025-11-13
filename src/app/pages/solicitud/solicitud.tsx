@@ -9,7 +9,7 @@ import solicitudJSON from "../../../../modelo/solicitud.json"
 export function SolicitudPage() {
     const { currentUser } = useAuth();
     const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
-     const datos = solicitudJSON as Solicitud[];
+    const datos = solicitudJSON as Solicitud[];
     const columns = useMemo<MRT_ColumnDef<Solicitud>[]>(
         () => [
             {
@@ -18,27 +18,32 @@ export function SolicitudPage() {
                 enableColumnFilter: false,
                 size: 50,
                 Cell: ({ row }) => (
-                     <div className="d-flex gap-1 justify-content-start">
-                            <Link className="btn btn-icon btn-light-primary btn-sm" 
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                title="Aprobar / Rechazar"
-                                to={`/solicitudform/ver`}>
-                                <i className="fa-solid fa-clipboard-check fs-4  "></i>
-                            </Link>
-                            
-                            <Link className="btn btn-icon btn-light-success btn-sm" 
+                    <div className="d-flex gap-1 justify-content-start">
+                        <Link className="btn btn-icon btn-light-primary btn-sm"
                             data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                title="Vista de Solicitud"
-                                to={`/solicitudvista/${row.original.codigo_estado}`}>
-                                <i className="fa-solid fa-eye fs-4 "></i>
-                            </Link>  
+                            data-bs-placement="top"
+                            title="Aprobar / Rechazar"
+                            to={`/solicitudreporte/1`}>
+                            <i className="fa-solid fa-file-pdf fs-4 text-danger  "></i>
+                        </Link>
+                         {row.original.codigo_estado != 7 && row.original.codigo_estado != 9 ?
+                            <>
+<Link className="btn btn-icon btn-light-success btn-sm"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Vista de Solicitud"
+                            to={`/solicitudvista/${row.original.codigo_estado}`}>
+                            <i className="fa-solid fa-eye fs-4 "></i>
+                        </Link>
+                            </>:<></>
+                         }
+                        
                     </div>
                 ),
             },
             { accessorKey: 'codigo', header: 'Código' },
-            { accessorKey: 'codigo_estado',
+            {
+                accessorKey: 'codigo_estado',
                 header: 'Estado', size: 10,
                 Cell: ({ row }) => {
                     const estadosolicitud = row.original.codigo_estado;
@@ -74,7 +79,7 @@ export function SolicitudPage() {
                             label = 'Entregado';
                             break;
                         case 9:
-                            colorClass = 'badge badge-secondary';
+                            colorClass = 'badge badge-dark';
                             label = 'Rechazada';
                             break;
                     }
@@ -90,7 +95,7 @@ export function SolicitudPage() {
             { accessorKey: 'puesto', header: 'Puesto' },
             { accessorKey: 'perfil', header: 'Perfil' },
             { accessorKey: 'urgencia', header: 'Urgencia' },
-            
+
             {
                 accessorKey: 'fecha_solicitud',
                 header: 'Fecha Solicitud',

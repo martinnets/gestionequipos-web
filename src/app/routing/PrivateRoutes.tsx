@@ -36,6 +36,8 @@ import AprobadorForm from '../pages/aprobador/aprobadorform'
 import SoporteForm from '../pages/soporte/soporteform'
 import { SoportePage } from '../pages/soporte/soporte'
 import SolicitudView from '../pages/solicitud/solicitudview'
+import { PerfilPage } from '../pages/perfil/perfil'
+import PerfilForm from '../pages/perfil/perfilform'
  
 
 const PrivateRoutes = () => {
@@ -72,6 +74,9 @@ const PrivateRoutes = () => {
 
         <Route path='/licencia' element={<LicenciaPage />} />
         <Route path='/licenciaform/:id' element={< LicenciaForm />} />
+
+        <Route path='/perfil' element={<PerfilPage />} />
+        <Route path='/perfilform/:id' element={< PerfilForm />} />
 
         <Route path='/venta' element={<VentaPage />} />
         <Route path='/ventaform/:id' element={< VentaForm />} />

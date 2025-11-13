@@ -42,16 +42,5 @@
     "orden": 4,
     "valor_esperado": "Funcionamiento correcto",
     "instrucciones": "Comprobar dispositivos en el panel de control."
-  },
-  {
-    "id_item": 5,
-    "id_checklist": 101,
-    "descripcion": "Adjuntar foto del equipo configurado",
-    "categoria": "Evidencia",
-    "tipo_validacion": "foto",
-    "obligatorio": false,
-    "orden": 5,
-    "valor_esperado": "Foto visible del escritorio configurado",
-    "instrucciones": "Subir imagen en formato JPG o PNG."
   }
 ]

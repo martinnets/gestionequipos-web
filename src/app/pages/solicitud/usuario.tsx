@@ -19,12 +19,7 @@ const SolicitudUsuarioPage = () => {
     // TODO: Implementar llamada al servicio
     //const data = (empresaJSON as Empresa[])
     // empresa.json tiene ids numéricos; convertirlos a string para que coincidan con la interfaz Empresa
-    setPersonal((personalJSON as { id: number; nombres: string; apellidos: string }[]).map(e => ({
-      id: String(e.id),
-      nombres: e.nombres,
-      apellidos: e.apellidos,
-      personal: e.nombres + ' ' + e.apellidos
-    })));
+    
   };
   // Configuración de PDF
   const { toPDF, targetRef } = usePDF({
@@ -205,7 +200,7 @@ const SolicitudUsuarioPage = () => {
                   </tr>
                   <tr>
                     <td><strong>Gama</strong></td>
-                    <td>{solicitud.gama_nombre}</td>
+                    <td>{solicitud.gama}</td>
                   </tr>
                   <tr>
                     <td><strong>Características</strong></td>
