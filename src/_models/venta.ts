@@ -1,5 +1,5 @@
 export interface Venta {
-    id_venta?: string;
+    id?: number;
     codigo?: string;
     usuario_id?: string;
     usuario_nombre?: string;
@@ -20,5 +20,5 @@ export interface Venta {
     notificar_email?: string;
     usu_crea?: string;
     usu_modi?: string;
-    codigo_estado?: string;
+    codigo_estado?: number;
 }

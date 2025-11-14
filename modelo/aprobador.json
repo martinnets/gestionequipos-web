@@ -17,5 +17,34 @@
     "centro_costo":"Marketing",
     "email":""
     }
-    
+    ,
+    {
+    "id": 2,
+    "empresa":"EL,PANORAMA",
+    "nro_doc_identidad":"87654321",
+    "nombre_completo":"Lucio Levano",
+    "cargo":"Gerente",
+    "centro_costo":"Marketing",
+    "email":""
+    }
+    ,
+    {
+    "id": 2,
+    "empresa":"SAMITEX",
+    "nro_doc_identidad":"87654321",
+    "nombre_completo":"Robert Sanchez",
+    "cargo":"JEfe",
+    "centro_costo":"Marketing",
+    "email":""
+    }
+    ,
+    {
+    "id": 2,
+    "empresa":"Panorama CSC",
+    "nro_doc_identidad":"87654321",
+    "nombre_completo":"Donny Lopez",
+    "cargo":"Gerente de RRHH",
+    "centro_costo":"Marketing",
+    "email":""
+    }
 ]

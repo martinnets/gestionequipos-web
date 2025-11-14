@@ -1,0 +1,73 @@
+[
+    {
+        "id": 1, 
+        "codigo": "VEN-001", 
+        "solicitante": "Juan Perez", 
+        "empresa":"EL",
+        "aprobador":"Lucio Levano",
+        "tipo_equipo": "Tablet", 
+        "descripcion": "Laptop para oficina", 
+        "detalle": "Dell XPS 13", 
+        "cantidad": 2, 
+        "codigo_estado":1,
+        "estado": "Pendiente",
+        "fecha_solicitud": "2024-06-01"     
+    },
+    {
+        "id": 2, 
+        "codigo": "VEN-002", 
+        "solicitante": "Juan Perez", 
+        "empresa":"ADAMS",
+        "aprobador":"Lucio Levano",
+        "tipo_equipo": "Tablet", 
+        "descripcion": "Laptop para oficina", 
+        "detalle": "Dell XPS 13", 
+        "cantidad": 2, 
+        "codigo_estado":2,
+        "estado": "Aprobado",
+        "fecha_solicitud": "2024-06-01"     
+    },
+    {
+        "id": 1, 
+        "codigo": "VEN-001", 
+        "solicitante": "Juan Perez", 
+        "empresa":"PanoramaCSC",
+        "aprobador":"Lucio Levano",
+        "tipo_equipo": "Tablet", 
+        "descripcion": "Laptop para oficina", 
+        "detalle": "Dell XPS 13", 
+        "cantidad": 2, 
+        "codigo_estado":3,
+        "estado": "En Compra",
+        "fecha_solicitud": "2024-06-01"     
+    },
+    {
+        "id": 1, 
+        "codigo": "VEN-001", 
+        "solicitante": "Juan Gomez", 
+        "empresa":"PanoramaCSC",
+        "aprobador":"Lucio Levano",
+        "tipo_equipo": "Tablet", 
+        "descripcion": "Laptop para oficina", 
+        "detalle": "Dell XPS 13", 
+        "cantidad": 2, 
+        "codigo_estado":4,
+        "estado": "Comprado",
+        "fecha_solicitud": "2024-06-01"     
+    },
+    {
+        "id": 9, 
+        "codigo": "VEN-009", 
+        "solicitante": "Julio Reyes", 
+        "empresa":"EL",
+        "aprobador":"Lucio Levano",
+        "tipo_equipo": "Tablet", 
+        "descripcion": "Laptop para oficina", 
+        "detalle": "Dell XPS 13", 
+        "cantidad": 2, 
+        "codigo_estado":9,
+        "estado": "Rechazado",
+        "fecha_solicitud": "2024-06-01"     
+    }
+
+]

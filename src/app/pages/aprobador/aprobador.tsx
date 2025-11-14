@@ -10,11 +10,42 @@ export function AprobadorPage() {
     const { currentUser } = useAuth();
     const [equipos, setEquipos] = useState<Personal[]>([]);
     const datos = aprobadorJSON as Personal[];
+    const [loadingDelete, setLoadingDelete] = useState<{ [key: string]: boolean }>({});
+        const anularRegistro = async (row: Personal) => {
+        const answer = window.confirm("Esta seguro de Anular el Registro del Aprobador?");
+        if (answer) {
+           
+          
+          try {
+             console.log('Registro Elminado')
+          } catch (error) {
+            console.error("Error al anular el Registro:", error);
+            alert("Error al anular el Registro");
+          } finally {
+            console.log('Registro Elminado')
+          }
+        }
+    
+      };
      const columns = useMemo<MRT_ColumnDef<Personal>[]>(
         () => [
-            { accessorKey: 'id', header: 'ID ', },
-            { accessorKey: 'nombre_completo', header: 'aprobador', },
+            { accessorKey: 'id',
+                        header: 'Acción',
+                        enableColumnFilter: false,size:20,
+                        Cell: ({ row }) => (
+                            <div className="d-flex gap-1 justify-content-start">
+                               <button className="btn btn-icon btn-light-dark btn-sm" 
+                    onClick={() => anularRegistro(row.original)}
+                    title="Anular Registro" >
+                    <i className="fa-solid fa-trash fs-4  "></i>
+                  </button>
+                                                 
+                                            </div>
+                                        ),
+                                    },             
+            { accessorKey: 'nombre_completo', header: 'Aprobador', },
             { accessorKey: 'nro_doc_identidad', header: 'DNI', },
+            { accessorKey: 'cargo', header: 'Cargo', },
             { accessorKey: 'empresa', header: 'Empresa', },
         ],
         [],

@@ -21,7 +21,7 @@ export default function VentaForm() {
         if (answer) {
             if (id === 'crea') {
                 solicitudVenta.usu_crea = currentUser?.codigo;
-                solicitudVenta.codigo_estado = '1';
+                solicitudVenta.codigo_estado = 1;
                 solicitudVenta.empresa_id = currentUser?.id_empresa;
                 
                 solicitudVenta.fecha_solicitud = new Date().toISOString().split('T')[0];
@@ -45,7 +45,7 @@ export default function VentaForm() {
                     });
             } else {
                 solicitudVenta.usu_modi = currentUser?.codigo;
-                solicitudVenta.id_venta = id;
+                solicitudVenta.id =Number(id);
                 ventaDataService.updateSolicitudVenta(id, solicitudVenta)
                     .then(function (response) {
                         console.log(JSON.stringify(response.data));
@@ -70,7 +70,7 @@ export default function VentaForm() {
     const handleEquipoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const equipoId = e.target.value;
         if (equipoId) {
-            const equipo = equiposDisponibles.find(eq => eq.id_equipo === equipoId);
+            const equipo = equiposDisponibles.find(eq => eq.id === Number(equipoId));
             setEquipoSeleccionado(equipo || null);
             setEspecificarEquipo(false);
         }
@@ -95,28 +95,7 @@ export default function VentaForm() {
 
         if (id === 'crea') {
             console.log(id);
-        } else {
-            ventaDataService.getVentaById(id)
-                .then(response => response.json())
-                .then(result => {
-                    setSolicitudVenta(result);
-                    // Determinar si está especificando equipo manualmente
-                    if (result.equipo_id) {
-                        setEspecificarEquipo(false);
-                        equipoDataService.getEquipoById(result.equipo_id)
-                            .then(response => response.json())
-                            .then(equipo => {
-                                setEquipoSeleccionado(equipo);
-                            });
-                    } else {
-                        setEspecificarEquipo(true);
-                    }
-                    console.log(result);
-                })
-                .catch(e => {
-                    console.log(e);
-                });
-        }
+        }  
     }, [id, currentUser?.id_empresa]);
 
     return (
@@ -160,14 +139,7 @@ export default function VentaForm() {
                                     <label className="form-label">Solicitante *</label>
                                 </div>
                             </div>
-                            <div className="col-lg-4 input-group-sm mb-5">
-                                <div className="form-floating">
-                                    <input type="text" name="departamento" defaultValue={solicitudVenta.area}
-                                        className="form-control" onChange={handleChange} 
-                                        placeholder="Departamento" required />
-                                    <label className="form-label">Departamento *</label>
-                                </div>
-                            </div>
+                            
 
                             {/* Selección de tipo de equipo */}
                             <div className="col-lg-6 input-group-sm mb-5">
@@ -175,13 +147,10 @@ export default function VentaForm() {
                                     <select name="tipo_equipo" defaultValue={solicitudVenta.tipo_equipo} 
                                         className="form-control" onChange={handleChange} required>
                                         <option value="">Seleccionar tipo</option>
-                                        <option value="laptop">Laptop</option>
                                         <option value="monitor">Monitor</option>
                                         <option value="impresora">Impresora</option>
                                         <option value="tablet">Tablet</option>
                                         <option value="smartphone">Smartphone</option>
-                                        <option value="desktop">Desktop</option>
-                                        <option value="servidor">Servidor</option>
                                         <option value="accesorio">Accesorio</option>
                                     </select>
                                     <label className="form-label">Tipo de Equipo *</label>
@@ -216,14 +185,10 @@ export default function VentaForm() {
                                         <select 
                                             className="form-control" 
                                             onChange={handleEquipoChange}
-                                            value={equipoSeleccionado?.id_equipo || ''}
+                                            value={equipoSeleccionado?.id || ''}
                                         >
                                             <option value="">Seleccionar equipo disponible</option>
-                                            {equiposDisponibles.map(equipo => (
-                                                <option key={equipo.id_equipo} value={equipo.id_equipo}>
-                                                    {equipo.codigo} - {equipo.marca} {equipo.modelo} ({equipo.estado})
-                                                </option>
-                                            ))}
+                                             
                                         </select>
                                         <label className="form-label">Equipo Disponible</label>
                                     </div>
@@ -251,25 +216,20 @@ export default function VentaForm() {
                                             <h6 className="card-title">Información del Equipo Seleccionado</h6>
                                             <div className="row">
                                                 <div className="col-lg-3">
-                                                    <strong>Marca/Modelo:</strong> {equipoSeleccionado.marca} {equipoSeleccionado.modelo}
+                                                    <strong>Marca/Modelo:</strong> 
                                                 </div>
                                                 <div className="col-lg-3">
-                                                    <strong>Procesador:</strong> {equipoSeleccionado.procesador}
+                                                    <strong>Procesador:</strong>
                                                 </div>
                                                 <div className="col-lg-2">
-                                                    <strong>RAM:</strong> {equipoSeleccionado.ram}
+                                                    <strong>RAM:</strong> 
                                                 </div>
                                                 <div className="col-lg-2">
-                                                    <strong>Almacenamiento:</strong> {equipoSeleccionado.disco}
+                                                    <strong>Almacenamiento:</strong> 
                                                 </div>
                                                 <div className="col-lg-2">
                                                     <strong>Estado:</strong> 
-                                                    <span className={`badge ms-1 ${
-                                                        equipoSeleccionado.estado === 'Disponible' ? 'bg-success' : 
-                                                        equipoSeleccionado.estado === 'Asignado' ? 'bg-warning' : 'bg-secondary'
-                                                    }`}>
-                                                        {equipoSeleccionado.estado}
-                                                    </span>
+                                                     
                                                 </div>
                                             </div>
                                         </div>

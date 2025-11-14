@@ -1,277 +1,497 @@
-import React, { useEffect, useState } from 'react';
+/********************************************************************
+ ✅ AsignacionSoporteForm con:
+  - Datos de la solicitud (readonly)
+  - Asignación de técnico
+  - Fechas de inicio y fin
+  - Selección de checklist mediante popup
+  - Comentarios
+********************************************************************/
+
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { usePDF } from 'react-to-pdf';
-import empresaDataService from "../../../_services/empresa";
 import solicitudDataService from "../../../_services/solicitud";
-import { Empresa } from '../../../_models/empresa';
-import { toAbsoluteUrl } from '../../../_metronic/helpers';
-import { Solicitud } from '../../../_models/solicitud';
-import { useAuth } from '../../modules/auth';
+import { useAuth } from "../../modules/auth";
+import { Checklist } from "../../../_models/checklist";
+import checklistJSON from "../../../../modelo/checklist.json"
+import personalJSON from "../../../../modelo/personal.json"
+import { Personal } from "../../../_models/personal";
 
-const DevolucionPage = () => {
-    const [empresa, setEmpresa] = useState<Empresa>({});
-    const [solicitud, setSolicitud] = useState<Solicitud>({});
-    const { currentUser } = useAuth();
-    const { id } = useParams<{ id: string }>();
+// ------------------ Interfaces ---------------------
+interface Solicitud {
+  id_solicitud?: number;
+  codigo?: string;
+  usuario_nombre?: string;
+  tipo_solicitud?: string;
+  tipo_equipo_nombre?: string;
+  gama_nombre?: string;
+  urgencia?: string;
+  estado?: string;
+  fecha_solicitud?: string;
+  aprobador_nombre?: string;
+}
 
-    // Configuración de PDF
-    const { toPDF, targetRef } = usePDF({
-        filename: 'Solicitud-' + solicitud.codigo + '.pdf',
-        page: {
-            margin: 10,
-            format: "A4",
-            orientation: 'portrait'
-        },
-        overrides: {
-            pdf: { compress: true },
-            canvas: { useCORS: true }
-        }
-    });
+interface ChecklistItem {
+  id_item: number;
+  tipo_equipo: string;
+  descripcion: string;
+  categoria: string;
+  tipo_validacion: string;
+  obligatorio: boolean;
+  orden: number;
+  valor_esperado: string;
+  instrucciones: string;
+  completado?: boolean;
+}
 
-    const formatearFecha = (fechaISO: string | undefined) => {
-        if (!fechaISO) return 'N/A';
-        const fecha = new Date(fechaISO);
-        return fecha.toLocaleDateString('es-PE', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric'
-        });
-    };
+interface AsignacionSoporte {
+  id?: number;
+  id_solicitud?: number;
+  id_tecnico?: number;
+  fecha_inicio?: string;
+  fecha_fin?: string;
+  comentarios?: string;
+  checklist?: ChecklistItem[];
+  estado?: string;
+}
 
-    const generarPDF = () => {
-        toPDF();
-    };
+// ------------------ Component ---------------------
+export default function DevolucionPage() {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const datos = checklistJSON as Checklist[];
+  const personal = personalJSON as Personal[];
+  const [solicitud, setSolicitud] = useState<Solicitud>({});
+  const [asignacion, setAsignacion] = useState<AsignacionSoporte>({
+    estado: "Pendiente",
+    checklist: []
+  });
+  const [tecnicos, setTecnicos] = useState<any[]>([]);
+  const [catalogoChecklist, setCatalogoChecklist] = useState<ChecklistItem[]>([]);
+  const [showChecklistModal, setShowChecklistModal] = useState(false);
+  const [alert, setAlert] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const getEstadoConfig = (estadoId: string) => {
+    switch (estadoId) {
+      case '1': // Pendiente
+        return {
+          estadoId,
+          titulo: 'Proceso de Devolución de Equipo',
+          subtitulo: 'Detalles para devolver equipo',
+          mostrarBotones: {
+            aprobar: false,
+            rechazar: false,
+            guardar: true,
+            eliminar: false
+          },
+          colorHeader: 'bg-light-danger',
+          icono: 'fa-clock'
+        };
+       
+    }
+  };
 
-    const getEstadoBadgeClass = (estado: string | undefined) => {
-        switch (estado) {
-            case 'Pendiente':
-                return 'bg-warning';
-            case 'En Aprobación':
-                return 'bg-info';
-            case 'Aprobado':
-                return 'bg-success';
-            case 'Rechazado':
-                return 'bg-danger';
-            case 'En Compra':
-                return 'bg-primary';
-            default:
-                return 'bg-secondary';
-        }
-    };
+  // Obtener configuración según el estado
+  const estadoConfig = getEstadoConfig(id || 'crea');
+  // ------------------ Init ------------------------
+  useEffect(() => {
+    // Cargar técnicos disponibles
+    setTecnicos([
+      { id: 1, nombres: "Carlos", apellidos: "Mendoza", especialidad: "Hardware" },
+      { id: 2, nombres: "Ana", apellidos: "Silva", especialidad: "Software" },
+      { id: 3, nombres: "Luis", apellidos: "Torres", especialidad: "Redes" },
+      { id: 4, nombres: "María", apellidos: "Gonzales", especialidad: "Soporte General" },
+    ]);
 
-    const getUrgenciaBadgeClass = (urgencia: string | undefined) => {
-        switch (urgencia) {
-            case 'Alta':
-                return 'bg-danger';
-            case 'Media':
-                return 'bg-warning';
-            case 'Baja':
-                return 'bg-success';
-            default:
-                return 'bg-secondary';
-        }
-    };
+       
+  }, [id]);
 
-    useEffect(() => {
-        // Cargar datos de la empresa
-        empresaDataService.getempresaById(currentUser?.id_empresa)
-            .then(response => response.json())
-            .then(result => {
-                setEmpresa(result);
-                console.log(result);
-            })
-            .catch(e => {
-                console.log(e);
-            });
+  // ------------------ Helpers ---------------------
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setAsignacion((prev) => ({ ...prev, [name]: value }));
+  };
 
-        // Cargar datos de la solicitud
-        solicitudDataService.getsolicitudById(id)
-            .then(response => response.json())
-            .then(result => {
-                setSolicitud(result);
-                console.log(result);
-            })
-            .catch(e => {
-                console.log(e);
-            });
-    }, [id, currentUser?.id_empresa]);
+  const removeChecklistItem = (id_item: number) => {
+    setAsignacion(prev => ({
+      ...prev,
+      checklist: prev.checklist?.filter(item => item.id_item !== id_item)
+    }));
+  };
 
-    return (
-        <div className="d-flex flex-column flex-column-fluid">
-            <div className="row m-5">
-                <div className="card card-custom">
-                    <div className="card-header bg-info">
-                        <h3 className="card-title text-light">Solicitud de Devolucion de Equipo </h3>
-                        <div className="card-toolbar">
-                            <Link
-                                to={"/asignacion"}
-                                className="btn btn-icon-white btn-text-dark btn-secondary btn-sm me-2"
-                            >
-                                <i className="fa-solid fa-reply text-dark"></i>
-                                Volver
-                            </Link>
+  const getBadgeClass = (urgencia?: string) => {
+    switch (urgencia) {
+      case 'Alta': return 'bg-danger';
+      case 'Media': return 'bg-warning';
+      case 'Baja': return 'bg-info';
+      default: return 'bg-secondary';
+    }
+  };
 
-                            <button type='submit'
-                                className='btn btn-primary btn-sm ms-2'>
-                                <i className="fa-solid fa-check"></i>
-                                Guardar
-                            </button>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div ref={targetRef} className="bg-white p-10" style={{ minHeight: '800px' }}>
-                {/* Header */}
-                <div className="row mb-10">
-                    <div className="col-8">
-                        <img
-                            alt="Logo"
-                            src={toAbsoluteUrl('media/') + 'logo-header.png'}
-                            className="w-25"
-                        />
-
-                    </div>
-                    <div className="col-4 text-center">
-                        <div className="border border-1 border-dotted border-dark p-4">
-                            <h4 className="fw-bold mb-2">DEVOLUCION DE EQUIPO</h4>
-                            <p className="mb-0 fw-bold fs-1">{solicitud.codigo}</p>
-                            <div className="mt-3">
-                                <span className={`badge ${getEstadoBadgeClass(solicitud.estado)} fs-6 px-4 py-2`}>
-                                    {solicitud.estado}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Información General */}
-                <div className="row mb-8">
-                    <div className="col-12">
-                        <h6 className="fw-bold mb-3 border-bottom pb-2">INFORMACIÓN GENERAL</h6>
-                    </div>
-                    <div className="col-6">
-                        <p className="mb-2">
-                            <strong>Fecha de Solicitud:</strong> 30-10-2025
-                        </p>
-                        <p className="mb-2">
-                            <strong>Tipo de Solicitud:</strong>LAPTOP
-                        </p>
-                        <p className="mb-2">
-                            <strong>Urgencia:</strong>{' '}
-                            <span className={`badge ${getUrgenciaBadgeClass(solicitud.urgencia)} ms-2`}>
-                                ALTA
-                            </span>
-                        </p>
-                    </div>
-                    <div className="col-6">
-                        <p className="mb-2">
-                            <strong>Solicitante:</strong> Donny Lopez
-                        </p>
-                        <p className="mb-2">
-                            <strong>Puesto Real:</strong> Asistente
-                        </p>
-                        <p className="mb-2">
-                            <strong>Empresa:</strong> EL
-                        </p>
-                    </div>
-                </div>
-
-                {/* Información del Equipo */}
-                <div className='row'>
-                    <div className="col-lg-6">
-                        <div className="col-12">
-                            <h6 className="fw-bold mb-3 border-bottom pb-2">ESPECIFICACIONES DEL EQUIPO</h6>
-                        </div>
-                        <div className="col-12">
-                            <table className="table table-bordered table-sm mb-0">
-                                <tbody >
-                                    <tr>
-                                        <td style={{ width: '30%' }}><strong>Tipo de Equipo</strong></td>
-                                        <td>{solicitud.tipo_equipo_nombre}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Perfil de Usuario</strong></td>
-                                        <td>{solicitud.perfil}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Gama</strong></td>
-                                        <td>{solicitud.gama_nombre}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Características</strong></td>
-                                        <td>{solicitud.caracteristicas}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    {/* Información de Renting */}
-                    <div className="col-lg-6">
-                        <div className="col-12">
-                            <h6 className="fw-bold mb-3 border-bottom pb-2">INFORMACIÓN DE RENTING</h6>
-                        </div>
-                        <div className="col-12">
-                            <table className="table table-bordered table-sm mb-0">
-                                <tbody >
-                                    <tr>
-                                        <td style={{ width: '30%' }}><strong>Costo Mensual</strong></td>
-                                        <td>S/ 99.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Tiempo de Renting</strong></td>
-                                        <td>48 meses</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Costo Total del Contrato</strong></td>
-                                        <td className="fw-bold">
-                                            S/{' '}
-                                            9999.00
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+  const getEstadoBadgeClass = (estado?: string) => {
+    switch (estado) {
+      case 'Pendiente': return 'bg-warning';
+      case 'Aprobada': return 'bg-success';
+      case 'Rechazada': return 'bg-danger';
+      case 'En Proceso': return 'bg-info';
+      default: return 'bg-secondary';
+    }
+  };
 
 
+  // ---------------- Submit ------------------------
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setAlert({ message: '✅ Checklist completado correctamente', type: 'success' });
+    setTimeout(() => navigate('/solicitud'), 1500);
 
+  };
 
-                {/* Observaciones */}
-                {solicitud.observaciones && (
-                    <div className="row mb-8">
-                        <div className="col-12">
-                            <h6 className="fw-bold mb-3 border-bottom pb-2">OBSERVACIONES</h6>
-                            <p style={{ textAlign: 'justify' }}>
-                                {solicitud.observaciones}
-                            </p>
-                        </div>
-                    </div>
-                )}
+  const handleAprobar = () => {
+    const confirmacion = window.confirm('¿Está seguro de aprobar esta solicitud?');
+    if (confirmacion) {
+      // Lógica para aprobar
+      setAlert({ message: '✅ Solicitud aprobada correctamente', type: 'success' });
+      setTimeout(() => navigate('/solicitud'), 1500);
+    }
+  };
 
-                {/* Datos a Completar */}
-                <form>
-                    <div className="row mb-8">
-                        <div className="col-lg-12 input-group-sm mb-5">
-                            <div className="form-floating">
-                                <input
-                                    type='text'
-                                    className='form-control'
-                                    id='comentarios'
-                                    placeholder='Comentarios'
-                                />
-                                <label htmlFor="comentarios" className="form-label">Comentarios</label>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+  const handleRechazar = () => {
+    const motivo = window.prompt('Ingrese el motivo del rechazo:');
+    if (motivo) {
+      // Lógica para rechazar
+      setAlert({ message: '✅ Solicitud rechazada correctamente', type: 'success' });
+      setTimeout(() => navigate('/solicitud'), 1500);
+    }
+  };
 
-
-            </div>
+  // ------------------ UI --------------------------
+  return (
+    <>
+      {/* Alert Messages */}
+      {alert && (
+        <div className={`alert alert-${alert.type === 'success' ? 'success' : 'danger'} alert-dismissible fade show`} role="alert">
+          {alert.message}
+          <button type="button" className="btn-close" onClick={() => setAlert(null)}></button>
         </div>
-    );
-};
+      )}
 
-export default DevolucionPage;
+      <form onSubmit={handleSubmit}>
+
+        {/* Header */}
+        <div className={`alert alert-dark p-4 d-flex justify-content-between bg-danger text-light`}>
+          <div>
+            <h3 className="text-dark">
+              <i className={`fa fa-edit me-2`}></i>
+              Devolución de Equipo
+            </h3>
+            <span className="text-dark">
+                Devolución de Equipo
+            </span>
+
+          </div>
+          <div>
+            <Link to="/solicitud" className="btn btn-secondary btn-sm me-2">
+              <i className="fa-solid fa-reply"></i> Volver
+            </Link>
+             
+              <button type="submit" className="btn btn-primary btn-sm">
+                <i className="fa-solid fa-floppy-disk"></i> Guardar
+              </button>
+             
+          </div>
+        </div>
+
+        <div className="card p-2">
+
+          {/* ------------------ Datos de la Solicitud (Readonly) -------------------- */}
+          <div className="alert alert-info text-dark">
+            <h5 className="mb-3">
+              <i className="fa fa-file-alt"></i> Datos del Equipo
+            </h5>
+            <div className="row">
+              <div className="col-lg-2">
+                <p className="mb-2">
+                  <strong>Código:</strong><br />
+                  <span className="badge bg-info fs-6 text-light">SOL-00000001</span>
+                </p>
+              </div>
+              <div className="col-lg-2">
+                <p className="mb-2">
+                  <strong>Fecha Solicitud:</strong><br />
+                  11/11/2025
+                </p>
+              </div>
+              <div className="col-lg-2">
+                <p className="mb-2">
+                  <strong>Urgencia:</strong><br />
+                  <span className={`badge ${getBadgeClass(solicitud.urgencia)}`}>
+                    Alta
+                  </span>
+                </p>
+              </div>
+              <div className="col-lg-2">
+                <p className="mb-2">
+                  <strong>Estado:</strong><br />
+                  <span className={`badge ${getEstadoBadgeClass(solicitud.estado)}`}>
+                    Pendiente
+                  </span>
+                </p>
+              </div>
+              <div className="col-lg-2">
+                <p className="mb-2">
+                  <strong>Usuario Solicitante:</strong><br />
+                  Donny Lopez
+                </p>
+              </div>
+              <div className="col-lg-2">
+                <p className="mb-2">
+                  <strong>Tipo Equipo:</strong><br />
+                  Laptop
+                </p>
+              </div>
+              <div className="col-lg-2">
+                <p className="mb-2">
+                  <strong>Aprobador:</strong><br />
+                  Lucio Levano
+                </p>
+              </div>
+              <div className="col-lg-2">
+                <p className="mb-0">
+                  <strong>Tipo Equipo:</strong><br /> Laptop
+                </p>
+              </div>
+              <div className="col-lg-2">
+                <p className="mb-0">
+                  <strong>Gama:</strong><br />
+                  Alta
+                </p>
+              </div>
+            </div>
+            <div className="row  ">
+              <div className="col-lg-12 mt-2">
+                <h5><i className="fa fa-microchip me-2"></i>Características de la Gama</h5>
+                <table className="table table-bordered table-sm">
+                  <thead>
+                    <tr>
+                      <th>Característica</th>
+                      <th>Valor</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    <tr key='1'>
+                      <td>RAM</td>
+                      <td>32GB</td>
+                    </tr>
+                    <tr key='1'>
+                      <td>Disco Duro</td>
+                      <td>2048GB</td>
+                    </tr>
+                    <tr key='1'>
+                      <td>Core i7</td>
+                      <td>3.5GHZ</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+          
+           
+          {/* ------------------ Comentarios -------------------- */}
+          <h5 className="mb-3 mt-4">
+            <i className="fa fa-comment"></i> Comentarios
+          </h5>
+
+          <div className="mb-3">
+            <textarea
+              className="form-control"
+              name="comentarios"
+              value={asignacion.comentarios || ""}
+              onChange={handleChange}
+              rows={5}
+              placeholder="Ingrese comentarios,  o notas de la solicitud..."
+            />
+            <small className="text-muted">Opcional - Información adicional</small>
+          </div>
+
+          {/* Resumen final */}
+          {asignacion.id_tecnico && asignacion.checklist && asignacion.checklist.length > 0 && (
+            <div className="alert alert-success mt-4">
+              <h6 className="alert-heading">
+                <i className="fa fa-check-circle me-2"></i>Resumen de Asignación
+              </h6>
+              <hr />
+              <div className="row">
+                <div className="col-md-6">
+                  <p className="mb-1">
+                    <strong>Técnico:</strong> {tecnicos.find(t => t.id === Number(asignacion.id_tecnico))?.nombres} {tecnicos.find(t => t.id === Number(asignacion.id_tecnico))?.apellidos}
+                  </p>
+                  <p className="mb-1">
+                    <strong>Período:</strong> {asignacion.fecha_inicio} al {asignacion.fecha_fin}
+                  </p>
+                </div>
+                <div className="col-md-6">
+                  <p className="mb-1">
+                    <strong>Total Items:</strong> {asignacion.checklist.length}
+                  </p>
+                  <p className="mb-1">
+                    <strong>Items Obligatorios:</strong> {asignacion.checklist.filter(i => i.obligatorio).length}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      </form>
+
+      {/* ---------------- Modal Selección Checklist ---------------- */}
+      {showChecklistModal && (
+        <ModalSeleccionChecklist
+          catalogo={catalogoChecklist}
+          existentes={asignacion.checklist || []}
+          tipoEquipo={solicitud.tipo_equipo_nombre?.toLowerCase() || 'laptop'}
+          onClose={() => setShowChecklistModal(false)}
+          onSelect={(sel: ChecklistItem[]) => {
+            setAsignacion(prev => ({
+              ...prev,
+              checklist: [...(prev.checklist || []), ...sel]
+            }));
+            setShowChecklistModal(false);
+          }}
+        />
+      )}
+    </>
+  );
+}
+
+// ---------------- Modal Component Base -------------------
+const ModalBase = ({ title, onClose, children }: any) => (
+  <div className="modal fade show d-block" style={{ background: "rgba(0,0,0,.5)" }}>
+    <div className="modal-dialog modal-xl modal-dialog-scrollable">
+      <div className="modal-content">
+        <div className="modal-header bg-primary text-white">
+          <h5>{title}</h5>
+          <button type="button" className="btn-close btn-close-white" onClick={onClose}></button>
+        </div>
+        <div className="modal-body">{children}</div>
+        <div className="modal-footer">
+          <button className="btn btn-secondary btn-sm" onClick={onClose}>Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// ---------------- Modal Selección Checklist -----
+const ModalSeleccionChecklist = ({ catalogo, existentes, tipoEquipo, onClose, onSelect }: any) => {
+  const [selected, setSelected] = useState<number[]>([]);
+  const [filtroCategoria, setFiltroCategoria] = useState<string>('');
+
+  const toggle = (id_item: number) =>
+    setSelected(s => s.includes(id_item) ? s.filter(x => x !== id_item) : [...s, id_item]);
+
+  const add = () => onSelect(catalogo.filter((c: any) => selected.includes(c.id_item)));
+
+  // Filtrar por tipo de equipo y categoría
+  const catalogoFiltrado = catalogo.filter((item: ChecklistItem) => {
+    const matchTipo = item.tipo_equipo.toLowerCase() === tipoEquipo.toLowerCase();
+    const matchCategoria = !filtroCategoria || item.categoria === filtroCategoria;
+    return matchTipo && matchCategoria;
+  });
+
+  // Obtener categorías únicas
+  const categorias = Array.from(new Set(catalogoFiltrado.map((i: ChecklistItem) => i.categoria)));
+
+  return (
+    <ModalBase title={`Seleccionar Items de Checklist - ${tipoEquipo.toUpperCase()}`} onClose={onClose}>
+      {catalogoFiltrado.length === 0 ? (
+        <div className="alert alert-warning">
+          <i className="fa fa-exclamation-triangle me-2"></i>
+          No hay items de checklist disponibles para el tipo de equipo "{tipoEquipo}"
+        </div>
+      ) : (
+        <div className="table-responsive" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+          <table className="table table-hover table-bordered">
+            <thead className="table-light sticky-top">
+              <tr>
+                <th style={{ width: '50px' }}></th>
+                <th style={{ width: '60px' }}>Orden</th>
+                <th>Descripción</th>
+                <th style={{ width: '120px' }}>Categoría</th>
+                <th style={{ width: '100px' }}>Tipo</th>
+                <th style={{ width: '100px' }}>Obligatorio</th>
+              </tr>
+            </thead>
+            <tbody>
+              {catalogoFiltrado
+                .sort((a: ChecklistItem, b: ChecklistItem) => a.orden - b.orden)
+                .map((item: ChecklistItem) => {
+                  const yaExiste = existentes.some((e: any) => e.id_item === item.id_item);
+                  return (
+                    <tr key={item.id_item} className={yaExiste ? 'table-secondary' : ''}>
+                      <td className="text-center">
+                        <input
+                          type="checkbox"
+                          className="form-check-input"
+                          disabled={yaExiste}
+                          checked={selected.includes(item.id_item)}
+                          onChange={() => toggle(item.id_item)}
+                        />
+                      </td>
+                      <td className="text-center">{item.orden}</td>
+                      <td>
+                        <strong>{item.descripcion}</strong>
+                        {item.instrucciones && (
+                          <small className="d-block text-muted mt-1">
+                            <i className="fa fa-info-circle me-1"></i>
+                            {item.instrucciones}
+                          </small>
+                        )}
+                        {item.valor_esperado && (
+                          <small className="d-block text-success mt-1">
+                            <i className="fa fa-check-circle me-1"></i>
+                            Esperado: {item.valor_esperado}
+                          </small>
+                        )}
+                      </td>
+                      <td>
+                        <span className="badge bg-secondary">{item.categoria}</span>
+                      </td>
+                      <td>
+                        <span className={`badge ${item.tipo_validacion === 'checkbox' ? 'text-light bg-info' : 'bg-warning'
+                          }`}>
+                          {item.tipo_validacion}
+                        </span>
+                      </td>
+                      <td className="text-center">
+                        {item.obligatorio ? (
+                          <span className="badge bg-danger text-light">Sí</span>
+                        ) : (
+                          <span className="badge bg-secondary">No</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <div className="text-end mt-3">
+        <button
+          className="btn btn-success"
+          onClick={add}
+          disabled={selected.length === 0}
+        >
+          <i className="fa fa-check me-2"></i>
+          Agregar Seleccionados ({selected.length})
+        </button>
+      </div>
+    </ModalBase>
+  );
+};

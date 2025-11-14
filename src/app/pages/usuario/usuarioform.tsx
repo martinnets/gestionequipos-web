@@ -11,12 +11,9 @@ interface UserFormData {
     usuario?: string;
     email?: string;
     opciones?: {
+      soporte?: boolean;
+      solicitante?: boolean;
       compras?: boolean;
-      ventas?: boolean;
-      inventario?: boolean;
-      finanzas?: boolean;
-      produccion?: boolean;
-      reportes?: boolean;
       administracion?: boolean;
     };
     id_empresa?: string;
@@ -37,33 +34,8 @@ export default function UsuarioForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState("");
     const { id } = useParams<{ id: string }>();
-    const [formData, setFormData] = useState<UserFormData>({});
-    // const [formData, setFormData] = useState<UserFormData>({
-    //     codigo: currentUser?.codigo || '',
-    //     usuario: currentUser?.usuario || '',
-    //     email: currentUser?.email || '',
-    //     opciones: {
-    //         compras: currentUser?.opciones?.compras || false,
-    //         ventas: currentUser?.opciones?.ventas || false,
-    //         inventario: currentUser?.opciones?.inventario || false,
-    //         finanzas: currentUser?.opciones?.finanzas || false,
-    //         produccion:currentUser?.opciones?.produccion || false,
-    //         reportes:currentUser?.opciones?.reportes || false,
-    //         administracion: currentUser?.opciones?.administracion || false
-    //     },
-    //     id_empresa: currentUser?.id_empresa || '',
-    //     rol: currentUser?.rol || '',
-    //     codigo_estado: '1', // Asignar un valor por defecto
-    //     usu_crea: currentUser?.codigo || '', // Asignar el código del usuario actual
-    //     fec_crea: new Date(), // Asignar la fecha actual
-    //     usu_modi: currentUser?.codigo || '', // Asignar el código del usuario actual
-    //     fec_modi: new Date(), // Asignar la fecha actual
-    // });
-
+    const [formData, setFormData] = useState<UserFormData>({});    
     const [validated, setValidated] = useState(false);
-
- 
-
     const roles = [
         { id: 'administrador', nombre: 'Administrador' },
         { id: 'usuario', nombre: 'Usuario' },
@@ -224,21 +196,7 @@ export default function UsuarioForm() {
           });
         }
       };
-    // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    //     const { name, value } = e.target;
-    //     setusuario((prev) => ({
-    //         ...prev,
-    //         [name]: value,
-    //     }));
-        
-    //     // Limpiar error del campo cuando el usuario empiece a escribir
-    //     if (errors[name]) {
-    //         setErrors(prev => ({
-    //             ...prev,
-    //             [name]: ""
-    //         }));
-    //     }
-    // };
+   
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData({
@@ -276,19 +234,8 @@ export default function UsuarioForm() {
     };
 
     useEffect(() => {
-       // console.log(currentUser)
-        if (id !== null) {
-            usuarioDataService.getusuarioById(id)
-                .then(response => response.json())
-                .then(result => {
-                    setFormData(result);
-                    //console.log(result);
-                })
-                .catch(e => {
-                    console.log(e);
-                });
-        }
-    }, [id]);
+       
+    }, []);
 
     return (
         <>
@@ -313,7 +260,7 @@ export default function UsuarioForm() {
                             {/* Código Usuario */}
                             <div className="col-lg-4 input-group-sm mb-5">
                                 <div className="mb-2">
-                                    <label className="form-label required">Código Usuario</label>
+                                    <label className="form-label required">Nro Documento</label>
                                     <input 
                                         type="text" 
                                         name="codigo" 
@@ -366,11 +313,7 @@ export default function UsuarioForm() {
                                     required
                                     >
                                     <option value="">Seleccione una empresa</option>
-                                    {currentUser?.empresas?.map((item) => (
-                                        <option key={item._id} value={item._id}>
-                                        {item.empresa}
-                                        </option>
-                                    ))}
+                                     
                                     </select>
                                     {errors.rol && <div className="invalid-feedback">{errors.empresa}</div>}
                                 </div>
@@ -404,44 +347,29 @@ export default function UsuarioForm() {
                                 <div className="d-flex flex-wrap gap-3">                            
                                 <Form.Check
                                     type="checkbox"
-                                    id="compras"
-                                    name="compras"
-                                    label="Compras"
-                                    checked={formData.opciones?.compras}
+                                    id="soporte"
+                                    name="soporte"
+                                    label="soporte"
+                                    checked={formData.opciones?.soporte}
                                     onChange={handleChange}
                                 />
                                   <Form.Check
                                     type="checkbox"
-                                    id="ventas"
-                                    name="ventas"
-                                    label="ventas"
-                                    checked={formData.opciones?.ventas}
+                                    id="solicitante"
+                                    name="solicitante"
+                                    label="solicitante"
+                                    checked={formData.opciones?.solicitante}
                                     onChange={handleChange}
                                 />
                                  <Form.Check
                                     type="checkbox"
-                                    id="finanzas"
-                                    name="finanzas"
-                                    label="finanzas"
-                                    checked={formData.opciones?.finanzas}
+                                    id="compras"
+                                    name="compras"
+                                    label="compras"
+                                    checked={formData.opciones?.compras}
                                     onChange={handleChange}
                                 />
-                                 <Form.Check
-                                    type="checkbox"
-                                    id="produccion"
-                                    name="produccion"
-                                    label="produccion"
-                                    checked={formData.opciones?.produccion}
-                                    onChange={handleChange}
-                                />
-                                 <Form.Check
-                                    type="checkbox"
-                                    id="inventario"
-                                    name="inventario"
-                                    label="inventario"
-                                    checked={formData.opciones?.inventario}
-                                    onChange={handleChange}
-                                />
+                                   
                                  <Form.Check
                                     type="checkbox"
                                     id="administracion"
@@ -450,14 +378,7 @@ export default function UsuarioForm() {
                                     checked={formData.opciones?.administracion}
                                     onChange={handleChange}
                                 />
-                                <Form.Check
-                                    type="checkbox"
-                                    id="reportes"
-                                    name="reportes"
-                                    label="reportes"
-                                    checked={formData.opciones?.reportes}
-                                    onChange={handleChange}
-                                />
+                                 
                                 </div>
                             </div>
                             {/* Contraseña */}

@@ -56,17 +56,7 @@ export default function PerfilForm() {
     useEffect(() => {
         if (id === 'crea') {
             console.log(id);
-        } else {
-            perfilDataService.getPerfilById(id)
-                .then(response => response.json())
-                .then(result => {
-                    setPerfil(result);
-                    console.log(result);
-                })
-                .catch(e => {
-                    console.log(e);
-                });
-        }
+        }  
     }, [id]);
 
     return (

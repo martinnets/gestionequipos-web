@@ -4,52 +4,84 @@ import ventaDataService from "../../../_services/venta";
 import { useAuth } from "../../modules/auth";
 import { MaterialReactTable, MRT_ColumnDef } from 'material-react-table';
 import { Venta } from "../../../_models/venta";
+import ventaJSON from "../../../../modelo/venta.json"
 
 export function VentaPage() {
     const { currentUser } = useAuth();
     const [solicitudesVenta, setSolicitudesVenta] = useState<Venta[]>([]);
-    const datos =[
-        { id_venta: '1', codigo: 'VEN-001', usuario_nombre: 'Juan Perez', tipo_equipo: 'Laptop', descripcion: 'Laptop para oficina', modelo: 'Dell XPS 13', cantidad: 2, estado: 'Pendiente', fecha_solicitud: '2024-06-01', 
-            notificar_email: ''
-        },
-        { id_venta: '2', codigo: 'VEN-002', usuario_nombre: 'Ana Lopez', tipo_equipo: 'Desktop', descripcion: 'Desktop para diseño gráfico', modelo: 'iMac 27"', cantidad: 1, estado: 'Aprobada', fecha_solicitud: '2024-06-05', 
-            notificar_email: ''
-        },
-        { id_venta: '3', codigo: 'VEN-003', usuario_nombre: 'Luis Martinez', tipo_equipo: 'Tablet', descripcion: 'Tablet para presentaciones', modelo: 'iPad Pro', cantidad: 3, estado: 'Rechazada', fecha_solicitud: '2024-06-10', 
-            notificar_email: ''
-        },  
-        { id_venta: '4', codigo: 'VEN-004', usuario_nombre: 'Marta Sanchez', tipo_equipo: 'Laptop', descripcion: 'Laptop para desarrollo de software', modelo: 'MacBook Pro', cantidad: 2, estado: 'En Proceso', fecha_solicitud: '2024-06-12', 
-            notificar_email: '' 
-        }
-
-    ]
+    const datos = ventaJSON as Venta[];
     const columns = useMemo<MRT_ColumnDef<Venta>[]>(
         () => [
             { 
-                accessorKey: 'id_solicitud_venta', 
+                accessorKey: 'id', 
                 header: 'Acción',
                 enableColumnFilter: false,
                 size: 50,
                 Cell: ({ row }) => (
                     <>
                     <Link className="btn btn-sm" 
-                          to={`/ventaform/${row.original.id_venta}`}>
+                          to={`/ventaform/${row.original.id}`}>
                         <i className="fa-solid fa-pen-to-square fs-4 text-primary"></i>
                     </Link>
                     <Link className="btn btn-sm" 
-                        to={`/cotizacionform/${row.original.id_venta}`}>
+                        to={`/cotizacionform/${row.original.id}`}>
                         <i className="fa-solid fa-list-check  fs-4 text-danger"></i>                                            
                     </Link>
                     </>
                 ),
             },
             { accessorKey: 'codigo', header: 'Código' },
-            { accessorKey: 'usuario_nombre', header: 'Solicitante' },
+            { accessorKey: 'solicitante', header: 'Solicitante' },
             { accessorKey: 'tipo_equipo', header: 'Tipo Equipo' },
+            { accessorKey: 'aprobador', header: 'Aprobador' },
+            { accessorKey: 'codigo_estado',
+                header: 'Estado', size: 10,
+                Cell: ({ row }) => {
+                    const estadosolicitud = row.original.codigo_estado;
+                    let colorClass = '';
+                    let label = '';
+                    switch (estadosolicitud) {
+                        case 1:
+                            colorClass = 'badge badge-danger';
+                            label = 'Pendiente';
+                            break;
+                        case 2:
+                            colorClass = 'badge badge-success';
+                            label = 'Aprobada';
+                            break;
+                        case 3:
+                            colorClass = 'badge badge-warning';
+                            label = 'En Compra';
+                            break;
+                        case 4:
+                            colorClass = 'badge badge-success';
+                            label = 'Comprado';
+                            break;
+                        case 5:
+                            colorClass = 'badge badge-warning';
+                            label = 'En Preparacion';
+                            break;
+                        case 6:
+                            colorClass = 'badge badge-primary';
+                            label = 'Preparado';
+                            break;
+                        case 7:
+                            colorClass = 'badge badge-info';
+                            label = 'Entregado';
+                            break;
+                        case 9:
+                            colorClass = 'badge badge-dark';
+                            label = 'Rechazada';
+                            break;
+                    }
+
+                    return <span className={colorClass}>{label}</span>;
+                },
+            },
             { accessorKey: 'descripcion', header: 'Descripción' },
             { accessorKey: 'modelo', header: 'Modelo' },
             { accessorKey: 'cantidad', header: 'Cantidad' },
-            { accessorKey: 'estado', header: 'Estado' },
+             
             { 
                 accessorKey: 'fecha_solicitud', 
                 header: 'Fecha Solicitud',
@@ -58,7 +90,7 @@ export function VentaPage() {
                     return fecha ? new Date(fecha).toLocaleDateString() : '';
                 }
             },
-            { accessorKey: 'notificar_email', header: 'Email Notificación' },
+            
         ],
         [],
     );

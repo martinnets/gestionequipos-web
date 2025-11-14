@@ -12,7 +12,21 @@ export function PersonalPage() {
     const datos = personalJSON as Personal[];
     const columns = useMemo<MRT_ColumnDef<Personal>[]>(
         () => [
-            { accessorKey: 'id', header: 'ID ', },
+            { accessorKey: 'id',
+            header: 'Acción',
+            enableColumnFilter: false,size:20,
+            Cell: ({ row }) => (
+                <div className="d-flex gap-1 justify-content-start">
+                    <Link className="btn btn-icon btn-light-primary btn-sm"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"                                        
+                                        to={`/usuarioform`}>
+                                        <i className="fa-solid fa-id-badge fs-4 text-danger  "></i>
+                                    </Link>
+                                     
+                                </div>
+                            ),
+                        },            
             { accessorKey: 'nombres', header: 'Nombre', },
             { accessorKey: 'apellidos', header: 'Apellido', },
             { accessorKey: 'email', header: 'Email', },
@@ -23,6 +37,7 @@ export function PersonalPage() {
                     return (
                         <span className={`badge ${
                             perfil === 'solicitante' ? 'text-light bg-success' : 
+                            perfil === 'comprador' ? 'text-light bg-warning' : 
                             perfil === 'aprobador' ? 'text-light    bg-danger' : 'bg-secondary'
                         }`}>
                             {perfil}
