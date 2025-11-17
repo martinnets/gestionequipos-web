@@ -38,6 +38,7 @@ import { SoportePage } from '../pages/soporte/soporte'
 import SolicitudView from '../pages/solicitud/solicitudview'
 import { PerfilPage } from '../pages/perfil/perfil'
 import PerfilForm from '../pages/perfil/perfilform'
+import SolicitudTimeline from '../pages/solicitud/solicitudtimeline'
  
 
 const PrivateRoutes = () => {
@@ -71,6 +72,7 @@ const PrivateRoutes = () => {
         <Route path='/solicitudjefe' element={< SolicitudJefePage />} />
         <Route path='/solicitudusuario' element={< SolicitudUsuarioPage />} />
         <Route path='/solicitudvista/:id' element={< SolicitudView />} />
+        <Route path='/solicitudtimeline/:id' element={< SolicitudTimeline />} />
 
         <Route path='/licencia' element={<LicenciaPage />} />
         <Route path='/licenciaform/:id' element={< LicenciaForm />} />

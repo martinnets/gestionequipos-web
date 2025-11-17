@@ -20,7 +20,7 @@ export function PersonalPage() {
                     <Link className="btn btn-icon btn-light-primary btn-sm"
                                         data-bs-toggle="tooltip"
                                         data-bs-placement="top"                                        
-                                        to={`/usuarioform`}>
+                                        to={`/usuarioform/1`}>
                                         <i className="fa-solid fa-id-badge fs-4 text-danger  "></i>
                                     </Link>
                                      

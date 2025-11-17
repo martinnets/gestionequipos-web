@@ -532,15 +532,7 @@ export default function SolicitudView() {
           {estadoConfig.estadoId === '2' && (
             <>
             <div className="row">
-            <div className="col-md-6 mb-3 form-floating">
-              <input className="form-control" name="codigo_activo" onChange={handleChange} required />
-              <label>Código de Activo *</label>
-            </div>
-
-            <div className="col-md-6 mb-3 form-floating">
-              <input className="form-control" name="serie"  onChange={handleChange} required />
-              <label>Serie *</label>
-            </div>
+             
             <div className="col-md-4 mb-3 form-floating">
               <input className="form-control" name="orden_compra"  onChange={handleChange} required />
               <label>Orden de Compra *</label>
@@ -555,6 +547,24 @@ export default function SolicitudView() {
               <input type="number" className="form-control" name="monto_compra"  onChange={handleChange} required />
               <label>Monto Compra *</label>
             </div>
+
+            <div className="col-md-3 mb-3 form-floating">
+              <input type="date" className="form-control" name="fecha_compra"  onChange={handleChange} required />
+              <label>Fecha Compra *</label>
+            </div>
+          </div>
+            </>
+          )}
+           {/* ------------------ En Compra  -------------------- */}
+          {estadoConfig.estadoId === '3' && (
+            <>
+            <div className="row">
+             
+            <div className="col-md-4 mb-3 form-floating">
+              <input className="form-control" name="orden_compra"  onChange={handleChange} required />
+              <label>Parte de Ingreso *</label>
+            </div>
+ 
 
             <div className="col-md-3 mb-3 form-floating">
               <input type="date" className="form-control" name="fecha_compra"  onChange={handleChange} required />

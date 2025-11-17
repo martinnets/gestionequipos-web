@@ -19,25 +19,32 @@ export function SolicitudPage() {
                 size: 50,
                 Cell: ({ row }) => (
                     <div className="d-flex gap-1 justify-content-start">
-                        <Link className="btn btn-icon btn-light-primary btn-sm"
+                        <Link className="btn btn-icon btn-light-danger btn-sm"
                             data-bs-toggle="tooltip"
                             data-bs-placement="top"
                             title="Aprobar / Rechazar"
                             to={`/solicitudreporte/1`}>
-                            <i className="fa-solid fa-file-pdf fs-4 text-danger  "></i>
+                            <i className="fa-solid fa-file-pdf fs-4    "></i>
                         </Link>
-                         {row.original.codigo_estado != 7 && row.original.codigo_estado != 9 ?
-                            <>
-<Link className="btn btn-icon btn-light-success btn-sm"
+                         <Link className="btn btn-icon btn-light-info btn-sm"
                             data-bs-toggle="tooltip"
                             data-bs-placement="top"
-                            title="Vista de Solicitud"
-                            to={`/solicitudvista/${row.original.codigo_estado}`}>
-                            <i className="fa-solid fa-eye fs-4 "></i>
+                            title="Time Line"
+                            to={`/solicitudtimeline/1`}>
+                            <i className="fa-solid fa-timeline fs-4    "></i>
                         </Link>
-                            </>:<></>
-                         }
-                        
+                        {row.original.codigo_estado != 7 && row.original.codigo_estado != 9 ?
+                            <>
+                                <Link className="btn btn-icon btn-light-success btn-sm"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title="Vista de Solicitud"
+                                    to={`/solicitudvista/${row.original.codigo_estado}`}>
+                                    <i className="fa-solid fa-eye fs-4 "></i>
+                                </Link>
+                            </> : <></>
+                        }
+
                     </div>
                 ),
             },

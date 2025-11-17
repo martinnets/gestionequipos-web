@@ -324,7 +324,6 @@ export default function SolicitudForm() {
                                         <tr>
                                             <th>Tipo de Equipo</th>
                                             <th>Características</th>
-                                            <th>Estado</th>
                                             <th>Acción</th>
                                         </tr>
                                     </thead>
@@ -333,11 +332,7 @@ export default function SolicitudForm() {
                                             <tr key={equipo.id}>
                                                 <td>{equipo.tipo_equipo}</td>
                                                 <td>{equipo.caracteristicas}</td>
-                                                <td>
-                                                    <span className="badge badge-success">
-                                                        {equipo.estado}
-                                                    </span>
-                                                </td>
+                                                
                                                 <td>
                                                     <button
                                                         type="button"
@@ -358,6 +353,21 @@ export default function SolicitudForm() {
                 <div className="card card-custom">
                     <div className="card-body pt-10">
                         <div className="form-group row">
+                            <div className="col-lg-6 input-group-sm mb-5">
+                                <div className="form-floating">
+                                    <select
+                                        name="tipo_solicitud"
+                                        
+                                        className="form-control"
+                                        onChange={handleChange}
+                                        required>
+                                        <option value="">Seleccione</option>
+                                        <option value="">Personal Nuevo</option>
+                                        <option value="">Personal Activo</option>
+                                    </select>
+                                    <label className="form-label">Tipo de Solicitud *</label>
+                                </div>
+                            </div>
                             {/* Primera fila - Empresa y Puesto Real */}
                             <div className="col-lg-6 input-group-sm mb-5">
                                 <div className="form-floating">
