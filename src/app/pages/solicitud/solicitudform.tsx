@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import solicitudDataService from "../../../_services/solicitud";
 import { useAuth } from "../../modules/auth";
@@ -6,6 +6,9 @@ import { Solicitud } from "../../../_models/solicitud";
 import empresaJSON from "../../../../modelo/empresa.json"
 import perfilJSON from "../../../../modelo/perfil.json"
 import gamaJSON from "../../../../modelo/gama.json"
+import personalJSON from "../../../../modelo/personal.json"
+import { Personal } from "../../../_models/personal";
+import { MaterialReactTable, MRT_ColumnDef } from 'material-react-table';
 
 // Interfaces para los datos del formulario
 interface TipoEquipo {
@@ -66,10 +69,96 @@ export default function SolicitudForm() {
     const [solicitud, setSolicitud] = useState<Solicitud>({});
     {
         id === 'ver' ?
-        solicitud.estado = 'En Aprobación' :
-        solicitud.empresa_id = '1'
+            solicitud.estado = 'En Aprobación' :
+            solicitud.empresa_id = '1'
     }
-
+    const [mostrarModalPerfil, setMostrarModalPerfil] = useState(false);
+    const columnasPerfil = useMemo<MRT_ColumnDef<PerfilUsuario>[]>(
+        () => [
+            {
+                accessorKey: 'id',
+                header: 'Acción',
+                enableColumnFilter: false,
+                size: 80,
+                Cell: ({ row }) => (
+                    <button
+                        type="button"
+                        className="btn btn-sm btn-primary"
+                        onClick={() => handleSeleccionarPerfil(row.original.id)}>
+                        <i className="fa-solid fa-check me-1"></i>
+                        Seleccionar
+                    </button>
+                ),
+            },
+            {
+                accessorKey: 'perfil',
+                header: 'Perfil',
+                size: 150,
+            },
+            {
+                accessorKey: 'gama',
+                header: 'Gama',
+                size: 100,
+            },
+            {
+                accessorKey: 'costo_renting_mensual',
+                header: 'Costo Mensual',
+                size: 120,
+                Cell: ({ cell }) => (
+                    <span className="text-success fw-bold">
+                        S/ {cell.getValue<number>()}
+                    </span>
+                ),
+            },
+            {
+                accessorKey: 'gama',
+                header: 'RAM',
+                size: 120,
+                enableColumnFilter: false,
+                Cell: ({ row }) => {
+                    const gama = (gamaJSON as Gama[]).find(g => g.codigo === row.original.gama);
+                    const ram = gama?.caracteristicas.find(c => c.nombre === "RAM")?.valor || "-";
+                    return <span>{ram}</span>;
+                },
+            },
+            {
+                accessorKey: 'gama',
+                id: 'disco',
+                header: 'Disco Duro',
+                size: 150,
+                enableColumnFilter: false,
+                Cell: ({ row }) => {
+                    const gama = (gamaJSON as Gama[]).find(g => g.codigo === row.original.gama);
+                    const disco = gama?.caracteristicas.find(c => c.nombre === "Disco Duro")?.valor || "-";
+                    return <span>{disco}</span>;
+                },
+            },
+            {
+                accessorKey: 'gama',
+                id: 'procesador',
+                header: 'Procesador',
+                size: 200,
+                enableColumnFilter: false,
+                Cell: ({ row }) => {
+                    const gama = (gamaJSON as Gama[]).find(g => g.codigo === row.original.gama);
+                    const procesador = gama?.caracteristicas.find(c => c.nombre === "Procesador")?.valor || "-";
+                    return <span>{procesador}</span>;
+                },
+            },
+        ],
+        [gamaJSON]
+    );
+    const handleSeleccionarPerfil = (perfilId: string) => {
+        const perfil = perfilesUsuario.find(p => p.id === perfilId) || null;
+        setPerfilSeleccionado(perfil);
+        cargarDetalleGama(perfil?.gama);
+        setSolicitud(prev => ({
+            ...prev,
+            perfil: perfilId
+        }));
+        setMostrarModalPerfil(false);
+    };
+    const personal = personalJSON as Personal[];
     const [tiposEquipo, setTiposEquipo] = useState<TipoEquipo[]>([]);
     const [perfilesUsuario, setPerfilesUsuario] = useState<PerfilUsuario[]>([]);
     const [perfilesFiltrados, setPerfilesFiltrados] = useState<PerfilUsuario[]>([]);
@@ -279,34 +368,7 @@ export default function SolicitudForm() {
                             <i className="fa-solid fa-reply text-dark"></i>
                             Volver
                         </Link>
-                        <button
-                            className='btn btn-info btn-sm ms-2'
-                            type="button"
-                            onClick={() => setMostrarCustodia(!mostrarCustodia)}>
-                            <i className="fa-solid fa-box"></i>
-                            {mostrarCustodia ? 'Ocultar' : 'Ver'} Equipos en Custodia
-                        </button>
-                        {id === 'ver' && (
-                            <>
-                                <button
-                                    className='btn btn-danger btn-sm ms-2'>
-                                    <i className="fa-solid fa-square-xmark"></i>
-                                    Rechazar
-                                </button>
-                                <button
-                                    className='btn btn-success btn-sm ms-2'>
-                                    <i className="fa-solid fa-check"></i>
-                                    Aprobar y Guardar
-                                </button>
-                            </>
-                        )
-                        }
-                        {id === 'crea' &&
-                            <button className='btn btn-primary btn-sm ms-2' type="submit">
-                                <i className="fa-solid fa-paper-plane"></i>
-                                Guardar Solicitud
-                            </button>
-                        }
+
 
                     </div>
                 </div>
@@ -332,7 +394,7 @@ export default function SolicitudForm() {
                                             <tr key={equipo.id}>
                                                 <td>{equipo.tipo_equipo}</td>
                                                 <td>{equipo.caracteristicas}</td>
-                                                
+
                                                 <td>
                                                     <button
                                                         type="button"
@@ -347,29 +409,16 @@ export default function SolicitudForm() {
                                 </table>
                             </div>
                         </div>
+
                     </div>
                 )}
 
                 <div className="card card-custom">
                     <div className="card-body pt-10">
                         <div className="form-group row">
-                            <div className="col-lg-6 input-group-sm mb-5">
-                                <div className="form-floating">
-                                    <select
-                                        name="tipo_solicitud"
-                                        
-                                        className="form-control"
-                                        onChange={handleChange}
-                                        required>
-                                        <option value="">Seleccione</option>
-                                        <option value="">Personal Nuevo</option>
-                                        <option value="">Personal Activo</option>
-                                    </select>
-                                    <label className="form-label">Tipo de Solicitud *</label>
-                                </div>
-                            </div>
+
                             {/* Primera fila - Empresa y Puesto Real */}
-                            <div className="col-lg-6 input-group-sm mb-5">
+                            <div className="col-lg-4 input-group-sm mb-5">
                                 <div className="form-floating">
                                     <select
                                         name="empresa_id"
@@ -388,7 +437,7 @@ export default function SolicitudForm() {
                                 </div>
                             </div>
 
-                            <div className="col-lg-6 input-group-sm mb-5">
+                            <div className="col-lg-4 input-group-sm mb-5">
                                 <div className="form-floating">
                                     <select
                                         name="puesto"
@@ -414,7 +463,7 @@ export default function SolicitudForm() {
                             </div>
 
                             {/* Segunda fila - Tipo de Equipo */}
-                            <div className="col-lg-12 input-group-sm mb-5">
+                            <div className="col-lg-4 input-group-sm mb-5">
                                 <div className="form-floating">
                                     <select
                                         name="tipo_equipo"
@@ -436,22 +485,19 @@ export default function SolicitudForm() {
                             {/* Tercera fila - Perfil de Usuario */}
                             {solicitud.tipo_equipo && (
                                 <div className="col-lg-12 input-group-sm mb-5">
-                                    <div className="form-floating">
-                                        <select
-                                            name="perfil"
-                                            value={solicitud.perfil || ''}
-                                            className="form-control"
-                                            onChange={handleChange}
-                                            required>
-                                            <option value="">Seleccionar perfil de usuario</option>
-                                            {perfilesFiltrados.map(perfil => (
-                                                <option key={perfil.id} value={perfil.id}>
-                                                    {perfil.perfil}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <label className="form-label">Perfil de Usuario *</label>
-                                    </div>
+                                    <label className="form-label mb-2">Perfil de Usuario *</label>
+                                    <button
+                                        type="button"
+                                        className="btn btn-light-primary btn-block w-100 text-start d-flex justify-content-between align-items-center"
+                                        onClick={() => setMostrarModalPerfil(true)}>
+                                        <span>
+                                            <i className="fa-solid fa-search me-2"></i>
+                                            {perfilSeleccionado
+                                                ? `${perfilSeleccionado.perfil} - ${perfilSeleccionado.gama}`
+                                                : 'Seleccionar perfil de usuario'}
+                                        </span>
+                                        <i className="fa-solid fa-chevron-down"></i>
+                                    </button>
                                 </div>
                             )}
 
@@ -461,14 +507,14 @@ export default function SolicitudForm() {
                                     <div className="col-lg-12 mb-5">
                                         <div className="alert alert-info">
                                             <h5 className="alert-heading">
-                                                <i className="fa-solid fa-laptop"></i> Características del Equipo
+                                                <i className="fa-solid fa-laptop"></i> Características
                                             </h5>
-                                            <hr />
                                             <p className="mb-2">
-                                                <strong>Perfil:</strong> {perfilSeleccionado.perfil}
+                                                <strong>Perfil :</strong>
+                                                {perfilSeleccionado.perfil}
                                             </p>
                                             <p className="mb-2">
-                                                <strong>Especificaciones:</strong><br />
+                                                <strong>Gama:</strong>
                                                 {perfilSeleccionado.gama}
                                             </p>
                                             <hr />
@@ -490,27 +536,26 @@ export default function SolicitudForm() {
                                                     </p>
                                                 </div>
                                             </div>
+                                            <hr />
+                                            <table className="table table-bordered table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Característica</th>
+                                                        <th>Valor</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {caracteristicasGama.map((c) => (
+                                                        <tr key={c.id}>
+                                                            <td>{c.nombre}</td>
+                                                            <td>{c.valor}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
-                                    <div className="mb-4 border p-3 rounded bg-light">
-                                        <h5><i className="fa fa-microchip me-2"></i>Características de la Gama</h5>
-                                        <table className="table table-bordered table-sm">
-                                            <thead>
-                                                <tr>
-                                                    <th>Característica</th>
-                                                    <th>Valor</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {caracteristicasGama.map((c) => (
-                                                    <tr key={c.id}>
-                                                        <td>{c.nombre}</td>
-                                                        <td>{c.valor}</td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
+
                                 </>
                             )}
                             {/* Tabla características */}
@@ -520,16 +565,19 @@ export default function SolicitudForm() {
                             {/* Quinta fila - Aprobador (solo lectura) */}
                             {aprobador && (
                                 <div className="col-lg-12 input-group-sm mb-5">
-                                    <div className="alert alert-warning">
-                                        <h6 className="mb-2">
-                                            <i className="fa-solid fa-user-check"></i> Aprobador Asignado
-                                        </h6>
-                                        <p className="mb-0">
-                                            <strong>{aprobador.nombre}</strong> - {aprobador.cargo}
-                                        </p>
-                                        <small className="text-muted">
-                                            Esta persona recibirá la notificación para aprobar su solicitud
-                                        </small>
+                                    <div className="form-floating">
+                                        <select
+                                            name="empresa_id"
+                                            className="form-control"
+                                            required>
+                                            <option value="">Seleccionar Aprobador</option>
+                                            {personal.map(personal => (
+                                                <option key={personal.id} value={personal.id}>
+                                                    {personal.nombres} {personal.apellidos}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <label className="form-label">Aprobador *</label>
                                     </div>
                                 </div>
                             )}
@@ -576,6 +624,36 @@ export default function SolicitudForm() {
                                 </div>
                             )}
                         </div>
+                    </div>
+                    <div className="card-footer d-flex justify-content" >
+                        <button
+                            className='btn btn-info btn-sm ms-2'
+                            type="button"
+                            onClick={() => setMostrarCustodia(!mostrarCustodia)}>
+                            <i className="fa-solid fa-box"></i>
+                            {mostrarCustodia ? 'Ocultar' : 'Ver'} Equipos en Custodia
+                        </button>
+                        {id === 'ver' && (
+                            <>
+                                <button
+                                    className='btn btn-danger btn-sm ms-2'>
+                                    <i className="fa-solid fa-square-xmark"></i>
+                                    Rechazar
+                                </button>
+                                <button
+                                    className='btn btn-success btn-sm ms-2'>
+                                    <i className="fa-solid fa-check"></i>
+                                    Aprobar y Guardar
+                                </button>
+                            </>
+                        )
+                        }
+                        {id === 'crea' &&
+                            <button className='btn btn-primary btn-sm ms-2' type="submit">
+                                <i className="fa-solid fa-paper-plane"></i>
+                                Guardar Solicitud
+                            </button>
+                        }
                     </div>
                 </div>
             </form>
@@ -655,6 +733,63 @@ export default function SolicitudForm() {
                                     className="btn btn-success"
                                     onClick={handleEnviarAprobacion}>
                                     <i className="fa-solid fa-paper-plane"></i> Enviar a Aprobación
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {/* Modal de Selección de Perfil - Agregar antes del modal de Resumen */}
+            {mostrarModalPerfil && (
+                <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                    <div className="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                        <div className="modal-content">
+                            <div className="modal-header bg-primary ">
+                                <h5 className="modal-title text-white">
+                                    <i className="fa-solid fa-user-gear text-white"></i> Seleccionar Perfil de Usuario
+                                </h5>
+                                <button
+                                    type="button"
+                                    className="btn-close btn-close-white"
+                                    onClick={() => setMostrarModalPerfil(false)}>
+                                </button>
+                            </div>
+                            <div className="modal-body p-0">
+                                <MaterialReactTable
+                                    columns={columnasPerfil}
+                                    data={perfilesFiltrados}
+                                    enableTopToolbar={false}
+                                    muiTableHeadCellProps={{
+                                        className: 'bg-secondary text-dark',
+                                    }}
+                                    muiTableBodyRowProps={({ row }) => ({
+                                        onClick: () => handleSeleccionarPerfil(row.original.id),
+                                        sx: {
+                                            cursor: 'pointer',
+                                            backgroundColor: perfilSeleccionado?.id === row.original.id ? '#e8f5e9' : 'inherit',
+                                            '&:hover': {
+                                                backgroundColor: perfilSeleccionado?.id === row.original.id ? '#c8e6c9' : '#f5f5f5',
+                                            },
+                                        },
+                                    })}
+                                    initialState={{
+                                        density: 'compact',
+                                        showGlobalFilter: true,
+                                        showColumnFilters: true,
+                                        pagination: { pageSize: 10, pageIndex: 0 },
+                                    }}
+                                    localization={{
+                                        noRecordsToDisplay: 'No se encontraron perfiles',
+                                        search: 'Buscar...',
+                                    }}
+                                />
+                            </div>
+                            <div className="modal-footer">
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    onClick={() => setMostrarModalPerfil(false)}>
+                                    <i className="fa-solid fa-times"></i> Cerrar
                                 </button>
                             </div>
                         </div>

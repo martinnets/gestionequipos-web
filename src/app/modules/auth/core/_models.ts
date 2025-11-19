@@ -78,16 +78,19 @@ export interface UserModel {
   sexo: string
   telefono: string
   token: string
-  opciones?: {
-    vendedor?:boolean
+  rol?: {
+    administrador?:boolean
+    solicitante?:boolean
+    aprobador?: boolean
     compras?: boolean
-    ventas?: boolean
-    inventario?: boolean
-    finanzas?: boolean
-    administracion?: boolean
-    produccion?: boolean
+    infraestructura?: boolean
+    soporte?: boolean    
     reportes?: boolean
 }
-  empresas?: { _id: string; empresa: string }[]
-  rol?: string
+  empresas?: { 
+    id: string; 
+    empresa: string,
+    fecha_inicio: string,
+    fecha_fin: string
+}[]
 }

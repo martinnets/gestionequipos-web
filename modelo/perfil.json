@@ -4,7 +4,7 @@
     "perfil":"administrador",
     "nivel_acceso":"alto",
     "gama":"LAP-G1",
-    "costo_renting_mensual":130,
+    "costo_renting_mensual":120,
     "tiempo_renting_meses":60
 },
 {
@@ -12,8 +12,8 @@
     "tipo_equipo":"laptop",
     "perfil":"desarrollador",
     "nivel_acceso":"alto",
-    "gama":"LAP-G1",
-    "costo_renting_mensual":130,
+    "gama":"LAP-G2",
+    "costo_renting_mensual":99,
     "tiempo_renting_meses":60
 },
 {

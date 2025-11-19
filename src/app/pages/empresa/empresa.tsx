@@ -27,15 +27,7 @@ export function EmpresaPage() {
     [],
     );
     useEffect(() => {
-        empresaDataService.getempresa()
-          .then(response => response.json())
-          .then(response => {
-            setempresa(response)
-            console.log(response)
-          })
-          .catch(e => {
-            console.log(e);
-          });
+        
       }, []);
     return (
     <>

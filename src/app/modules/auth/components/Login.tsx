@@ -50,7 +50,8 @@ export function Login() {
         //console.log(auth)
         const {data: user} = await getUserByToken(auth.token)
         setCurrentUser(user)
-        console.log(user)
+        //console.log(user)
+        
       } catch (error) {
         console.error(error)
         saveAuth(undefined)

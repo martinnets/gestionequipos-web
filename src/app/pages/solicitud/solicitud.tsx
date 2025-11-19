@@ -26,7 +26,7 @@ export function SolicitudPage() {
                             to={`/solicitudreporte/1`}>
                             <i className="fa-solid fa-file-pdf fs-4    "></i>
                         </Link>
-                         <Link className="btn btn-icon btn-light-info btn-sm"
+                        <Link className="btn btn-icon btn-light-info btn-sm"
                             data-bs-toggle="tooltip"
                             data-bs-placement="top"
                             title="Time Line"
@@ -67,21 +67,25 @@ export function SolicitudPage() {
                             break;
                         case 3:
                             colorClass = 'badge badge-warning';
-                            label = 'En Compra';
+                            label = 'SOLPE';
                             break;
                         case 4:
+                            colorClass = 'badge badge-warning';
+                            label = 'En Compra';
+                            break;
+                        case 5:
                             colorClass = 'badge badge-success';
                             label = 'Comprado';
                             break;
-                        case 5:
+                        case 6:
                             colorClass = 'badge badge-warning';
                             label = 'En Preparacion';
                             break;
-                        case 6:
+                        case 7:
                             colorClass = 'badge badge-primary';
                             label = 'Preparado';
                             break;
-                        case 7:
+                        case 8:
                             colorClass = 'badge badge-info';
                             label = 'Entregado';
                             break;
