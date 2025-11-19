@@ -170,7 +170,7 @@ const DashboardWrapper = () => {
             svgIcon='file'
             color='danger'
             iconColor='white'
-            title='Solicitudes'
+            title='Solicitudes Asignadas'
             description='Solicitudes asignadas'
             titleColor='white'
             descriptionColor='gray-400'
